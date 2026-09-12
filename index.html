@@ -1,0 +1,646 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caderno do Campo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap">
+<style>
+/* ============================================================
+   CADERNO DO CAMPO · página de vendas (prévia)
+   Identidade: parede caiada, tinta verde-preta, mata fechada,
+   amarelo de placa nos botões, margem vermelha de caderno.
+   ============================================================ */
+:root{
+  color-scheme: light;
+  --papel:#F1F2EA;        /* cal: branco de parede caiada */
+  --papel-2:#E6E8DC;      /* papel mais usado (bloco da oferta) */
+  --folha:#FBFBF6;        /* folha do caderno */
+  --tinta:#1B2420;        /* tinta verde-preta */
+  --tinta-2:#4F5A53;      /* texto secundário */
+  --linha:#D3D7CB;        /* pauta do caderno */
+  --mata:#14291C;         /* fundo escuro: mata fechada */
+  --mata-2:#1D3A28;       /* verde da capa */
+  --verde-folha:#8FB58A;  /* rótulos sobre o fundo escuro */
+  --ocre:#E9B949;         /* amarelo de placa: botões */
+  --ocre-2:#C9992E;       /* sombra do ocre */
+  --ocre-claro:#F7E8B8;   /* marca-texto das pendências */
+  --barro:#A3472A;        /* margem vermelha do caderno */
+  --destaque:#A67C18;     /* ocre escuro legível: destaque na headline sobre o papel */
+  --f-display:"Young Serif", Georgia, "Times New Roman", serif;
+  --f-texto:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --gutter:20px;
+  --medida:640px;
+  --largo:1040px;
+  --tarja:44px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--f-texto);font-size:17px;line-height:1.55;padding-top:var(--tarja);overflow-x:hidden}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:400;line-height:1.12;margin:0;text-wrap:balance}
+p,ul,ol{margin:0}
+a{color:inherit}
+b,strong{font-weight:700}
+:focus-visible{outline:3px solid var(--tinta);outline-offset:3px}
+.escuro :focus-visible{outline-color:var(--ocre)}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* ---------- Bloco 1 · tarja fixa ---------- */
+.tarja{position:fixed;top:0;left:0;right:0;height:var(--tarja);z-index:50;background:var(--tinta);color:var(--papel);display:flex;align-items:center;justify-content:center;gap:10px;padding:0 var(--gutter);text-decoration:none;font-size:12px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.tarja strong{color:var(--ocre)}
+.tarja s{color:#8E978F;text-decoration-color:var(--barro);text-decoration-thickness:2px}
+.tarja .tempo{text-transform:none;background:var(--ocre);color:var(--tinta);font-weight:700;padding:4px 8px;border-radius:3px;font-variant-numeric:tabular-nums;letter-spacing:.08em;min-width:82px;text-align:center}
+.tarja .so-desk{display:none}
+.tarja .opc{display:none}
+@media(min-width:520px){.tarja .opc{display:inline}}
+@media(min-width:720px){.tarja{font-size:13px;gap:14px}.tarja .so-desk{display:inline}.tarja .so-cel{display:none}}
+
+/* ---------- estrutura ---------- */
+.sec{padding:56px var(--gutter)}
+.wrap{max-width:var(--medida);margin:0 auto}
+.wrap--largo{max-width:var(--largo);margin:0 auto}
+@media(min-width:720px){.sec{padding:84px var(--gutter)}}
+@media(min-width:1024px){.sec{padding:108px var(--gutter)}}
+.escuro{background:var(--mata);color:var(--papel)}
+.cabeca{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.num{font-family:var(--f-display);font-size:17px;color:var(--barro);border:2px solid currentColor;padding:2px 8px 0;line-height:1.35;transform:rotate(-3deg);border-radius:2px;flex:0 0 auto}
+.etq{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--tinta-2)}
+.escuro .num{color:var(--ocre)}
+.escuro .etq{color:var(--verde-folha)}
+.t1{font-size:clamp(30px,5.4vw,50px);line-height:1.1}
+.t1 .hl{color:var(--destaque)}
+.t2{font-size:clamp(27px,4.2vw,40px);line-height:1.12;margin-bottom:18px}
+.t3{font-size:22px}
+.lead{font-size:19px;line-height:1.45;color:var(--tinta-2)}
+.escuro .lead{color:#C7D2C6}
+.texto p+p{margin-top:1em}
+.pend{background:var(--ocre-claro);color:var(--tinta);padding:0 4px;border-bottom:2px dotted var(--barro);font-style:normal}
+.ph{border:2px dashed var(--tinta-2);border-radius:6px;background:repeating-linear-gradient(45deg,rgba(27,36,32,.06) 0 10px,transparent 10px 20px);display:grid;place-items:center;text-align:center;padding:20px;color:var(--tinta-2);font-size:12px;letter-spacing:.12em;text-transform:uppercase;line-height:1.6;min-height:220px}
+
+/* ---------- botões ---------- */
+.cta{margin-top:26px;text-align:center}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:62px;padding:14px 22px;background:var(--ocre);color:var(--tinta);font-weight:700;font-size:18px;line-height:1.2;text-decoration:none;border-radius:6px;border-bottom:4px solid var(--ocre-2);text-align:center;transition:transform .12s ease,background .12s ease}
+.btn:hover{background:#F0C55C}
+.btn:active{transform:translateY(2px);border-bottom-width:2px}
+.btn--grande{font-size:20px;min-height:68px;text-transform:uppercase;letter-spacing:.05em}
+.btn__sub{display:block;text-align:center;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-2);margin-top:14px;line-height:1.6}
+.escuro .btn__sub{color:var(--verde-folha)}
+@media(min-width:720px){.btn{width:auto;min-width:360px;display:inline-flex}}
+@media(prefers-reduced-motion:reduce){.btn{transition:none}}
+
+/* ---------- Bloco 2 · hero ---------- */
+.hero{padding:40px var(--gutter) 28px;background:repeating-linear-gradient(to bottom,transparent 0 31px,rgba(27,36,32,.075) 31px 32px)}
+.hero .wrap{max-width:780px;border-left:2px solid var(--barro);padding-left:18px}
+.hero .lead{margin-top:18px;max-width:600px}
+.assista{display:inline-flex;align-items:center;gap:8px;margin-top:22px;font-size:15px;font-weight:700;color:var(--barro);letter-spacing:.02em}
+@media(min-width:720px){.hero{padding:64px var(--gutter) 36px}.hero .wrap{padding-left:32px}}
+
+/* ---------- Bloco 3 · VSL ---------- */
+.sec--vsl{padding-top:0}
+.wrap--video{max-width:780px;margin:0 auto}
+.video{position:relative;aspect-ratio:16/9;background:radial-gradient(120% 90% at 50% 100%,#22452E 0%,var(--mata) 62%);border-radius:6px;overflow:hidden;box-shadow:0 26px 44px -24px rgba(27,36,32,.55);display:grid;place-items:center;color:var(--papel)}
+.video__mata{position:absolute;left:0;right:0;bottom:0;width:100%;height:28%}
+.video .play{position:relative;width:78px;height:78px;border-radius:50%;background:var(--ocre);color:var(--tinta);display:grid;place-items:center;box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.video .play svg{margin-left:5px}
+.video .leg{position:absolute;left:16px;bottom:14px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--verde-folha)}
+.video .dur{position:absolute;right:16px;bottom:14px;font-size:11px;letter-spacing:.1em;color:var(--verde-folha);font-variant-numeric:tabular-nums}
+
+/* ---------- capa do livro (desenhada em código) ---------- */
+.capa-palco{display:flex;justify-content:center;padding:36px 0 8px}
+.capa{position:relative;width:min(272px,74vw);aspect-ratio:3/4.15;background:linear-gradient(135deg,#27492F 0%,#1D3A28 55%,#173222 100%);border-radius:3px 9px 9px 3px;box-shadow:0 30px 50px -22px rgba(20,41,28,.75),0 2px 0 rgba(255,255,255,.08) inset;color:var(--tinta);flex:0 0 auto}
+.capa::before{content:"";position:absolute;left:0;top:0;bottom:0;width:15px;background:linear-gradient(90deg,#0D1A12 0%,#1B2F21 55%,#0F1E15 100%);border-radius:3px 0 0 3px}
+.capa::after{content:"";position:absolute;inset:0;border-radius:inherit;opacity:.14;mix-blend-mode:multiply;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .9 0'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>")}
+.capa__rotulo{position:absolute;left:19%;right:11%;top:11%;padding:16px 12px 14px;background:#F2E9CF;outline:1px solid #C6B784;outline-offset:-5px;box-shadow:0 3px 10px rgba(0,0,0,.35);text-align:center;font-size:9px;letter-spacing:.14em;text-transform:uppercase;line-height:1.5;color:#3B3323}
+.capa__rotulo .ed{font-family:var(--f-display);text-transform:none;letter-spacing:.02em;font-style:italic;font-size:10px;color:#6B5F43;margin-top:2px}
+.capa__rotulo .eco{font-weight:700;margin-top:10px;font-size:9.5px;color:var(--barro)}
+.capa__rotulo .nome{font-family:var(--f-display);text-transform:none;letter-spacing:0;font-size:24px;line-height:1.05;margin:6px 0 8px;color:#1E2A22}
+.capa__rotulo .sub{font-family:var(--f-display);text-transform:none;letter-spacing:0;font-size:10.5px;font-style:italic;line-height:1.35;color:#4A4231}
+.capa__rotulo .temas{margin-top:10px;font-size:7.5px;letter-spacing:.12em;color:#6B5F43}
+.capa__faixa{position:absolute;left:15px;right:0;bottom:10%;height:28px;background:var(--ocre);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--tinta)}
+.capa--menor{width:min(232px,64vw)}
+@media(min-width:720px){.capa__rotulo{font-size:10px}.capa__rotulo .nome{font-size:27px}.capa__rotulo .sub{font-size:11.5px}.capa__rotulo .temas{font-size:8px}}
+
+/* ---------- Bloco 5 · lista compacta ---------- */
+.lista{list-style:none;padding:0;margin:26px 0 20px;border-top:1px solid var(--tinta)}
+.lista li{display:flex;gap:12px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--linha);font-size:17px;line-height:1.4}
+.lista .ok{color:var(--ocre-2);font-weight:700;flex:0 0 auto;font-size:18px}
+.lista .item{flex:1}
+.lista .bonus-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--barro);margin-left:8px;vertical-align:1px}
+.lista .item b{font-weight:700}
+.lista .item small{display:block;font-size:14px;color:var(--tinta-2);line-height:1.35;margin-top:3px;font-weight:400}
+.lista .val{flex:0 0 auto;font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap;color:var(--tinta-2)}
+.lista .val s{text-decoration-color:var(--barro);text-decoration-thickness:2px}
+.lista .val--incluso{color:var(--ocre-2)}
+.entrega{font-size:15px;color:var(--tinta-2);line-height:1.5}
+.entrega b{color:var(--tinta)}
+
+/* ---------- Bloco 6 · a conta ---------- */
+.contas{display:grid;gap:22px;margin-top:34px}
+@media(min-width:820px){.contas{grid-template-columns:1fr 1fr}}
+.caderneta{background:var(--folha);color:var(--tinta);border-radius:4px;padding:22px 20px 18px 24px;position:relative;box-shadow:0 26px 48px -24px rgba(0,0,0,.7)}
+.caderneta::before{content:"";position:absolute;top:0;bottom:0;left:16px;width:2px;background:var(--barro);opacity:.75}
+.caderneta h3{font-size:22px;padding-left:16px}
+.caderneta .por{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--tinta-2);padding-left:16px;margin:4px 0 12px;font-weight:700}
+.linha{display:flex;justify-content:space-between;gap:14px;padding:10px 0 10px 16px;border-bottom:1px solid var(--linha);align-items:baseline}
+.linha .rot{flex:1;line-height:1.35}
+.linha .rot small{display:block;font-size:13px;color:var(--tinta-2);line-height:1.35;margin-top:2px}
+.linha .val{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+/* /ano pequeno ao lado de cada valor anual (menos nos totais, que já dizem "Anual") */
+.caderneta .linha:not(.linha--total) .val::after{content:" /ano";font-size:.72em;font-weight:400;color:var(--tinta-2);letter-spacing:.02em}
+.linha--total{border-bottom:0;border-top:2px solid var(--tinta);margin-top:4px;padding-top:12px}
+.linha--total .rot{font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:700}
+.linha--total .val{font-family:var(--f-display);font-size:24px;font-weight:400}
+.fonte{font-size:12px;color:var(--tinta-2);padding-left:16px;margin-top:12px;font-style:italic;line-height:1.45}
+.dif{margin-top:40px;text-align:center}
+.dif .grande{font-family:var(--f-display);font-size:clamp(26px,5vw,40px);color:var(--ocre);line-height:1.15;text-wrap:balance}
+.dif .peq{margin-top:10px;font-size:19px}
+
+/* ---------- Bloco 7 · índice ---------- */
+.indice{margin-top:34px}
+@media(min-width:720px){.indice{columns:2;column-gap:44px}}
+.cad{break-inside:avoid;border-top:2px solid var(--tinta);padding:14px 0 22px;margin-bottom:10px}
+.cad h3{font-family:var(--f-texto);font-weight:700;font-size:13px;letter-spacing:.18em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.cad h3 span{font-weight:400;color:var(--tinta-2);letter-spacing:.12em;font-size:11px;white-space:nowrap}
+.cad .mote{font-family:var(--f-display);font-size:19px;line-height:1.25;margin:8px 0 12px;text-wrap:balance}
+.cad ol{list-style:none;padding:0;margin:0;counter-reset:c}
+.cad li{counter-increment:c;display:flex;gap:10px;padding:7px 0;border-bottom:1px dotted var(--linha);font-size:16px;line-height:1.35}
+.cad li::before{content:counter(c,decimal-leading-zero) " ·";font-variant-numeric:tabular-nums;color:var(--barro);font-weight:700;flex:0 0 auto}
+
+/* ---------- Bloco 8 · depoimentos ---------- */
+.deps{display:grid;gap:16px;margin-top:28px}
+@media(min-width:720px){.deps{grid-template-columns:1fr 1fr}}
+.dep{background:var(--folha);border:1px solid var(--linha);border-radius:4px;padding:22px 20px 20px;position:relative}
+.tag-ex{position:absolute;top:-1px;right:14px;background:var(--ocre);color:var(--tinta);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:3px 8px;border-radius:0 0 4px 4px}
+.dep__quem{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.dep__ini{width:44px;height:44px;border-radius:50%;background:var(--mata-2);color:var(--ocre);font-family:var(--f-display);font-size:20px;display:grid;place-items:center;flex:0 0 auto}
+.dep__nome{font-weight:700;font-size:15px;line-height:1.3}
+.dep__nome small{display:block;font-weight:400;color:var(--tinta-2);font-size:13px}
+.dep__frase{font-family:var(--f-display);font-size:20px;line-height:1.25;margin-bottom:10px;text-wrap:balance}
+.dep__txt{font-size:16px;color:var(--tinta-2);line-height:1.5}
+
+/* ---------- Bloco 9 · sobre ---------- */
+.sobre{display:grid;gap:28px;margin-top:6px}
+@media(min-width:900px){.sobre{grid-template-columns:2fr 3fr;align-items:start}.sobre .ph,.sobre .retrato{position:sticky;top:64px}}
+.sobre .ph{min-height:300px}
+.retrato{margin:0;border-radius:6px;overflow:hidden;background:var(--folha);box-shadow:0 24px 44px -26px rgba(20,41,28,.7)}
+.retrato img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
+.retrato figcaption{font-family:var(--f-display);font-size:16px;color:var(--tinta-2);padding:12px 14px;text-align:center}
+.assina{font-family:var(--f-display);font-size:26px;margin-top:22px;color:var(--barro)}
+
+/* ---------- Bloco 10 · oferta ---------- */
+.oferta{background:var(--papel-2)}
+.oferta-grid{display:grid;gap:30px;margin-top:34px;justify-items:center}
+@media(min-width:900px){.oferta-grid{grid-template-columns:1fr 1.45fr;align-items:start;justify-items:stretch}.oferta-grid .capa-palco{padding-top:8px;position:sticky;top:64px}}
+.box{background:var(--folha);border:2px solid var(--tinta);border-radius:6px;padding:22px 20px 24px;width:100%;box-shadow:0 30px 50px -30px rgba(27,36,32,.5)}
+.box .etq{display:block;margin-bottom:10px;line-height:1.6}
+.box .nome{font-size:32px;margin-bottom:10px}
+.box .desc{font-size:16px;color:var(--tinta-2);line-height:1.5}
+.preco{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:20px 0 4px}
+.preco .agora{font-family:var(--f-display);font-size:52px;line-height:1}
+.preco s{font-size:22px;color:var(--tinta-2);text-decoration-color:var(--barro);text-decoration-thickness:2px}
+.preco .lanc{width:100%;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:var(--barro)}
+.recebe{margin-top:20px;border-top:2px solid var(--tinta)}
+.recebe h4{font-family:var(--f-texto);font-size:12px;letter-spacing:.18em;text-transform:uppercase;padding:14px 0 6px;font-weight:700}
+.recebe .linha{padding-left:0;font-size:15px}
+.recebe .linha .rot b{display:block;font-size:16px}
+.recebe .linha .rot small{font-size:14px}
+.recebe .linha--total{font-size:15px}
+.recebe .linha--total .val{font-size:20px}
+.recebe .linha--paga{border:0;background:var(--ocre);margin:10px -20px 0;padding:14px 20px}
+.recebe .linha--paga .rot{font-size:13px}
+.recebe .linha--paga .val{font-family:var(--f-display);font-size:30px;font-weight:400}
+.box .cta{margin-top:22px}
+.box .btn{width:100%;min-width:0;display:flex}
+.seguro{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 14px;margin-top:30px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-2);text-align:center;font-weight:700}
+.seguro svg{vertical-align:-2px}
+
+/* ---------- Bloco 11 · perguntas ---------- */
+.faq{margin-top:28px;border-top:2px solid var(--tinta)}
+.faq details{border-bottom:1px solid var(--linha)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0;font-weight:700;font-size:18px;line-height:1.3}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--f-display);font-size:30px;line-height:1;color:var(--barro);flex:0 0 auto;width:32px;text-align:center;transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq .resp{padding:0 44px 22px 0;font-size:17px;color:var(--tinta-2);line-height:1.55}
+@media(prefers-reduced-motion:reduce){.faq summary::after{transition:none}}
+.final{text-align:center}
+.final .cta{margin-top:0}
+
+/* ---------- rodapé ---------- */
+.rodape{background:var(--tinta);color:#AEB7B0;font-size:13px;line-height:1.55;padding:34px var(--gutter) 112px}
+.rodape .wrap--largo{display:grid;gap:16px}
+.rodape a{color:var(--papel)}
+.rodape .links{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+@media(min-width:720px){.rodape{padding-bottom:44px}}
+
+/* ---------- botão fixo (só celular) ---------- */
+.fixo{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:10px var(--gutter) max(10px,env(safe-area-inset-bottom));background:rgba(241,242,234,.96);border-top:1px solid var(--linha);transform:translateY(110%);transition:transform .25s ease;backdrop-filter:blur(6px)}
+.fixo.on{transform:none}
+.fixo .btn{min-height:54px;font-size:17px}
+@media(min-width:720px){.fixo{display:none}}
+@media(prefers-reduced-motion:reduce){.fixo{transition:none}}
+
+/* ---------- modo edição (escrever direto no site) ---------- */
+.edit-bar{position:fixed;top:var(--tarja);left:0;right:0;z-index:60;display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:8px var(--gutter);background:var(--mata);color:var(--papel);font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.edit-bar b{color:var(--ocre)}
+.edit-bar .sp{flex:1}
+.edit-bar button{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:5px;padding:8px 14px;background:var(--ocre);color:var(--tinta)}
+.edit-bar button.ghost{background:transparent;color:var(--papel);border:1px solid rgba(255,255,255,.35)}
+body.editando [data-edit]{outline:1.5px dashed rgba(163,71,42,.5);outline-offset:3px;border-radius:2px;cursor:text}
+body.editando [data-edit]:hover{outline-color:var(--barro);background:rgba(233,185,73,.12)}
+body.editando [data-edit]:focus{outline:2px solid var(--barro);background:rgba(233,185,73,.16)}
+body.editando{padding-top:calc(var(--tarja) + 46px)}
+.edit-toggle{position:fixed;top:calc(var(--tarja) + 8px);right:10px;z-index:55;display:none;align-items:center;gap:6px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;border:0;border-radius:20px;padding:9px 14px;background:var(--barro);color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.28)}
+.edit-toggle.show{display:inline-flex}
+.edit-toggle:hover{filter:brightness(1.08)}
+body.editando .edit-toggle{display:none}
+@media print{.edit-toggle{display:none}}
+</style>
+
+<!-- ================= BLOCO 1 · TARJA ================= -->
+<a class="tarja" href="#oferta" aria-label="Preço de lançamento R$&nbsp;47, de R$&nbsp;97. Ir para a oferta.">
+  <span class="so-cel"><strong>R$&nbsp;47</strong> <s>R$&nbsp;97</s> · <span class="opc">preço de lançamento </span>termina em</span>
+  <span class="so-desk">Preço de lançamento: <strong>R$&nbsp;47</strong> <s>R$&nbsp;97</s> · termina em</span>
+  <span class="tempo" id="tempo">--:--:--</span>
+</a>
+
+<!-- ================= BLOCO 2 · HEADLINE ================= -->
+<header class="hero">
+  <div class="wrap">
+    <h1 class="t1" data-edit>Como <span class="hl">economizar</span> mais de <span class="hl">R$&nbsp;4.000 por ano</span> dentro de casa com o Caderno do Campo.</h1>
+    <p class="lead" data-edit>O método antigo que manteve a minha família fora da pobreza e ainda funciona até hoje.</p>
+    <p class="assista"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3l16 9-16 9z" fill="currentColor"/></svg> <span data-edit>Assista ao vídeo abaixo pra entender</span></p>
+  </div>
+</header>
+
+<!-- ================= BLOCO 3 · VSL ================= -->
+<section class="sec sec--vsl" id="video">
+  <div class="wrap--video">
+    <div class="video" role="img" aria-label="Vídeo de apresentação do Caderno do Campo">
+      <svg class="video__mata" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60V38l14-8 8 10 12-18 14 14 12-18 14 16 14-8 12 14 16-20 14 16 12-8 16 14 14-18 14 14 14-22 14 18 14-8 16 14 14-18 14 14 14-6 14 12 16-22 14 14 14-8 16 12 16-14 14 12 10-6v30z" fill="#20402B"/></svg>
+      <div class="play"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z" fill="currentColor"/></svg></div>
+      <div class="leg">Juca da Mata · vídeo de apresentação</div>
+      <div class="dur">--:--</div>
+    </div>
+    <div class="cta" id="cta-topo"><a class="btn" href="#oferta" data-edit>Quero o Caderno do Campo por R$&nbsp;47</a></div>
+  </div>
+</section>
+
+<!-- ================= BLOCO 4 · O CADERNO ================= -->
+<section class="sec" id="caderno">
+  <div class="wrap texto">
+    <div class="cabeca"><span class="num">I.</span><span class="etq" data-edit>O Caderno</span></div>
+    <h2 class="t2" data-edit>Um livro. Noventa métodos. Quatro mil reais por ano.</h2>
+    <p data-edit>Luz, água, gás, despensa, cozinha, horta, praga, limpeza, remédios da mata, conserto e muito mais. Você começa neste fim de semana com tarefas simples e já começa a economizar.</p>
+    <div class="capa-palco">
+      <div class="capa" role="img" aria-label="Capa do Caderno do Campo, Juca da Mata, Volume I, edição 2026">
+        <div class="capa__rotulo">
+          <div>Juca da Mata · Volume I</div>
+          <div class="ed">Edição 2026</div>
+          <div class="eco">Economize R$&nbsp;4.000 por ano</div>
+          <div class="nome">Caderno do Campo</div>
+          <div class="sub">Métodos simples que ajudam uma casa a guardar mais dinheiro.</div>
+          <div class="temas">✦ Luz · Água · Gás · Despensa · Horta · Praga · Conserto ✦</div>
+        </div>
+        <div class="capa__faixa">90 métodos · 13 cadernos</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BLOCO 5 · O PRODUTO ================= -->
+<section class="sec" id="plano" style="padding-top:0">
+  <div class="wrap texto">
+    <h2 class="t2" data-edit>O plano completo pra economizar R$&nbsp;4.000 por ano na sua casa.</h2>
+    <p data-edit>Chuveiro regulado. Borracha da geladeira. Sabão de óleo usado. A carne na banha. O chá que a roça toma. Os hábitos financeiros e as técnicas de economia de quem passou por tempos difíceis. Nada aqui é invenção minha. É o que três gerações da minha família fizeram pra viver bem sem dinheiro.</p>
+    <ul class="lista">
+      <li><span class="ok">✓</span><span class="item" data-edit><b>Caderno do Campo</b><small>livro digital ilustrado</small></span><span class="val val--incluso">incluído</span></li>
+      <li><span class="ok">✓</span><span class="item" data-edit><b>O Roteiro do Primeiro Fim de Semana</b> <span class="bonus-tag">bônus</span><small>três consertos pra recuperar os R$&nbsp;47 rápido</small></span><span class="val"><s>R$&nbsp;27</s></span></li>
+      <li><span class="ok">✓</span><span class="item" data-edit><b>A Caderneta de Contas</b> <span class="bonus-tag">bônus</span><small>folha pra imprimir e anotar o que cada método devolveu</small></span><span class="val"><s>R$&nbsp;27</s></span></li>
+      <li><span class="ok">✓</span><span class="item" data-edit><b>A Lista de Onde Comprar</b> <span class="bonus-tag">bônus</span><small>o lugar mais barato pra cada material</small></span><span class="val"><s>R$&nbsp;17</s></span></li>
+    </ul>
+    <div class="cta"><a class="btn" href="#oferta" data-edit>Quero o Caderno do Campo por R$&nbsp;47</a></div>
+  </div>
+</section>
+
+<!-- ================= BLOCO 6 · A CONTA ================= -->
+<section class="sec escuro" id="conta">
+  <div class="wrap--largo">
+    <div class="wrap" style="margin:0">
+      <div class="cabeca"><span class="num">II.</span><span class="etq" data-edit>A Conta</span></div>
+      <h2 class="t2" data-edit>Pra onde o seu dinheiro vai de verdade. E o que você pode parar de pagar.</h2>
+      <p class="lead" data-edit>Esses são os números que a maioria das casas aceita calada. A coluna da direita é a mesma casa depois de aplicar os noventa métodos do Caderno.</p>
+    </div>
+    <div class="contas">
+      <div class="caderneta">
+        <h3 data-edit>Uma casa comum</h3>
+        <div class="por">Por ano</div>
+        <div class="linha"><span class="rot" data-edit>Conta de luz</span><span class="val">R$&nbsp;3.000</span></div>
+        <div class="linha"><span class="rot" data-edit>Água e esgoto</span><span class="val">R$&nbsp;1.560</span></div>
+        <div class="linha"><span class="rot" data-edit>Gás de cozinha</span><span class="val">R$&nbsp;1.440</span></div>
+        <div class="linha"><span class="rot" data-edit>Produto de limpeza</span><span class="val">R$&nbsp;1.080</span></div>
+        <div class="linha"><span class="rot" data-edit>Consertos e pequenos reparos</span><span class="val">R$&nbsp;1.500</span></div>
+        <div class="linha"><span class="rot" data-edit>Veneno e dedetização</span><span class="val">R$&nbsp;400</span></div>
+        <div class="linha linha--total"><span class="rot">Anual</span><span class="val">R$&nbsp;8.980</span></div>
+        <p class="fonte" data-edit>Médias pra uma casa de 3 pessoas na cidade, com chuveiro elétrico e botijão · tarifas de 2026</p>
+      </div>
+      <div class="caderneta">
+        <h3 data-edit>A mesma casa, depois do Caderno</h3>
+        <div class="por">Por ano</div>
+        <div class="linha"><span class="rot">Conta de luz <small>chuveiro regulado, geladeira vedada, nada ligado à toa</small></span><span class="val">R$&nbsp;1.900</span></div>
+        <div class="linha"><span class="rot">Água e esgoto <small>vazamento achado, chuva na caixa</small></span><span class="val">R$&nbsp;900</span></div>
+        <div class="linha"><span class="rot">Gás <small>botijão que dura 50 dias, panela de pressão</small></span><span class="val">R$&nbsp;870</span></div>
+        <div class="linha"><span class="rot">Limpeza <small>quatro coisas do mercado fazem tudo</small></span><span class="val">R$&nbsp;250</span></div>
+        <div class="linha"><span class="rot">Conserto <small>olhada por mês, cal, silicone, óleo de linhaça</small></span><span class="val">R$&nbsp;500</span></div>
+        <div class="linha"><span class="rot">Praga <small>receita de vinagre, bórax e terra</small></span><span class="val">R$&nbsp;80</span></div>
+        <div class="linha linha--total"><span class="rot">Anual</span><span class="val">~R$&nbsp;4.500</span></div>
+        <p class="fonte" data-edit>Cada número tem um capítulo no Caderno com material, preço e passo a passo</p>
+      </div>
+    </div>
+    <div class="dif">
+      <p class="grande" data-edit>Diferença: R$&nbsp;4.480 por ano.</p>
+      <p class="peq" data-edit>O Caderno custa R$&nbsp;47 em um único pagamento.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BLOCO 7 · O QUE TEM DENTRO ================= -->
+<section class="sec" id="dentro">
+  <div class="wrap--largo">
+    <div class="wrap" style="margin:0">
+      <div class="cabeca"><span class="num">III.</span><span class="etq" data-edit>O que tem dentro</span></div>
+      <h2 class="t2" data-edit>Exatamente o que você recebe por R$&nbsp;47.</h2>
+      <p data-edit>Noventa métodos numerados em treze cadernos com páginas de resumo e passo a passo. Escolha os que servem pra sua casa e pro seu bolso. Você não precisa fazer todos.</p>
+    </div>
+    <div class="indice">
+      <article class="cad"><h3>Luz <span>10 capítulos</span></h3><p class="mote">Cortar um terço da conta sem trocar nada de lugar.</p><ol><li>O chuveiro que come um terço da conta</li><li>O aquecedor de água de garrafa PET</li><li>A borracha da geladeira e o degelo</li><li>O que gasta luz parado na tomada</li><li>A lâmpada certa pra cada cômodo</li><li>Como ler a conta e achar o erro da distribuidora</li></ol></article>
+      <article class="cad"><h3>Casa fresca <span>8 capítulos</span></h3><p class="mote">Baixar a temperatura de dentro sem ar-condicionado.</p><ol><li>A tela molhada que refresca a janela</li><li>Por onde o vento entra e por onde sai</li><li>O telhado pintado, a cortina de R$&nbsp;5</li><li>Sombra que tira 4 graus da casa</li><li>O ventilador no lugar certo</li><li>Frio no Sul: a manta de janela e o tijolo quente</li></ol></article>
+      <article class="cad"><h3>Água <span>7 capítulos</span></h3><p class="mote">Achar o vazamento antes que ele ache a sua conta.</p><ol><li>O teste do hidrômetro em 10 minutos</li><li>A caixa acoplada que rouba 200 litros por dia</li><li>Chuva na caixa d'água (de sítio e de varanda)</li><li>A água da máquina que lava o quintal</li><li>O filtro de areia</li><li>A torneira que pinga: conserto de R$&nbsp;3</li></ol></article>
+      <article class="cad"><h3>Gás e fogo <span>6 capítulos</span></h3><p class="mote">Fazer o botijão durar 50 dias.</p><ol><li>Fogo baixo, tampa fechada, panela de pressão</li><li>O fogão de lata pra quintal</li><li>O forno de barro e o de tambor</li><li>Cozinhar com o calor que sobra</li><li>Quando o fogão a lenha vale e quando não vale</li></ol></article>
+      <article class="cad"><h3>Despensa <span>9 capítulos</span></h3><p class="mote">Guardar comida do jeito de quem não tinha geladeira.</p><ol><li>Carne que dura 6 meses sem geladeira</li><li>Charque em casa, carne na banha</li><li>Farinha, arroz e feijão sem bicho</li><li>Conserva de legume, ovo que dura</li><li>Os 11 itens pra comprar em quantidade</li><li>A caixa fria de barro</li></ol></article>
+      <article class="cad"><h3>Cozinha <span>5 capítulos</span></h3><p class="mote">Comer bem e barato é jeito, não receita.</p><ol><li>Aproveitar o que a cidade joga fora</li><li>Caldo de osso, tempero que dura o ano</li><li>O forno de areia</li><li>Cozinhar uma vez, comer a semana</li></ol></article>
+      <article class="cad"><h3>Horta <span>8 capítulos</span></h3><p class="mote">Comida do quintal e da varanda, sem precisar de terra.</p><ol><li>40 quilos de batata em 1 m²</li><li>Verdura em garrafa PET na varanda</li><li>Semente guardada de um ano pro outro</li><li>Milho, feijão e abóbora juntos</li><li>O adubo da cozinha, a galinha no quintal</li><li>O mato que a roça planta de propósito</li></ol></article>
+      <article class="cad"><h3>Praga <span>9 capítulos</span></h3><p class="mote">O que o dedetizador cobra caro pra fazer.</p><ol><li>O pó de terra que mata praga e não mata gente</li><li>Formiga, barata, cupim</li><li>Mosquito da dengue: o que funciona de verdade</li><li>Carrapato, rato, marimbondo</li><li>As receitas de vinagre, bórax e água oxigenada</li></ol></article>
+      <article class="cad"><h3>Casa e limpeza <span>9 capítulos</span></h3><p class="mote">Todo o corredor de limpeza do mercado cabe em quatro coisas.</p><ol><li>Sabão de óleo usado, de barra e líquido</li><li>O detergente de R$&nbsp;6 que rende 5 litros</li><li>O pó de banheiro de R$&nbsp;2</li><li>Vinagre, bicarbonato e bórax: o que mistura e o que não</li><li>Sabão de cinza, vela de cera</li><li>Lavar roupa gastando metade</li></ol></article>
+      <article class="cad"><h3>Remédio de mata <span>5 capítulos</span></h3><p class="mote">Pra coisa pequena. Não substitui médico.</p><ol><li>Os chás que a roça toma há 200 anos</li><li>Óleo de coco e vinagre de maçã: uso de fora</li><li>O que a mata dá pra machucado pequeno</li><li>O kit de primeiros socorros do mateiro</li><li>Quando ir no médico sem discutir</li></ol></article>
+      <article class="cad"><h3>Conserto <span>8 capítulos</span></h3><p class="mote">Casa boa é casa que não chama ninguém.</p><ol><li>Madeira que dura 50 anos, ferro sem ferrugem</li><li>Cal na parede (e por que é melhor que tinta)</li><li>Umidade que sobe da parede</li><li>Telha que goteja, porta que emperra</li><li>Fresta de janela e porta</li><li>O óleo de linhaça</li></ol></article>
+      <article class="cad"><h3>Terreno e sítio <span>4 capítulos</span></h3><p class="mote">Terra errada é o erro mais caro que existe.</p><ol><li>Como ver terra ruim em 60 segundos</li><li>Onde tem água no terreno</li><li>Os erros de quem vai morar fora da cidade</li><li>Vinte truques de mato que servem em qualquer lugar</li></ol></article>
+      <article class="cad"><h3>Dinheiro <span>2 capítulos</span></h3><p class="mote">O que meu pai fazia quando não tinha nada.</p><ol><li>Os 20 hábitos de dinheiro de quem viveu tempo difícil</li><li>A conta de gasto da família, do jeito antigo</li></ol></article>
+    </div>
+    <div class="cta"><a class="btn" href="#oferta" data-edit>Quero o Caderno do Campo por R$&nbsp;47</a></div>
+  </div>
+</section>
+
+<!-- ================= BLOCO 8 · DEPOIMENTOS ================= -->
+<section class="sec" id="depoimentos" style="padding-top:0">
+  <div class="wrap--largo">
+    <div class="wrap" style="margin:0">
+      <div class="cabeca"><span class="num">IV.</span><span class="etq" data-edit>Depoimentos</span></div>
+      <h2 class="t2" data-edit>Quem já está usando o Caderno</h2>
+    </div>
+    <div class="deps">
+      <article class="dep"><span class="tag-ex">Exemplo</span>
+        <div class="dep__quem"><span class="dep__ini">C</span><div class="dep__nome" data-edit>Célia, 61 <small>Contagem, MG</small></div></div>
+        <p class="dep__frase" data-edit>"A conta de luz caiu R$&nbsp;62 no primeiro mês."</p>
+        <p class="dep__txt" data-edit>Fiz o do chuveiro e o da borracha da geladeira. Moro em apartamento. Foi fácil, e abri o livro no celular sem precisar de ajuda.</p>
+      </article>
+      <article class="dep"><span class="tag-ex">Exemplo</span>
+        <div class="dep__quem"><span class="dep__ini">A</span><div class="dep__nome" data-edit>Antônio, 68 <small>Sorocaba, SP</small></div></div>
+        <p class="dep__frase" data-edit>"O botijão passou de 30 pra 48 dias."</p>
+        <p class="dep__txt" data-edit>Fogo baixo, tampa fechada e panela de pressão. Só isso. Casa de três pessoas, na cidade mesmo.</p>
+      </article>
+      <article class="dep"><span class="tag-ex">Exemplo</span>
+        <div class="dep__quem"><span class="dep__ini">M</span><div class="dep__nome" data-edit>Marlene, 54 <small>Caruaru, PE</small></div></div>
+        <p class="dep__frase" data-edit>"Achei um vazamento que me custava R$&nbsp;40 por mês."</p>
+        <p class="dep__txt" data-edit>O teste do hidrômetro em dez minutos. A caixa acoplada vazava fazia mais de um ano e eu não sabia.</p>
+      </article>
+      <article class="dep"><span class="tag-ex">Exemplo</span>
+        <div class="dep__quem"><span class="dep__ini">R</span><div class="dep__nome" data-edit>Roberto, 45 <small>Curitiba, PR</small></div></div>
+        <p class="dep__frase" data-edit>"Gastei R$&nbsp;12 em silicone e parei de sentir vento na sala."</p>
+        <p class="dep__txt" data-edit>Fresta da janela e da porta. Fiz num sábado de manhã com o caderno aberto no celular.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BLOCO 9 · SOBRE O JUCA ================= -->
+<section class="sec" id="sobre">
+  <div class="wrap--largo">
+    <div class="wrap" style="margin:0 0 6px">
+      <div class="cabeca"><span class="num">V.</span><span class="etq" data-edit>Sobre o Juca</span></div>
+      <h2 class="t2" data-edit>Quem sou eu pra te ensinar isso</h2>
+    </div>
+    <div class="sobre">
+      <figure class="retrato"><img src="assets/juca.jpg" width="900" height="900" alt="Juca da Mata, na varanda de casa, com a mata ao fundo" loading="lazy"><figcaption>Juca da Mata</figcaption></figure>
+      <div class="texto">
+        <p data-edit>Me chamo Juca. Juca da Mata, porque passei a vida dentro dela.</p>
+        <p data-edit>Nasci no meio do mato. Filho de lavrador. Aprendi a ler a mata antes de aprender a ler letra. Com 14 anos já me chamavam quando alguém sumia no mato, porque eu achava.</p>
+        <p data-edit>Passei a vida adulta guiando. Equipe de mapa, gente de pesquisa, gente da cidade que ia entrar sozinha e não ia sair. Vi homem forte morrer por erro bobo. Vi menino franzino sobreviver por saber uma coisa só. Aprendi mais com o erro dos outros do que com o meu acerto.</p>
+        <p data-edit>E aprendi com meu pai. Ele não tinha estudo. Tinha uma casa que não faltava nada, com quase nenhum dinheiro. Sabia guardar carne sem geladeira, achar água onde não tinha, fazer sabão, fazer botijão render, fazer a terra dar. Tudo isso ele me passou. Nada disso ele escreveu.</p>
+        <p data-edit>Hoje eu já passei dos setenta faz tempo. E olho pro lado e vejo que os velhos que sabiam essas coisas estão morrendo. E que isso não está em livro nenhum.</p>
+        <p data-edit>Então eu escrevi. Não é pra você virar mateiro. É pra você guardar o que ganha, do jeito que a minha família guardou por três gerações.</p>
+        <p class="assina" data-edit>— Juca</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BLOCO 10 · A OFERTA ================= -->
+<section class="sec oferta" id="oferta">
+  <div class="wrap--largo">
+    <div class="wrap" style="margin:0">
+      <div class="cabeca"><span class="num">VI.</span><span class="etq" data-edit>Peça o Caderno</span></div>
+      <h2 class="t2" data-edit>R$&nbsp;47 uma vez. Sem mensalidade. Seu pra sempre.</h2>
+      <p data-edit>Acesso na hora: chega no seu e-mail e no seu WhatsApp em até 2 minutos depois do pagamento. <b>Não chega pelo correio.</b> Lê em qualquer celular, tablet ou computador. Imprime na mesa da cozinha se quiser. Garantia de 7 dias, sem pergunta: se não for pra você, manda uma mensagem e os R$&nbsp;47 voltam no mesmo dia.</p>
+    </div>
+    <div class="oferta-grid">
+      <div class="capa-palco">
+        <div class="capa capa--menor" role="img" aria-label="Capa do Caderno do Campo">
+          <div class="capa__rotulo">
+            <div>Juca da Mata · Volume I</div>
+            <div class="ed">Edição 2026</div>
+            <div class="eco">Economize R$&nbsp;4.000 por ano</div>
+            <div class="nome">Caderno do Campo</div>
+            <div class="sub">Métodos simples que ajudam uma casa a guardar mais dinheiro.</div>
+            <div class="temas">✦ Luz · Água · Gás · Despensa · Horta · Praga · Conserto ✦</div>
+          </div>
+          <div class="capa__faixa">90 métodos · 13 cadernos</div>
+        </div>
+      </div>
+      <div class="box">
+        <span class="etq" data-edit>Livro digital ilustrado · Edição 2026</span>
+        <h3 class="nome" data-edit>Caderno do Campo</h3>
+        <p class="desc" data-edit>Noventa métodos de casa pra luz, água, gás, despensa, horta, cozinha, limpeza, remédio de mata, conserto e terreno, com a lista de material, os preços e o passo a passo. Escolha os que servem pra sua casa. Pule os que não servem.</p>
+        <div class="preco"><span class="agora">R$&nbsp;47</span><s>R$&nbsp;97</s><span class="lanc" data-edit>Preço de lançamento — termina domingo</span></div>
+        <div class="recebe">
+          <h4 data-edit>O que você recebe por R$&nbsp;47:</h4>
+          <div class="linha"><span class="rot"><b>Caderno do Campo</b><small>livro digital ilustrado, edição 2026</small></span><span class="val">R$&nbsp;47</span></div>
+          <div class="linha"><span class="rot"><b>O Roteiro do Primeiro Fim de Semana</b><small>três consertos pra recuperar os R$&nbsp;47 rápido</small></span><span class="val">R$&nbsp;27</span></div>
+          <div class="linha"><span class="rot"><b>A Caderneta de Contas</b><small>folha pra imprimir e anotar o que cada método devolveu</small></span><span class="val">R$&nbsp;27</span></div>
+          <div class="linha"><span class="rot"><b>A Lista de Onde Comprar</b><small>o lugar mais barato pra cada material</small></span><span class="val">R$&nbsp;17</span></div>
+          <div class="linha linha--total"><span class="rot">Valor total</span><span class="val">R$&nbsp;118</span></div>
+          <div class="linha linha--total linha--paga"><span class="rot">Você paga hoje</span><span class="val">R$&nbsp;47</span></div>
+        </div>
+        <div class="cta">
+          <a class="btn btn--grande" href="#checkout" title="Trocar pelo link do checkout" data-edit>Pegar o Caderno · R$&nbsp;47 →</a>
+          <span class="btn__sub" data-edit>Compra segura · Paga uma vez · Seu pra sempre</span>
+        </div>
+      </div>
+    </div>
+    <p class="seguro"><span><svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1zm2 0h6V8a3 3 0 0 0-6 0v2z" fill="currentColor"/></svg> Compra segura</span><span>· Pix ·</span><span>Cartão em até 5x</span><span>· Boleto ·</span><span>Reembolso em 7 dias</span></p>
+  </div>
+</section>
+
+<!-- ================= BLOCO 11 · PERGUNTAS ================= -->
+<section class="sec" id="perguntas">
+  <div class="wrap">
+    <div class="cabeca"><span class="etq" data-edit>Antes de você decidir</span></div>
+    <h2 class="t2" data-edit>Deixe eu tirar suas dúvidas.</h2>
+    <div class="faq">
+      <details open><summary data-edit>"Juca, vou economizar R$&nbsp;4.000 com certeza?"</summary><p class="resp" data-edit>Certeza eu não dou de nada nessa vida. O que eu dou é a conta: numa casa comum de 3 pessoas, fazendo a maioria dos métodos, passa de R$&nbsp;4.000 no ano. Tem gente que faz só os de luz e água e economiza uns R$&nbsp;100 a R$&nbsp;150 por mês. Tem gente que faz tudo e passa de R$&nbsp;8.000. Depende de quanto você faz. Mas os R$&nbsp;47 do Caderno voltam no primeiro mês em quase toda casa.</p></details>
+      <details><summary data-edit>"Vou ter que comprar equipamentos?"</summary><p class="resp" data-edit>Não. A maioria dos métodos custa entre zero e R$&nbsp;30 pra fazer. O que mais se usa é silicone, vinagre, bicarbonato, arame, garrafa PET e balde. Coisa que tem na loja da esquina e que normalmente você já tem em casa. Se um novo método precisar de algo mais caro, eu aviso antes e digo se vale a pena.</p></details>
+      <details><summary data-edit>"Serve para casa pequena ou apartamento?"</summary><p class="resp" data-edit>Serve. A maior parte dos 90 métodos é pra dentro de casa: luz, água, gás, limpeza, despensa, praga e conserto. A horta tem versão de varanda. Os poucos que são só de sítio, eu marco como só de sítio. Ninguém compra o Caderno e descobre que não serve.</p></details>
+      <details><summary data-edit>"E se eu não tiver prática com celular?"</summary><p class="resp" data-edit>O acesso ao livro é facilitado e feito de forma digital. Se travar em qualquer passo, tem um número de ajuda que resolve com você, com calma. E se preferir papel, imprime.</p></details>
+      <details open><summary data-edit>"O material chega pelos Correios?"</summary><p class="resp" data-edit>Não. O Caderno do Campo é um livro digital. Não vem nada pelo correio. Você recebe no celular, no tablet ou no computador em até 2 minutos depois de pagar. Se quiser ter na mão, imprime em folha comum.</p></details>
+      <details><summary data-edit>"Já posso comprar?"</summary><p class="resp" data-edit>Pode. Aperta o botão, paga por Pix, cartão parcelado ou boleto, e em 2 minutos o Caderno está no seu celular (no boleto, depois que o banco compensa). Tem 7 dias pra ler, tentar e decidir. Se não for pra você, manda uma mensagem e o dinheiro volta inteiro.</p></details>
+      <details><summary data-edit>"Os remédios de mata são seguros?"</summary><p class="resp" data-edit>São usos tradicionais, de fora ou de chá, todos com aviso do que não fazer. Remédio de mata não substitui médico. Se está doente, vai no médico.</p></details>
+      <details><summary data-edit>"Tem garantia?"</summary><p class="resp" data-edit>Tem. 7 dias, sem pergunta. Manda uma mensagem e devolvo o dinheiro inteiro.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- botão final -->
+<section class="sec escuro final" id="final">
+  <div class="wrap">
+    <div class="cta">
+      <a class="btn" href="#oferta" data-edit>Quero o Caderno do Campo por R$&nbsp;47</a>
+      <span class="btn__sub" data-edit>Livro digital · Chega em 2 minutos · Não chega pelo correio · 7 dias de garantia</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RODAPÉ ================= -->
+<footer class="rodape">
+  <div class="wrap--largo">
+    <p data-edit>Os valores de economia são estimativas baseadas em uma casa média de 3 pessoas e variam conforme o uso, a região e quanto do conteúdo é aplicado. Este produto é um livro digital de conteúdo educativo. Não substitui orientação médica, elétrica ou hidráulica profissional.</p>
+    <p><mark class="pend">[Razão social]</mark> · CNPJ <mark class="pend">[xx]</mark> · <mark class="pend">[e-mail de suporte]</mark> · <mark class="pend">[WhatsApp de suporte]</mark></p>
+    <p class="links"><a href="#">Política de privacidade</a><a href="#">Termos de uso</a><a href="#caderno">O Caderno</a><a href="#conta">A Conta</a><a href="#oferta">Oferta</a></p>
+  </div>
+</footer>
+
+<!-- botão pra ligar o modo de edição da copy (só pra rascunhar o texto) -->
+<button class="edit-toggle" id="edit-toggle" type="button">✎ Editar texto</button>
+
+<!-- botão fixo no celular: aparece depois que o botão da VSL sai da tela -->
+<div class="fixo" id="fixo" aria-hidden="true">
+  <a class="btn" href="#oferta" tabindex="-1">Quero o Caderno · R$&nbsp;47</a>
+</div>
+
+<script>
+(function(){
+  /* ---- Bloco 1 · contador ----
+     Prévia: janela de ~2 horas começando num valor "quebrado" (não exatamente 2h),
+     recontada a cada carregamento. Pra fixar numa data real de fim do lançamento,
+     troca por: var DATA_FIM = new Date('2026-09-20T23:59:59-03:00'); */
+  var DATA_FIM = null;
+  var JANELA_MS = (1*3600 + 53*60 + 27) * 1000; /* 01:53:27 — valor quebrado, sob 2h */
+  var fim = DATA_FIM || new Date(Date.now() + JANELA_MS);
+  var el = document.getElementById('tempo');
+  function dois(n){ return (n < 10 ? '0' : '') + n; }
+  function tick(){
+    var diff = Math.max(0, fim - Date.now());
+    var dias = Math.floor(diff / 864e5); diff -= dias * 864e5;
+    var h = Math.floor(diff / 36e5); diff -= h * 36e5;
+    var m = Math.floor(diff / 6e4); diff -= m * 6e4;
+    var s = Math.floor(diff / 1e3);
+    el.textContent = (dias > 0 ? dias + 'd ' : '') + dois(h) + ':' + dois(m) + ':' + dois(s);
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ---- botão fixo no celular ---- */
+  var fixo = document.getElementById('fixo');
+  var topo = document.getElementById('cta-topo');
+  var oferta = document.getElementById('oferta');
+  var fin = document.getElementById('final');
+  if ('IntersectionObserver' in window){
+    var passouTopo = false, vendoOferta = false, vendoFinal = false;
+    function upd(){
+      var on = passouTopo && !vendoOferta && !vendoFinal;
+      fixo.classList.toggle('on', on);
+      fixo.setAttribute('aria-hidden', on ? 'false' : 'true');
+      fixo.querySelector('a').tabIndex = on ? 0 : -1;
+    }
+    new IntersectionObserver(function(e){ passouTopo = !e[0].isIntersecting && e[0].boundingClientRect.top < 0; upd(); }).observe(topo);
+    new IntersectionObserver(function(e){ vendoOferta = e[0].isIntersecting; upd(); }, {rootMargin:'0px 0px -30% 0px'}).observe(oferta);
+    new IntersectionObserver(function(e){ vendoFinal = e[0].isIntersecting; upd(); }).observe(fin);
+  }
+
+  /* ---- modo edição: escrever direto no site ---- (?editar na URL ou botão)
+     Guarda o texto no próprio navegador (localStorage). É pra rascunhar a copy;
+     depois é só me mandar o texto final que eu fixo na página de verdade. */
+  var CHAVE = 'caderno-copy-v1';
+  var alvos = Array.prototype.slice.call(document.querySelectorAll('[data-edit]'));
+  alvos.forEach(function(n, i){ n.setAttribute('data-ek', 'e' + i); });
+
+  function carregar(){
+    try{
+      var raw = localStorage.getItem(CHAVE); if(!raw) return;
+      var dados = JSON.parse(raw);
+      alvos.forEach(function(n){ var k = n.getAttribute('data-ek'); if(dados[k] != null) n.innerHTML = dados[k]; });
+    }catch(e){}
+  }
+  function salvar(){
+    try{
+      var dados = {};
+      alvos.forEach(function(n){ dados[n.getAttribute('data-ek')] = n.innerHTML; });
+      localStorage.setItem(CHAVE, JSON.stringify(dados));
+    }catch(e){}
+  }
+  carregar();
+
+  var editando = false;
+  function barra(){
+    var b = document.createElement('div');
+    b.className = 'edit-bar';
+    b.innerHTML = '<b>Modo edição</b><span>toque em qualquer texto e escreva por cima</span>'
+      + '<span class="sp"></span>'
+      + '<button id="ed-copiar" class="ghost" type="button">Copiar texto</button>'
+      + '<button id="ed-limpar" class="ghost" type="button">Descartar</button>'
+      + '<button id="ed-sair" type="button">Concluir</button>';
+    document.body.appendChild(b);
+    document.getElementById('ed-sair').onclick = sair;
+    document.getElementById('ed-limpar').onclick = function(){
+      if(confirm('Descartar todas as edições e voltar ao texto original?')){
+        try{ localStorage.removeItem(CHAVE); }catch(e){} location.reload();
+      }
+    };
+    document.getElementById('ed-copiar').onclick = function(){
+      var txt = alvos.map(function(n){ return '• ' + n.textContent.trim(); }).join('\n\n');
+      (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function(){
+        this.textContent = 'Copiado!'; setTimeout(function(){ var e=document.getElementById('ed-copiar'); if(e) e.textContent='Copiar texto'; }, 1500);
+      }.bind(this)).catch(function(){ alert(txt); });
+    };
+    return b;
+  }
+  function entrar(){
+    if(editando) return; editando = true;
+    document.body.classList.add('editando');
+    alvos.forEach(function(n){ n.setAttribute('contenteditable','true'); n.addEventListener('input', salvar); });
+    barra();
+  }
+  function sair(){
+    editando = false;
+    document.body.classList.remove('editando');
+    alvos.forEach(function(n){ n.removeAttribute('contenteditable'); });
+    var b = document.querySelector('.edit-bar'); if(b) b.remove();
+    salvar();
+  }
+  window.CadernoEditar = entrar;
+  var botao = document.getElementById('edit-toggle');
+  var querEditar = /[?#&]editar\b/.test(location.search + location.hash);
+  var dentroDeIframe = (function(){ try{ return window.self !== window.top; }catch(e){ return true; } })();
+  /* Botão de edição só aparece pro Lucas: dentro do preview (iframe) ou com ?editar na URL.
+     Pro visitante do site publicado ele fica escondido. */
+  if (botao && (querEditar || dentroDeIframe)) botao.classList.add('show');
+  if (botao) botao.addEventListener('click', entrar);
+  if (querEditar) entrar();
+})();
+</script>
