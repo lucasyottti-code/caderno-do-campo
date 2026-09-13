@@ -104,6 +104,15 @@ b,strong{font-weight:700}
 .video .dur{position:absolute;right:16px;bottom:14px;font-size:11px;letter-spacing:.1em;color:var(--verde-folha);font-variant-numeric:tabular-nums}
 .video-embed{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:#000;box-shadow:0 26px 44px -24px rgba(27,36,32,.55)}
 .video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-som{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;border:0;cursor:pointer;color:#fff;background:linear-gradient(0deg,rgba(20,41,28,.55),rgba(20,41,28,.15));font-family:var(--f-texto);text-align:center;padding:16px}
+.video-som[hidden]{display:none}
+.video-som__play{width:76px;height:76px;border-radius:50%;background:var(--ocre);color:var(--tinta);display:grid;place-items:center;box-shadow:0 10px 26px rgba(0,0,0,.45)}
+.video-som__play svg{margin-left:5px}
+.video-som__txt{font-size:16px;letter-spacing:.01em;text-shadow:0 1px 6px rgba(0,0,0,.55)}
+.video-som__txt b{font-weight:700}
+.video-som__mudo{position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(0,0,0,.5);padding:5px 9px;border-radius:20px}
+@media(prefers-reduced-motion:no-preference){.video-som__play{animation:vslpulse 2s ease-in-out infinite}}
+@keyframes vslpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 
 /* ---------- capa do livro (desenhada em código) ---------- */
 .capa-palco{display:flex;justify-content:center;padding:36px 0 8px}
@@ -279,7 +288,12 @@ body.editando .edit-toggle{display:none}
 <section class="sec sec--vsl" id="video">
   <div class="wrap--video">
     <div class="video-embed">
-      <iframe src="https://player.vimeo.com/video/1226280316?title=0&amp;byline=0&amp;portrait=0&amp;dnt=1" title="Vídeo de apresentação do Caderno do Campo" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" allowfullscreen loading="lazy"></iframe>
+      <iframe id="vsl" data-som="https://player.vimeo.com/video/1226280316?autoplay=1&amp;muted=0&amp;playsinline=1&amp;controls=1&amp;title=0&amp;byline=0&amp;portrait=0&amp;dnt=1" src="https://player.vimeo.com/video/1226280316?autoplay=1&amp;muted=1&amp;loop=1&amp;playsinline=1&amp;controls=0&amp;title=0&amp;byline=0&amp;portrait=0&amp;dnt=1" title="Vídeo de apresentação do Caderno do Campo" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" allowfullscreen loading="lazy"></iframe>
+      <button class="video-som" id="vsl-som" type="button" aria-label="Tocar o vídeo com som, desde o início">
+        <span class="video-som__mudo"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M15 8l6 8M21 8l-6 8" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg> tocando sem som</span>
+        <span class="video-som__play"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l14 8-14 8z" fill="currentColor"/></svg></span>
+        <span class="video-som__txt">Toque para ouvir <b>desde o início</b></span>
+      </button>
     </div>
     <div class="cta" id="cta-topo"><a class="btn" href="https://pay.kiwify.com.br/INdFS82" data-edit>Quero o Caderno do Campo por R$&nbsp;47</a></div>
   </div>
@@ -643,5 +657,19 @@ body.editando .edit-toggle{display:none}
   if (botao && (querEditar || dentroDeIframe)) botao.classList.add('show');
   if (botao) botao.addEventListener('click', entrar);
   if (querEditar) entrar();
+})();
+</script>
+
+<!-- VSL: teaser em autoplay no mudo (sem controles); ao tocar, recarrega do início com som e controles -->
+<script>
+(function(){
+  var iframe = document.getElementById('vsl');
+  var overlay = document.getElementById('vsl-som');
+  if(!iframe || !overlay) return;
+  overlay.addEventListener('click', function(){
+    overlay.hidden = true;
+    var comSom = iframe.getAttribute('data-som');
+    if(comSom) iframe.src = comSom;
+  });
 })();
 </script>
