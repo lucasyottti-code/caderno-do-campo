@@ -20,11 +20,14 @@
   --mata:#14291C;         /* fundo escuro: mata fechada */
   --mata-2:#1D3A28;       /* verde da capa */
   --verde-folha:#8FB58A;  /* rótulos sobre o fundo escuro */
-  --ocre:#E9B949;         /* amarelo de placa: botões */
+  --ocre:#E9B949;         /* amarelo de placa: detalhes */
+  --verde:#179A45;        /* verde de compra: botões */
+  --verde-2:#0F6E31;      /* sombra do verde */
+  --verde-hover:#1DB051;  /* verde aceso no hover */
   --ocre-2:#C9992E;       /* sombra do ocre */
   --ocre-claro:#F7E8B8;   /* marca-texto das pendências */
   --barro:#A3472A;        /* margem vermelha do caderno */
-  --destaque:#A67C18;     /* ocre escuro legível: destaque na headline sobre o papel */
+  --destaque:#158C3E;     /* verde legível: destaque na headline sobre o papel */
   --f-display:"Young Serif", Georgia, "Times New Roman", serif;
   --f-texto:"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --gutter:20px;
@@ -77,8 +80,8 @@ b,strong{font-weight:700}
 
 /* ---------- botões ---------- */
 .cta{margin-top:26px;text-align:center}
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:62px;padding:14px 22px;background:var(--ocre);color:var(--tinta);font-weight:700;font-size:18px;line-height:1.2;text-decoration:none;border-radius:6px;border-bottom:4px solid var(--ocre-2);text-align:center;transition:transform .12s ease,background .12s ease}
-.btn:hover{background:#F0C55C}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:62px;padding:14px 22px;background:var(--verde);color:#fff;font-weight:700;font-size:18px;line-height:1.2;text-decoration:none;border-radius:6px;border-bottom:4px solid var(--verde-2);text-align:center;transition:transform .12s ease,background .12s ease}
+.btn:hover{background:var(--verde-hover)}
 .btn:active{transform:translateY(2px);border-bottom-width:2px}
 .btn--grande{font-size:20px;min-height:68px;text-transform:uppercase;letter-spacing:.05em}
 .btn__sub{display:block;text-align:center;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-2);margin-top:14px;line-height:1.6}
@@ -106,7 +109,7 @@ b,strong{font-weight:700}
 .video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .video-som{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;border:0;cursor:pointer;color:#fff;background:linear-gradient(0deg,rgba(20,41,28,.55),rgba(20,41,28,.15));font-family:var(--f-texto);text-align:center;padding:16px}
 .video-som[hidden]{display:none}
-.video-som__play{width:76px;height:76px;border-radius:50%;background:var(--ocre);color:var(--tinta);display:grid;place-items:center;box-shadow:0 10px 26px rgba(0,0,0,.45)}
+.video-som__play{width:76px;height:76px;border-radius:50%;background:var(--verde);color:#fff;display:grid;place-items:center;box-shadow:0 10px 26px rgba(0,0,0,.45)}
 .video-som__play svg{margin-left:5px}
 .video-som__txt{font-size:16px;letter-spacing:.01em;text-shadow:0 1px 6px rgba(0,0,0,.55)}
 .video-som__txt b{font-weight:700}
@@ -247,7 +250,7 @@ b,strong{font-weight:700}
 /* ---------- botão fixo (só celular) ---------- */
 .fixo{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:10px var(--gutter) max(10px,env(safe-area-inset-bottom));background:rgba(241,242,234,.96);border-top:1px solid var(--linha);transform:translateY(110%);transition:transform .25s ease;backdrop-filter:blur(6px)}
 .fixo.on{transform:none}
-.fixo .btn{min-height:54px;font-size:17px}
+.fixo .btn{min-height:54px;font-size:18px}
 @media(min-width:720px){.fixo{display:none}}
 @media(prefers-reduced-motion:reduce){.fixo{transition:none}}
 
@@ -265,6 +268,7 @@ body.editando{padding-top:calc(var(--tarja) + 46px)}
 .edit-toggle.show{display:inline-flex}
 .edit-toggle:hover{filter:brightness(1.08)}
 body.editando .edit-toggle{display:none}
+.painel-toggle{top:calc(var(--tarja) + 52px);background:var(--mata);text-decoration:none}
 @media print{.edit-toggle{display:none}}
 </style>
 
@@ -543,6 +547,7 @@ body.editando .edit-toggle{display:none}
 
 <!-- botão pra ligar o modo de edição da copy (só pra rascunhar o texto) -->
 <button class="edit-toggle" id="edit-toggle" type="button">✎ Editar texto</button>
+<a class="edit-toggle painel-toggle" id="painel-toggle" href="painel.html"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10h3v10H4zm6.5 0V4h3v16h-3zM17 20v-7h3v7h-3z" fill="currentColor"/></svg> Painel</a>
 
 <!-- botão fixo no celular: aparece depois que o botão da VSL sai da tela -->
 <div class="fixo" id="fixo" aria-hidden="true">
@@ -652,9 +657,17 @@ body.editando .edit-toggle{display:none}
   var botao = document.getElementById('edit-toggle');
   var querEditar = /[?#&]editar\b/.test(location.search + location.hash);
   var dentroDeIframe = (function(){ try{ return window.self !== window.top; }catch(e){ return true; } })();
-  /* Botão de edição só aparece pro Lucas: dentro do preview (iframe) ou com ?editar na URL.
-     Pro visitante do site publicado ele fica escondido. */
-  if (botao && (querEditar || dentroDeIframe)) botao.classList.add('show');
+  /* Botões "Editar texto" e "Painel" só aparecem pro administrador:
+     aparelho marcado (abriu o painel, ?admin ou ?editar) ou dentro do preview.
+     Pro visitante do site publicado eles ficam escondidos. */
+  var qsAdm = location.search + location.hash;
+  var ehAdmin = querEditar || /[?#&]admin\b/.test(qsAdm);
+  try { ehAdmin = !/[?#&]sair-admin\b/.test(qsAdm) && (ehAdmin || localStorage.getItem('cc_admin') === '1'); } catch(e){}
+  var painelBtn = document.getElementById('painel-toggle');
+  if (ehAdmin || dentroDeIframe) {
+    if (botao) botao.classList.add('show');
+    if (painelBtn) painelBtn.classList.add('show');
+  }
   if (botao) botao.addEventListener('click', entrar);
   if (querEditar) entrar();
 })();
@@ -673,3 +686,7 @@ body.editando .edit-toggle{display:none}
   });
 })();
 </script>
+
+<!-- análise do site: IDs em assets/config.js -->
+<script src="assets/config.js"></script>
+<script src="assets/analytics.js"></script>

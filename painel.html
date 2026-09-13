@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel · Caderno do Campo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --papel:#F1F2EA;--folha:#FBFBF6;--tinta:#1B2420;--tinta-2:#4F5A53;--linha:#D3D7CB;
+  --mata:#14291C;--verde-folha:#8FB58A;--verde:#179A45;--verde-2:#0F6E31;
+  --ocre:#E9B949;--ocre-claro:#F7E8B8;--barro:#A3472A;
+  --f-display:"Young Serif",Georgia,"Times New Roman",serif;
+  --f-texto:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--f-texto);font-size:16px;line-height:1.55}
+a{color:var(--barro)}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
+p{margin:0}
+:focus-visible{outline:3px solid var(--tinta);outline-offset:2px}
+
+.topo{background:var(--mata);color:var(--papel);padding:18px 20px 22px}
+.topo__in{max-width:980px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 20px}
+.topo small{display:block;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--verde-folha)}
+.topo h1{font-size:clamp(26px,5vw,36px);margin-top:4px}
+.topo a{color:var(--papel);font-size:14px}
+
+.wrap{max-width:980px;margin:0 auto;padding:22px 20px 90px;display:grid;grid-template-columns:minmax(0,1fr);gap:22px}
+.card{min-width:0}
+.status{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;padding:6px 11px;border-radius:20px;background:var(--folha);border:1px solid var(--linha)}
+.chip::before{content:"";width:8px;height:8px;border-radius:50%;background:#B7BDB3}
+.chip.ok::before{background:var(--verde)}
+.chip.pend::before{background:var(--ocre)}
+
+.card{background:var(--folha);border:1px solid var(--linha);border-radius:10px;padding:20px}
+.card h2{font-size:23px;margin-bottom:6px}
+.card .sub{color:var(--tinta-2);font-size:15px;margin-bottom:16px;max-width:65ch}
+.card h3{font-family:var(--f-texto);font-weight:700;font-size:15px;margin:18px 0 6px}
+
+.atalhos{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(215px,1fr))}
+.atalho{display:block;text-decoration:none;color:var(--tinta);background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:12px 14px}
+.atalho b{display:block;font-size:15px}
+.atalho span{display:block;font-size:13px;color:var(--tinta-2);margin-top:2px}
+.atalho:hover{border-color:var(--verde)}
+
+.passos{margin:0;padding-left:22px;display:grid;gap:10px}
+.passos li::marker{font-weight:700;color:var(--barro)}
+.passos b{font-weight:700}
+.nota{margin-top:14px;font-size:14px;color:var(--tinta-2);background:var(--ocre-claro);border-radius:6px;padding:10px 12px}
+
+.embed{width:100%;height:1150px;border:1px solid var(--linha);border-radius:8px;overflow:hidden;background:#fff}
+.embed iframe{width:100%;height:100%;border:0;display:block}
+
+.funil{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.funil li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--papel);border-radius:8px;padding:12px 14px;border-left:4px solid var(--verde)}
+.funil .n{font-family:var(--f-display);font-size:22px;color:var(--verde-2);line-height:1}
+.funil b{display:block}
+.funil span{display:block;font-size:14px;color:var(--tinta-2)}
+.funil code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
+
+.tabela{overflow-x:auto;border:1px solid var(--linha);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--linha);vertical-align:top}
+th{background:#E6E8DC;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+tr:last-child td{border-bottom:0}
+td code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px;white-space:nowrap}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.melhorias{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.melhorias label{display:grid;grid-template-columns:22px 1fr;gap:12px;align-items:start;background:var(--papel);border-radius:8px;padding:12px 14px;cursor:pointer}
+.melhorias input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--verde)}
+.melhorias b{display:block}
+.melhorias span{display:block;font-size:14px;color:var(--tinta-2);margin-top:2px}
+.melhorias label.feito b{text-decoration:line-through;color:var(--tinta-2)}
+.melhorias .pri{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:4px;padding:1px 6px;margin-right:6px;vertical-align:1px}
+.pri.alta{background:#F4D6CC;color:#8A3218}
+.pri.media{background:var(--ocre-claro);color:#6B5314}
+.pri.baixa{background:#DCE8DA;color:#2C5A2E}
+
+.botao{display:inline-block;font:inherit;font-weight:700;border:0;border-radius:6px;padding:10px 16px;background:var(--verde);color:#fff;cursor:pointer;text-decoration:none}
+.botao.sec{background:transparent;color:var(--tinta);border:1px solid var(--linha)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="topo__in">
+    <div><small>Área do administrador</small><h1>Painel do Caderno do Campo</h1></div>
+    <a href="index.html">← Ver o site</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="status" id="status" aria-live="polite"></div>
+
+  <!-- 1. Números ao vivo -->
+  <section class="card" id="ao-vivo">
+    <h2>Números ao vivo</h2>
+    <p class="sub">Acessos, origem das visitas, cliques nos botões e taxas, direto do Google Analytics.</p>
+    <div class="embed" id="embed" hidden></div>
+    <div id="setup">
+      <p class="sub" style="margin-bottom:12px">Pra este painel mostrar os números, falta ligar as ferramentas. É grátis e leva uns 10 minutos:</p>
+      <ol class="passos">
+        <li><b>Microsoft Clarity</b> (mapa de calor e gravações): entre em <a href="https://clarity.microsoft.com" target="_blank" rel="noopener">clarity.microsoft.com</a> com sua conta Google, crie um projeto com o nome "Caderno do Campo" e o site <b>https://jucadamata.com.br</b>. Em Configurações, copie o <b>ID do projeto</b> (um código curto, tipo <code>abcd1234ef</code>).</li>
+        <li><b>Google Analytics 4</b> (acessos e eventos): em <a href="https://analytics.google.com" target="_blank" rel="noopener">analytics.google.com</a>, crie uma propriedade "Caderno do Campo" (fuso de Brasília, moeda Real) e um fluxo de dados <b>Web</b> com o endereço do site. Copie o <b>ID da métrica</b>, no formato <code>G-XXXXXXXXXX</code>.</li>
+        <li><b>Mande os dois IDs no chat.</b> Eu coloco no site e publico. A partir daí, os dados começam a chegar.</li>
+        <li><b>Relatório ao vivo aqui no painel</b> (Looker Studio): em <a href="https://lookerstudio.google.com" target="_blank" rel="noopener">lookerstudio.google.com</a>, crie um relatório com o conector Google Analytics e a sua propriedade. Depois vá em Compartilhar › Incorporar relatório › ativar incorporação, e me mande o link. Deixe o compartilhamento <b>restrito à sua conta</b>: assim só você vê os números aqui.</li>
+        <li><b>Marque a conversão</b>: no Google Analytics, em Administrador › Eventos, marque <code>begin_checkout</code> como evento principal. Ele aparece depois do primeiro clique num botão de compra.</li>
+      </ol>
+      <p class="nota">Os IDs não são senha: eles aparecem no código de qualquer site que usa essas ferramentas, então pode mandar tranquilo.</p>
+    </div>
+  </section>
+
+  <!-- 2. Atalhos -->
+  <section class="card">
+    <h2>Atalhos</h2>
+    <p class="sub">Cada ferramenta mostra uma parte da história. Os links abrem na sua conta.</p>
+    <div class="atalhos">
+      <a class="atalho" id="lk-clarity" href="https://clarity.microsoft.com" target="_blank" rel="noopener"><b>Mapa de calor e gravações</b><span>Microsoft Clarity: onde tocam, até onde rolam, onde travam</span></a>
+      <a class="atalho" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener"><b>Acessos e eventos</b><span>Google Analytics: visitas, origem, cliques por botão</span></a>
+      <a class="atalho" href="https://dashboard.kiwify.com.br" target="_blank" rel="noopener"><b>Vendas e checkout</b><span>Kiwify: vendas, conversão do checkout, abandono</span></a>
+      <a class="atalho" id="lk-vimeo" href="https://vimeo.com/manage/videos" target="_blank" rel="noopener"><b>Retenção do vídeo</b><span>Vimeo: quantos assistem e até quando</span></a>
+      <a class="atalho" href="index.html?editar"><b>Editar texto do site</b><span>Abre a página no modo de edição</span></a>
+    </div>
+  </section>
+
+  <!-- 3. Funil -->
+  <section class="card">
+    <h2>O funil da página</h2>
+    <p class="sub">A venda acontece em etapas. Olhe a taxa de cada passagem: a etapa com a maior queda é onde mexer primeiro.</p>
+    <ol class="funil">
+      <li><span class="n">1</span><div><b>Visitou a página</b><span>Evento <code>page_view</code> no Analytics. É a base de todas as taxas.</span></div></li>
+      <li><span class="n">2</span><div><b>Tocou pra ouvir o vídeo</b><span>Evento <code>vsl_play_com_som</code>. Taxa de play = plays ÷ visitas.</span></div></li>
+      <li><span class="n">3</span><div><b>Chegou na oferta</b><span>Evento <code>secao_vista</code> com seção <code>oferta</code>. Taxa = chegaram na oferta ÷ visitas.</span></div></li>
+      <li><span class="n">4</span><div><b>Clicou num botão de compra</b><span>Evento <code>clique_comprar</code>. Taxa de clique = cliques ÷ visitas.</span></div></li>
+      <li><span class="n">5</span><div><b>Comprou</b><span>Vendas na Kiwify. Conversão do checkout = vendas ÷ cliques. Conversão geral = vendas ÷ visitas.</span></div></li>
+    </ol>
+    <h3>Referência aproximada pra comparar</h3>
+    <p class="sub" style="margin-bottom:10px">Faixas comuns em páginas de produto digital barato no Brasil. Servem de ponto de partida, não de meta: variam muito com a origem do tráfego.</p>
+    <div class="tabela">
+      <table>
+        <thead><tr><th>Passagem</th><th>Faixa comum</th><th>Se estiver abaixo</th></tr></thead>
+        <tbody>
+          <tr><td>Visita → clique no botão</td><td class="num">5% a 15%</td><td>Testar headline, primeiro botão e a parte de cima da página</td></tr>
+          <tr><td>Clique → compra (checkout)</td><td class="num">20% a 40%</td><td>Olhar o checkout da Kiwify: preço, formas de pagamento, recuperação de carrinho</td></tr>
+          <tr><td>Visita → compra (geral)</td><td class="num">1% a 3%</td><td>Ver qual das duas passagens acima está puxando pra baixo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 4. Eventos -->
+  <section class="card">
+    <h2>O que o site registra</h2>
+    <p class="sub">Os nomes que você vai encontrar no Google Analytics (Relatórios › Engajamento › Eventos) e no Clarity (filtro "Eventos personalizados").</p>
+    <div class="tabela">
+      <table>
+        <thead><tr><th>Evento</th><th>Quando acontece</th><th>Pra que serve</th></tr></thead>
+        <tbody>
+          <tr><td><code>page_view</code></td><td>Alguém abriu a página</td><td>Contar acessos</td></tr>
+          <tr><td><code>vsl_play_com_som</code></td><td>Tocou pra ouvir o vídeo desde o início</td><td>Saber se o vídeo prende</td></tr>
+          <tr><td><code>clique_comprar</code></td><td>Clicou em qualquer botão de compra. O campo <code>local</code> diz qual: <code>video</code>, <code>plano</code>, <code>dentro</code>, <code>oferta</code>, <code>final</code> ou <code>fixo</code> (barra do celular)</td><td>Ver qual botão vende mais</td></tr>
+          <tr><td><code>begin_checkout</code></td><td>O mesmo clique, no formato padrão do Google</td><td>Marcar como conversão</td></tr>
+          <tr><td><code>clique_tarja</code></td><td>Tocou na faixa do preço no topo</td><td>Ver se a faixa chama atenção</td></tr>
+          <tr><td><code>secao_vista</code></td><td>Chegou em cada bloco da página (campo <code>secao</code>)</td><td>Ver em que bloco as pessoas desistem</td></tr>
+          <tr><td><code>rolagem</code></td><td>Rolou 25%, 50%, 75% e 90% da página</td><td>Ver quanto da página é lida</td></tr>
+          <tr><td><code>faq_abrir</code></td><td>Abriu uma pergunta (campo <code>pergunta</code>)</td><td>Descobrir as dúvidas mais comuns</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Origem das visitas</h3>
+    <p class="sub" style="margin-bottom:0">Nos links de anúncio e de descrição de vídeo, use UTMs, por exemplo <code>jucadamata.com.br/?utm_source=youtube&amp;utm_campaign=video12</code>. O site repassa esses dados pro checkout, então dá pra ver na Kiwify qual vídeo ou anúncio gerou cada venda.</p>
+  </section>
+
+  <!-- 5. Mapa de calor -->
+  <section class="card">
+    <h2>Como ler o mapa de calor</h2>
+    <p class="sub">No Clarity, abra Mapas de calor e escolha "Celular", que é onde está a maior parte do seu público.</p>
+    <ol class="passos">
+      <li><b>Cliques:</b> muitos toques em algo que não é botão (uma foto, a capa do livro, um preço) mostram que as pessoas esperavam que aquilo fosse clicável.</li>
+      <li><b>Rolagem:</b> a faixa onde a cor esfria é onde a maioria para de ler. O que estiver abaixo dela quase ninguém vê.</li>
+      <li><b>Gravações:</b> assista a 10 visitas que não compraram. Procure "cliques de raiva" (vários toques rápidos no mesmo lugar) e rolagens pra cima e pra baixo, que indicam confusão.</li>
+    </ol>
+  </section>
+
+  <!-- 6. Melhorias -->
+  <section class="card">
+    <h2>Melhorias sugeridas</h2>
+    <p class="sub">Revisão da página hoje, em ordem de prioridade. Marque o que já foi feito: fica salvo neste aparelho.</p>
+    <ul class="melhorias" id="melhorias">
+      <li><label><input type="checkbox" data-id="m1"><div><b><span class="pri alta">Alta</span>Alinhar a escassez</b><span>O contador reinicia em ~2h a cada visita, e a oferta diz "termina domingo". Quem volta vê o relógio recomeçar, e isso quebra a confiança. Escassez falsa também pode ser vista como propaganda enganosa. Escolha uma data real e use a mesma nos dois lugares.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m2"><div><b><span class="pri alta">Alta</span>Confirmar o preço "de R$ 97"</b><span>O preço riscado só deve aparecer se o produto foi ou vai ser vendido por esse valor.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m3"><div><b><span class="pri alta">Alta</span>Preencher os dados legais</b><span>Razão social, CNPJ, e-mail de contato e foro nas páginas de Privacidade e Termos. Passa confiança e é exigido pela LGPD.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m4"><div><b><span class="pri media">Média</span>Medir a taxa de play do vídeo</b><span>Se menos de 1 em cada 5 visitantes tocar pra ouvir, teste outra frase no aviso do vídeo ou outra capa.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m5"><div><b><span class="pri media">Média</span>Encurtar a lista dos 13 cadernos no celular</b><span>É o trecho mais longo da página. Se o mapa de rolagem mostrar que muita gente para ali, recolha a lista num botão "ver todos os capítulos".</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m6"><div><b><span class="pri media">Média</span>Comparar os cliques por botão</b><span>Com o campo <code>local</code> do evento <code>clique_comprar</code>, veja qual botão vende. O melhor pode ganhar mais destaque, e o que ninguém usa pode sair.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m7"><div><b><span class="pri media">Média</span>Mostrar a garantia perto do primeiro botão</b><span>Uma linha "7 dias de garantia" logo abaixo do botão do vídeo diminui o medo de comprar.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m8"><div><b><span class="pri media">Média</span>Usar UTMs em todo link que você divulgar</b><span>Descrição dos vídeos, comentário fixado e anúncios. Sem isso, não dá pra saber de onde vêm as vendas.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m9"><div><b><span class="pri media">Média</span>Ativar a recuperação de carrinho na Kiwify</b><span>Quem clica e não paga recebe um lembrete por e-mail ou WhatsApp. Costuma recuperar parte das vendas perdidas.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m10"><div><b><span class="pri baixa">Baixa</span>Trocar a capa desenhada por uma arte real</b><span>Uma foto ou mockup do livro no celular deixa o produto mais concreto.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m11"><div><b><span class="pri baixa">Baixa</span>Somar prints reais de clientes</b><span>Mensagens de WhatsApp e comentários do canal são a prova social mais forte.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m12"><div><b><span class="pri baixa">Baixa</span>Levar o vídeo pro Panda Video ou VTurb</b><span>Quando tiver volume de visitas: mostram a retenção segundo a segundo e onde as pessoas saem antes da oferta.</span></div></label></li>
+    </ul>
+  </section>
+
+  <!-- 7. Este aparelho -->
+  <section class="card">
+    <h2>Este aparelho</h2>
+    <p class="sub" id="admin-txt"></p>
+    <button class="botao sec" id="admin-btn" type="button"></button>
+  </section>
+</main>
+
+<script src="assets/config.js"></script>
+<script>
+(function(){
+  var C = window.CC_CONFIG || {};
+
+  /* Abrir o painel marca este aparelho como administrador:
+     suas visitas ao site deixam de entrar nas estatísticas. */
+  var admin = true;
+  try { localStorage.setItem('cc_admin','1'); } catch(e) {}
+
+  /* Status */
+  var st = document.getElementById('status');
+  function chip(txt, ok){ var s=document.createElement('span'); s.className='chip '+(ok?'ok':'pend'); s.textContent=txt; st.appendChild(s); }
+  chip(C.ga4 ? 'Google Analytics ligado' : 'Google Analytics pendente', !!C.ga4);
+  chip(C.clarity ? 'Clarity ligado' : 'Clarity pendente', !!C.clarity);
+  chip(C.lookerEmbed ? 'Relatório ao vivo ligado' : 'Relatório ao vivo pendente', !!C.lookerEmbed);
+
+  /* Relatório ao vivo */
+  if (C.lookerEmbed) {
+    var box = document.getElementById('embed');
+    var f = document.createElement('iframe');
+    f.src = C.lookerEmbed;
+    f.title = 'Relatório do Google Analytics';
+    f.setAttribute('allowfullscreen','');
+    f.setAttribute('sandbox','allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
+    box.appendChild(f);
+    box.hidden = false;
+    document.getElementById('setup').hidden = true;
+  }
+
+  /* Links com os IDs */
+  if (C.clarity) document.getElementById('lk-clarity').href = 'https://clarity.microsoft.com/projects/view/' + encodeURIComponent(C.clarity) + '/dashboard';
+  if (C.vimeoId) document.getElementById('lk-vimeo').href = 'https://vimeo.com/manage/videos/' + encodeURIComponent(C.vimeoId);
+
+  /* Melhorias: salvar o que já foi feito */
+  var KEY='cc_melhorias', feitos={};
+  try { feitos = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+  [].forEach.call(document.querySelectorAll('#melhorias input'), function(inp){
+    var id = inp.getAttribute('data-id');
+    var lab = inp.closest('label');
+    inp.checked = !!feitos[id];
+    lab.classList.toggle('feito', inp.checked);
+    inp.addEventListener('change', function(){
+      feitos[id] = inp.checked;
+      lab.classList.toggle('feito', inp.checked);
+      try { localStorage.setItem(KEY, JSON.stringify(feitos)); } catch(e) {}
+    });
+  });
+
+  /* Este aparelho */
+  var txt = document.getElementById('admin-txt'), btn = document.getElementById('admin-btn');
+  function render(){
+    var a = false; try { a = localStorage.getItem('cc_admin') === '1'; } catch(e) {}
+    txt.textContent = a
+      ? 'Este aparelho está marcado como administrador. Suas visitas ao site não entram nas estatísticas, e o site mostra os botões "Editar texto" e "Painel" pra você.'
+      : 'Este aparelho não está marcado. Suas visitas contam nas estatísticas como as de qualquer visitante.';
+    btn.textContent = a ? 'Desmarcar este aparelho' : 'Marcar como administrador';
+  }
+  btn.addEventListener('click', function(){
+    try {
+      if (localStorage.getItem('cc_admin') === '1') localStorage.removeItem('cc_admin');
+      else localStorage.setItem('cc_admin','1');
+    } catch(e) {}
+    render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>

@@ -24,3 +24,11 @@ As mudanças ficam só no seu navegador (rascunho) — depois é só passar o te
 - Definir data real do fim do preço de lançamento (contador em `index.html`, variável `JANELA_MS` / `DATA_FIM`).
 - Link real do checkout (botão "Pegar o Caderno", `href="#checkout"`).
 - Preencher razão social, CNPJ e contatos de suporte no rodapé.
+
+## Análise do site (painel)
+- Painel: `https://jucadamata.com.br/painel.html` (não aparece no Google). Abrir o painel marca o aparelho como administrador: suas visitas não contam nas estatísticas e o site passa a mostrar os botões "Editar texto" e "Painel".
+- Ferramentas: Google Analytics 4 (acessos, origem, eventos) e Microsoft Clarity (mapa de calor, gravações). Os IDs ficam em `assets/config.js`; vazio = desligado.
+- Só carregam depois do "Aceitar" no aviso de cookies (LGPD). Código em `assets/analytics.js`.
+- Eventos: `clique_comprar` (campo `local`), `begin_checkout`, `vsl_play_com_som`, `clique_tarja`, `secao_vista`, `rolagem`, `faq_abrir`.
+- UTMs da URL são repassadas pro checkout da Kiwify.
+- Para desmarcar um aparelho: botão no painel ou abrir o site com `?sair-admin`.
