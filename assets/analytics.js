@@ -22,6 +22,19 @@
   var emIframe = (function () { try { return window.self !== window.top; } catch (e) { return true; } })();
   window.CC_ADMIN = admin;
 
+  /* ---------- equipe: aparelho fora das estatísticas, sem botões de admin ---------- */
+  var equipe = false;
+  try {
+    if (/[?#&]sair-equipe\b/.test(qs)) localStorage.removeItem('cc_equipe');
+    else if (/[?#&]equipe\b/.test(qs)) localStorage.setItem('cc_equipe', '1');
+    equipe = localStorage.getItem('cc_equipe') === '1';
+    if (/[?#&](sair-)?equipe\b/.test(qs) && window.history && history.replaceState) {
+      var limpa = location.search.replace(/[?&](sair-)?equipe\b[^&]*/g, '').replace(/^&/, '?');
+      history.replaceState(null, '', location.pathname + (limpa === '?' ? '' : limpa) + location.hash);
+    }
+  } catch (e) {}
+  if (equipe) admin = true;   // mesma regra do admin pra medição: não conta
+
   /* ---------- origem do tráfego -> checkout ---------- */
   var links = [].slice.call(document.querySelectorAll('a[href*="pay.kiwify.com.br"]'));
   var params = null;

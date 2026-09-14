@@ -201,7 +201,7 @@ code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
       <button type="button" data-dias="90">90 dias</button>
     </div>
     <button class="btn-sec" type="button" id="btn-atualizar">Atualizar</button>
-    <span class="ao-vivo" id="ao-vivo" title="Pessoas com atividade nos últimos 5 minutos"><i aria-hidden="true"></i><span id="ao-vivo-n">0 pessoas agora</span></span>
+    <span class="ao-vivo" id="ao-vivo" title="Pessoas com atividade nos últimos 5 minutos"><i aria-hidden="true"></i><span id="ao-vivo-n">— agora</span></span>
     <span class="atualizado" id="atualizado"></span>
   </div>
   <div class="aviso" id="msg" hidden></div>
@@ -869,23 +869,58 @@ code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
   window.ccPainel = { render: render };
 
   function aviso(t, erro) { var m = $('msg'); if (!t) { m.hidden = true; return; } m.textContent = t; m.className = 'aviso' + (erro ? ' erro' : ''); m.hidden = false; }
-  function carregar(fresco) {
+  /* Busca dos números: mostra o último resultado na hora, busca por trás,
+     não empilha consultas, tenta de novo uma vez e só então avisa. */
+  var buscando = null;
+  function chaveCache() { return 'cc_dados_' + DIAS; }
+  function mostrarCache() {
+    try {
+      var c = JSON.parse(localStorage.getItem(chaveCache()) || 'null');
+      if (c && c.ok) { render(c); return true; }
+    } catch (e) {}
+    return false;
+  }
+  function carregar(fresco, tentativa) {
     var chave = lerChave();
     $('setup').hidden = !!(C.coletor && chave);
     $('setup-coletor').hidden = !!C.coletor;
     $('setup-chave').hidden = !C.coletor || !!chave;
     if (!C.coletor || !chave) return;
+    if (buscando) { if (!fresco) return; buscando.abort(); }
+    var ctrl = new AbortController(), diasPedido = DIAS;
+    buscando = ctrl;
+    var limite = setTimeout(function () { ctrl.abort(); }, 45000);
     $('wrap').classList.add('carregando');
-    var u = C.coletor + (C.coletor.indexOf('?') > -1 ? '&' : '?') + 'k=' + encodeURIComponent(chave) + '&dias=' + DIAS + (fresco ? '&fresco=1' : '') + '&_=' + Date.now();
-    fetch(u).then(function (r) { return r.json(); }).then(function (j) {
+    $('atualizado').textContent = 'Buscando os números…';
+    var u = C.coletor + (C.coletor.indexOf('?') > -1 ? '&' : '?') + 'k=' + encodeURIComponent(chave) + '&dias=' + diasPedido + (fresco ? '&fresco=1' : '') + '&_=' + Date.now();
+    fetch(u, { signal: ctrl.signal, cache: 'no-store' }).then(function (r) {
+      if (!r.ok) throw new Error('o servidor respondeu ' + r.status);
+      return r.text();
+    }).then(function (t) {
+      var j;
+      try { j = JSON.parse(t); } catch (e) { throw new Error('resposta inesperada da planilha'); }
       if (!j || !j.ok) {
-        aviso(j && j.erro === 'chave' ? 'A chave do painel não confere. Use o botão "Trocar a chave do painel", lá embaixo, e cole de novo.' : 'O coletor respondeu com erro. Tente de novo em instantes.', true);
+        aviso(j && j.erro === 'chave' ? 'A chave do painel não confere. Use o botão "Trocar a chave do painel", lá embaixo, e cole de novo.' : 'A planilha respondeu com erro. Tente de novo em instantes.', true);
         return;
       }
-      aviso(''); render(j);
-    }).catch(function () {
-      aviso('Não consegui buscar os dados agora. Confira a internet e toque em "Atualizar".', true);
-    }).then(function () { $('wrap').classList.remove('carregando'); });
+      if (diasPedido !== DIAS) return;   // o período mudou enquanto buscava
+      aviso('');
+      try { localStorage.setItem('cc_dados_' + diasPedido, t); } catch (e) {}
+      render(j);
+    }).catch(function (e) {
+      if (buscando !== ctrl) return;   // substituída por uma busca mais nova
+      if (!tentativa) { buscando = null; setTimeout(function () { carregar(fresco, 1); }, 1500); return; }
+      var motivo = e && e.name === 'AbortError' ? 'a planilha demorou demais pra responder' : (e && e.message) || 'sem conexão';
+      aviso('Não consegui buscar os números agora (' + motivo + '). Mostrando os últimos que chegaram. Toque em "Atualizar" pra tentar de novo.', true);
+      if (dados) {
+        var h = new Date(dados.geradoEm);
+        $('atualizado').textContent = 'Números de ' + String(h.getHours()).padStart(2, '0') + ':' + String(h.getMinutes()).padStart(2, '0');
+      } else $('atualizado').textContent = '';
+    }).then(function () {
+      clearTimeout(limite);
+      if (buscando === ctrl) { buscando = null; $('wrap').classList.remove('carregando'); }
+      else if (!buscando) $('wrap').classList.remove('carregando');
+    });
   }
 
   // período
@@ -895,7 +930,7 @@ code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
     b.addEventListener('click', function () {
       DIAS = d; try { localStorage.setItem('cc_dias', String(d)); } catch (e) {}
       [].forEach.call(document.querySelectorAll('[data-dias]'), function (x) { x.setAttribute('aria-pressed', String(x === b)); });
-      carregar(false);
+      mostrarCache(); carregar(false);
     });
   });
   $('btn-atualizar').addEventListener('click', function () { carregar(true); });
@@ -914,7 +949,7 @@ code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
     try { localStorage.removeItem('cc_chave'); } catch (e) {}
     carregar(false); $('setup').scrollIntoView({ behavior: 'smooth' });
   });
-  setInterval(function () { if (document.visibilityState === 'visible') carregar(true); }, 60000);
+  setInterval(function () { if (document.visibilityState === 'visible' && !buscando) carregar(false); }, 60000);
 
   // atalhos com IDs
   if (C.clarity) $('lk-clarity').href = 'https://clarity.microsoft.com/projects/view/' + encodeURIComponent(C.clarity) + '/dashboard';
@@ -948,6 +983,7 @@ code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
   renderAdmin();
 
   iniciarMapa();
+  mostrarCache();
   carregar(false);
 })();
 </script>

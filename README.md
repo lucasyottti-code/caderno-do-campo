@@ -40,3 +40,8 @@ As mudanças ficam só no seu navegador (rascunho) — depois é só passar o te
 - A chave fica só no navegador de quem administra: abra `painel.html#chave=SUA_CHAVE` uma vez em cada aparelho.
 - O que é registrado: visita, origem (UTM ou site de origem), toques com posição relativa ao bloco (mapa de calor), cliques em comprar (por botão), play do vídeo, perguntas abertas, rolagem máxima, tempo e blocos vistos. Sem IP, sem cookie, sem identificador permanente.
 - Se trocar o código da planilha: Implantar › Gerenciar implantações › editar › Nova versão (o URL continua o mesmo).
+
+## Aparelhos da equipe (fora das estatísticas)
+- Tirar um aparelho da contagem, sem mostrar os botões de administrador: abrir `https://jucadamata.com.br/?equipe` uma vez, em cada navegador.
+- Voltar a contar: `https://jucadamata.com.br/?sair-equipe`.
+- Aba anônima ou limpar os dados do navegador desfaz a marcação.
