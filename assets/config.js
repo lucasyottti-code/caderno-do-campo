@@ -12,7 +12,7 @@ window.CC_CONFIG = {
 
   // Looker Studio — link de incorporação do relatório
   // (https://lookerstudio.google.com/embed/reporting/...)
-  lookerEmbed: '',
+  lookerEmbed: 'https://lookerstudio.google.com/embed/reporting/f78ae821-9113-47d3-8009-d68e43a266ac/page/vCs8F',
 
   checkout: 'https://pay.kiwify.com.br/INdFS82',
   vimeoId: '1226280316'
