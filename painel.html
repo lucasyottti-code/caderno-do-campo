@@ -521,14 +521,15 @@ code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
     svg.appendChild(pl); svg.appendChild(c);
     return svg;
   }
+  function qtd(n, um, varios) { return num.format(n) + ' ' + (n === 1 ? um : varios); }
   function renderKpis(D) {
     var R = D.resumo, N = R.visitas, box = $('kpis'); box.textContent = '';
     var taxa = function (x) { return N ? pct(x / N) : '—'; };
-    box.appendChild(kpi('Visitas', num.format(N), num.format(R.sessoes) + ' pessoas diferentes',
+    box.appendChild(kpi('Visitas', num.format(N), qtd(R.sessoes, 'pessoa diferente', 'pessoas diferentes'),
       DIAS > 1 ? sparkline(D.porDia.map(function (d) { return d.visitas; })) : null));
-    box.appendChild(kpi('Tocaram no vídeo', taxa(R.pvPlay), num.format(R.pvPlay) + ' visitas'));
-    box.appendChild(kpi('Chegaram na oferta', taxa(R.pvOferta), num.format(R.pvOferta) + ' visitas'));
-    box.appendChild(kpi('Clicaram em comprar', taxa(R.pvClique), num.format(R.cliques) + ' cliques no total'));
+    box.appendChild(kpi('Tocaram no vídeo', taxa(R.pvPlay), qtd(R.pvPlay, 'visita', 'visitas')));
+    box.appendChild(kpi('Chegaram na oferta', taxa(R.pvOferta), qtd(R.pvOferta, 'visita', 'visitas')));
+    box.appendChild(kpi('Clicaram em comprar', taxa(R.pvClique), qtd(R.cliques, 'clique no total', 'cliques no total')));
     box.appendChild(kpi('Tempo médio na página', tempo(R.tempoMedio), 'por visita'));
     box.appendChild(kpi('Rolagem média', R.rolagemMedia ? R.rolagemMedia + '%' : '—', 'da página vista'));
   }
