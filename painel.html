@@ -880,6 +880,7 @@ code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
     } catch (e) {}
     return false;
   }
+  function horaDe(iso) { var h = new Date(iso); return String(h.getHours()).padStart(2, '0') + ':' + String(h.getMinutes()).padStart(2, '0'); }
   function carregar(fresco, tentativa) {
     var chave = lerChave();
     $('setup').hidden = !!(C.coletor && chave);
@@ -887,18 +888,21 @@ code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
     $('setup-chave').hidden = !C.coletor || !!chave;
     if (!C.coletor || !chave) return;
     if (buscando) { if (!fresco) return; buscando.abort(); }
-    var ctrl = new AbortController(), diasPedido = DIAS;
+    var ctrl = new AbortController(), diasPedido = DIAS, n = tentativa || 0;
     buscando = ctrl;
-    var limite = setTimeout(function () { ctrl.abort(); }, 45000);
-    $('wrap').classList.add('carregando');
-    $('atualizado').textContent = 'Buscando os números…';
+    var limite = setTimeout(function () { ctrl.abort(); }, 40000);
+    var temDoPeriodo = !!(dados && dados.dias === diasPedido);
+    // Com os números do período já na tela, busca por trás sem escurecer nada.
+    $('wrap').classList.toggle('carregando', !temDoPeriodo);
+    $('atualizado').textContent = temDoPeriodo ? 'Atualizando… · números de ' + horaDe(dados.geradoEm)
+      : 'Buscando os números… pode levar alguns segundos';
     var u = C.coletor + (C.coletor.indexOf('?') > -1 ? '&' : '?') + 'k=' + encodeURIComponent(chave) + '&dias=' + diasPedido + (fresco ? '&fresco=1' : '') + '&_=' + Date.now();
     fetch(u, { signal: ctrl.signal, cache: 'no-store' }).then(function (r) {
-      if (!r.ok) throw new Error('o servidor respondeu ' + r.status);
+      if (!r.ok) throw new Error('o Google respondeu ' + r.status);
       return r.text();
     }).then(function (t) {
       var j;
-      try { j = JSON.parse(t); } catch (e) { throw new Error('resposta inesperada da planilha'); }
+      try { j = JSON.parse(t); } catch (e) { throw new Error('resposta inesperada do Google'); }
       if (!j || !j.ok) {
         aviso(j && j.erro === 'chave' ? 'A chave do painel não confere. Use o botão "Trocar a chave do painel", lá embaixo, e cole de novo.' : 'A planilha respondeu com erro. Tente de novo em instantes.', true);
         return;
@@ -909,17 +913,20 @@ code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
       render(j);
     }).catch(function (e) {
       if (buscando !== ctrl) return;   // substituída por uma busca mais nova
-      if (!tentativa) { buscando = null; setTimeout(function () { carregar(fresco, 1); }, 1500); return; }
-      var motivo = e && e.name === 'AbortError' ? 'a planilha demorou demais pra responder' : (e && e.message) || 'sem conexão';
-      aviso('Não consegui buscar os números agora (' + motivo + '). Mostrando os últimos que chegaram. Toque em "Atualizar" pra tentar de novo.', true);
-      if (dados) {
-        var h = new Date(dados.geradoEm);
-        $('atualizado').textContent = 'Números de ' + String(h.getHours()).padStart(2, '0') + ':' + String(h.getMinutes()).padStart(2, '0');
-      } else $('atualizado').textContent = '';
+      // A entrega do Google às vezes demora ou dá 404: tenta de novo até 3 vezes.
+      if (n < 2) { buscando = null; setTimeout(function () { carregar(fresco, n + 1); }, n ? 5000 : 2000); return; }
+      var motivo = e && e.name === 'AbortError' ? 'o Google demorou demais pra responder' : (e && e.message) || 'sem conexão';
+      if (dados && dados.dias === diasPedido) {
+        aviso('');
+        $('atualizado').textContent = 'Não deu pra atualizar agora · números de ' + horaDe(dados.geradoEm);
+      } else {
+        aviso('Não consegui buscar os números agora (' + motivo + '). Toque em "Atualizar" pra tentar de novo.', true);
+        $('atualizado').textContent = '';
+      }
     }).then(function () {
       clearTimeout(limite);
-      if (buscando === ctrl) { buscando = null; $('wrap').classList.remove('carregando'); }
-      else if (!buscando) $('wrap').classList.remove('carregando');
+      if (buscando === ctrl) buscando = null;
+      if (!buscando) $('wrap').classList.remove('carregando');
     });
   }
 
