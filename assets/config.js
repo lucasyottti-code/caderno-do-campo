@@ -5,10 +5,10 @@
    ============================================================ */
 window.CC_CONFIG = {
   // Google Analytics 4 — "ID da métrica", formato G-XXXXXXXXXX
-  ga4: '',
+  ga4: 'G-0SC603SXSN',
 
   // Microsoft Clarity — ID do projeto (código curto, ex.: abcd1234ef)
-  clarity: '',
+  clarity: 'yi8etwv7cf',
 
   // Looker Studio — link de incorporação do relatório
   // (https://lookerstudio.google.com/embed/reporting/...)
