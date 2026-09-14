@@ -1,8 +1,11 @@
 /* ============================================================
-   ANÁLISE DO SITE — Google Analytics 4 + Microsoft Clarity
-   - Os IDs ficam em assets/config.js. Sem ID, nada é carregado.
-   - Só carrega depois que o visitante aceita o aviso de cookies (LGPD).
-   - Aparelho do administrador (abriu o painel, ?admin ou ?editar) fica fora das estatísticas.
+   ANÁLISE DO SITE
+   1) Medição própria do painel: anônima, sem cookies, conta todo mundo.
+      Manda os eventos pro coletor (planilha Google) definido em config.js.
+   2) Google Analytics 4 + Microsoft Clarity: só depois do "Aceitar"
+      no aviso de cookies (LGPD).
+   - Aparelho do administrador (abriu o painel, ?admin ou ?editar)
+     fica fora de tudo.
    - Repassa a origem do tráfego (UTM) pro checkout da Kiwify.
    ============================================================ */
 (function () {
@@ -21,10 +24,12 @@
 
   /* ---------- origem do tráfego -> checkout ---------- */
   var links = [].slice.call(document.querySelectorAll('a[href*="pay.kiwify.com.br"]'));
+  var params = null;
+  try { params = new URLSearchParams(location.search); } catch (e) {}
   try {
-    var p = new URLSearchParams(location.search), extra = [];
+    var extra = [];
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src', 'sck'].forEach(function (k) {
-      var v = p.get(k); if (v) extra.push([k, v]);
+      var v = params && params.get(k); if (v) extra.push([k, v]);
     });
     if (extra.length) links.forEach(function (a) {
       var u = new URL(a.href);
@@ -33,7 +38,125 @@
     });
   } catch (e) {}
 
-  /* ---------- envio de eventos ---------- */
+  function localDoBotao(a) {
+    var sec = a.closest('section');
+    return a.closest('.fixo') ? 'fixo' : (sec && sec.id) || 'outro';
+  }
+
+  /* ============================================================
+     1) MEDIÇÃO PRÓPRIA (painel) — anônima, sem cookies
+     Não guarda IP, nome nem identificador permanente. O código da
+     visita é aleatório e some ao fechar a aba.
+     ============================================================ */
+  if (C.coletor && !admin && !emIframe) (function () {
+    function rid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+    var pv = rid(), sid = pv;
+    try { sid = sessionStorage.getItem('cc_sid') || rid(); sessionStorage.setItem('cc_sid', sid); } catch (e) {}
+    var dev = window.innerWidth < 720 ? 'm' : 'd';
+    var fila = [], t0 = Date.now(), maxSc = 0, secs = { hero: 1 };
+
+    function add(o) { o.pv = pv; o.sid = sid; o.d = dev; fila.push(o); }
+    function enviar() {
+      if (!fila.length) return;
+      var corpo = JSON.stringify(fila.splice(0, fila.length));
+      try { if (navigator.sendBeacon && navigator.sendBeacon(C.coletor, corpo)) return; } catch (e) {}
+      try { fetch(C.coletor, { method: 'POST', body: corpo, mode: 'no-cors', keepalive: true }); } catch (e) {}
+    }
+
+    // visita + origem
+    var ref = '';
+    try {
+      if (document.referrer) {
+        var h = new URL(document.referrer).hostname.replace(/^www\./, '');
+        if (h && h !== location.hostname.replace(/^www\./, '')) ref = h;
+      }
+    } catch (e) {}
+    add({ t: 'v', o: (params && params.get('utm_source')) || ref || '', cp: (params && params.get('utm_campaign')) || '' });
+    enviar();
+
+    // rolagem: até onde a pessoa viu (parte de baixo da tela)
+    function medirRolagem() {
+      var h = document.documentElement.scrollHeight;
+      if (h > 0) maxSc = Math.max(maxSc, Math.min(100, (window.scrollY + window.innerHeight) / h * 100));
+    }
+    medirRolagem();
+    window.addEventListener('scroll', medirRolagem, { passive: true });
+
+    // blocos vistos
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (ents) {
+        ents.forEach(function (e) { if (e.isIntersecting) { secs[e.target.id] = 1; io.unobserve(e.target); } });
+      }, { rootMargin: '0px 0px -50% 0px' });
+      [].forEach.call(document.querySelectorAll('section[id]'), function (s) { io.observe(s); });
+    }
+
+    // toques e cliques (posição relativa ao bloco, pro mapa de calor)
+    function zonaDe(el) { return el.closest('.tarja, .fixo, .cookie, section[id], header.hero, footer.rodape'); }
+    function nomeZona(z) {
+      if (!z) return 'fora';
+      if (z.id) return z.id;
+      var c = z.classList;
+      return c.contains('tarja') ? 'tarja' : c.contains('fixo') ? 'fixo' : c.contains('cookie') ? 'cookie'
+        : c.contains('hero') ? 'hero' : c.contains('rodape') ? 'rodape' : 'fora';
+    }
+    function tipoAlvo(el) {
+      if (el.closest('a[href*="pay.kiwify.com.br"]')) return 'comprar';
+      if (el.closest('#vsl-som')) return 'video';
+      if (el.closest('.faq summary')) return 'pergunta';
+      if (el.closest('a')) return 'link';
+      if (el.closest('button')) return 'botao';
+      if (el.closest('img, .capa, .retrato, .dep__foto')) return 'imagem';
+      return 'texto';
+    }
+    var faqs = [].slice.call(document.querySelectorAll('.faq details'));
+    document.addEventListener('click', function (ev) {
+      var el = ev.target;
+      if (!el || !el.closest) return;
+      var z = zonaDe(el), nome = nomeZona(z), alvo = tipoAlvo(el), o = { t: 'c', z: nome, a: alvo };
+      if (z && !/^(tarja|fixo|cookie|fora)$/.test(nome)) {
+        var r = z.getBoundingClientRect();
+        if (r.width && r.height) {
+          o.x = (ev.clientX - r.left) / r.width * 100;
+          o.y = (ev.clientY - r.top) / r.height * 100;
+        }
+      }
+      add(o);
+      if (nome !== 'fora' && nome !== 'tarja' && nome !== 'fixo' && nome !== 'cookie') secs[nome] = 1;
+      if (alvo === 'comprar') {
+        var lk = el.closest('a[href*="pay.kiwify.com.br"]');
+        add({ t: 'b', a: localDoBotao(lk) });
+        resumo();
+      } else if (alvo === 'video') {
+        add({ t: 'p' });
+        enviar();
+      } else if (alvo === 'pergunta') {
+        var d = el.closest('details');
+        if (d && !d.open) add({ t: 'f', a: String(faqs.indexOf(d) + 1) });
+      }
+    }, true);
+
+    // resumo da visita: tempo, rolagem e blocos vistos
+    function resumo() {
+      medirRolagem();
+      // Blocos vistos também pela profundidade máxima: não depende só do detector
+      // de blocos, que alguns navegadores embutidos seguram em segundo plano.
+      try {
+        var fundo = maxSc / 100 * document.documentElement.scrollHeight - window.innerHeight / 2;
+        [].forEach.call(document.querySelectorAll('section[id]'), function (s) {
+          if (s.getBoundingClientRect().top + window.scrollY < fundo) secs[s.id] = 1;
+        });
+      } catch (e) {}
+      add({ t: 'l', a: Object.keys(secs).join(','), ms: Date.now() - t0, sc: maxSc });
+      enviar();
+    }
+    document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden') resumo(); });
+    window.addEventListener('pagehide', resumo);
+    setInterval(enviar, 15000);
+  })();
+
+  /* ============================================================
+     2) GOOGLE ANALYTICS 4 + MICROSOFT CLARITY (com consentimento)
+     ============================================================ */
   function track(nome, dados) {
     dados = dados || {};
     try { if (window.gtag) window.gtag('event', nome, dados); } catch (e) {}
@@ -46,7 +169,6 @@
   }
   window.ccTrack = track;
 
-  /* ---------- carregar as ferramentas ---------- */
   function carregar() {
     if (C.ga4) {
       window.dataLayer = window.dataLayer || [];
@@ -67,7 +189,6 @@
     }
   }
 
-  /* ---------- aviso de cookies ---------- */
   function mostrarAviso() {
     var st = document.createElement('style');
     st.textContent =
@@ -103,24 +224,18 @@
     else if (escolha !== 'nao') mostrarAviso();
   }
 
-  /* ---------- eventos da página ---------- */
-  // Botões de compra: qual botão foi clicado (video, plano, dentro, oferta, final, fixo)
+  // Eventos pro Google Analytics e Clarity (só chegam se a pessoa aceitou)
   links.forEach(function (a) {
     a.addEventListener('click', function () {
-      var sec = a.closest('section');
-      var local = a.closest('.fixo') ? 'fixo' : (sec && sec.id) || 'outro';
+      var local = localDoBotao(a);
       track('clique_comprar', { local: local });
       try { if (window.gtag) window.gtag('event', 'begin_checkout', { local: local, currency: 'BRL', value: 47 }); } catch (e) {}
     });
   });
-
   var tarja = document.querySelector('.tarja');
   if (tarja) tarja.addEventListener('click', function () { track('clique_tarja'); });
-
   var som = document.getElementById('vsl-som');
   if (som) som.addEventListener('click', function () { track('vsl_play_com_som'); });
-
-  // Perguntas: só conta quando a pessoa abre (clique), não as que já vêm abertas
   [].forEach.call(document.querySelectorAll('.faq details'), function (d, i) {
     var s = d.querySelector('summary');
     if (!s) return;
@@ -128,31 +243,21 @@
       if (!d.open) track('faq_abrir', { pergunta: s.textContent.trim().slice(0, 90) || 'p' + (i + 1) });
     });
   });
-
-  // Blocos vistos: mostra até onde as pessoas chegam na página
   if ('IntersectionObserver' in window) {
     var vistos = {};
-    var io = new IntersectionObserver(function (ents) {
+    var io2 = new IntersectionObserver(function (ents) {
       ents.forEach(function (e) {
         var id = e.target.id;
-        if (e.isIntersecting && !vistos[id]) {
-          vistos[id] = 1;
-          track('secao_vista', { secao: id });
-          io.unobserve(e.target);
-        }
+        if (e.isIntersecting && !vistos[id]) { vistos[id] = 1; track('secao_vista', { secao: id }); io2.unobserve(e.target); }
       });
     }, { rootMargin: '0px 0px -50% 0px' });
-    [].forEach.call(document.querySelectorAll('section[id]'), function (s) { io.observe(s); });
+    [].forEach.call(document.querySelectorAll('section[id]'), function (s) { io2.observe(s); });
   }
-
-  // Rolagem: 25%, 50%, 75% e 90% da página
   var marcos = [25, 50, 75, 90], feitos = {};
   window.addEventListener('scroll', function () {
     var h = document.documentElement.scrollHeight - window.innerHeight;
     if (h <= 0) return;
     var pct = (window.scrollY / h) * 100;
-    marcos.forEach(function (m) {
-      if (pct >= m && !feitos[m]) { feitos[m] = 1; track('rolagem', { percentual: m }); }
-    });
+    marcos.forEach(function (m) { if (pct >= m && !feitos[m]) { feitos[m] = 1; track('rolagem', { percentual: m }); } });
   }, { passive: true });
 })();

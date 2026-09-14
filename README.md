@@ -32,3 +32,11 @@ As mudanças ficam só no seu navegador (rascunho) — depois é só passar o te
 - Eventos: `clique_comprar` (campo `local`), `begin_checkout`, `vsl_play_com_som`, `clique_tarja`, `secao_vista`, `rolagem`, `faq_abrir`.
 - UTMs da URL são repassadas pro checkout da Kiwify.
 - Para desmarcar um aparelho: botão no painel ou abrir o site com `?sair-admin`.
+
+## Medição própria do painel (anônima, sem cookies)
+- O painel (`painel.html`) lê os números de uma planilha Google do Lucas, via um "App da Web" do Google Apps Script.
+- O código da planilha fica **fora deste repositório público**, em `JUCA DA MATA/OFERTA/painel-coletor.gs`, porque contém a chave do painel. Nunca publique esse arquivo.
+- O site manda os eventos pro endereço em `assets/config.js` → `coletor` (URL que termina em `/exec`). Vazio = medição desligada.
+- A chave fica só no navegador de quem administra: abra `painel.html#chave=SUA_CHAVE` uma vez em cada aparelho.
+- O que é registrado: visita, origem (UTM ou site de origem), toques com posição relativa ao bloco (mapa de calor), cliques em comprar (por botão), play do vídeo, perguntas abertas, rolagem máxima, tempo e blocos vistos. Sem IP, sem cookie, sem identificador permanente.
+- Se trocar o código da planilha: Implantar › Gerenciar implantações › editar › Nova versão (o URL continua o mesmo).

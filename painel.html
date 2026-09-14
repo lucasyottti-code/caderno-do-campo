@@ -10,81 +10,155 @@
 <style>
 :root{
   color-scheme:light;
-  --papel:#F1F2EA;--folha:#FBFBF6;--tinta:#1B2420;--tinta-2:#4F5A53;--linha:#D3D7CB;
+  --papel:#F1F2EA;--folha:#FBFBF6;--tinta:#1B2420;--tinta-2:#4F5A53;--mudo:#5E6660;
+  --linha:#D3D7CB;--grade:#E3E6DC;--eixo:#C3C7BB;
   --mata:#14291C;--verde-folha:#8FB58A;--verde:#179A45;--verde-2:#0F6E31;
-  --ocre:#E9B949;--ocre-claro:#F7E8B8;--barro:#A3472A;
+  --ocre-claro:#F7E8B8;--barro:#A3472A;
+  /* séries: paleta documentada, slots 1-3 (validada) */
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s1-trilho:#cde2fb;
+  /* rampa ordinal do funil: azul 650 -> 250 */
+  --o1:#104281;--o2:#1c5cab;--o3:#2a78d6;--o4:#5598e7;--o5:#86b6ef;
+  /* status: só quando a cor significa bom/ruim, sempre com ícone e rótulo */
+  --bom:#0ca30c;--atencao:#fab219;--critico:#d03b3b;
   --f-display:"Young Serif",Georgia,"Times New Roman",serif;
   --f-texto:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box}
-body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--f-texto);font-size:16px;line-height:1.55}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:var(--f-texto);font-size:16px;line-height:1.5}
 a{color:var(--barro)}
 h1,h2,h3{font-family:var(--f-display);font-weight:400;line-height:1.15;margin:0;text-wrap:balance}
 p{margin:0}
+button{font:inherit}
 :focus-visible{outline:3px solid var(--tinta);outline-offset:2px}
+[hidden]{display:none!important}
 
-.topo{background:var(--mata);color:var(--papel);padding:18px 20px 22px}
-.topo__in{max-width:980px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 20px}
+/* topo */
+.topo{background:var(--mata);color:var(--papel);padding:18px 20px 20px}
+.topo__in{max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 20px}
 .topo small{display:block;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--verde-folha)}
-.topo h1{font-size:clamp(26px,5vw,36px);margin-top:4px}
+.topo h1{font-size:clamp(24px,4.6vw,34px);margin-top:4px}
 .topo a{color:var(--papel);font-size:14px}
 
-.wrap{max-width:980px;margin:0 auto;padding:22px 20px 90px;display:grid;grid-template-columns:minmax(0,1fr);gap:22px}
-.card{min-width:0}
-.status{display:flex;flex-wrap:wrap;gap:8px}
-.chip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;padding:6px 11px;border-radius:20px;background:var(--folha);border:1px solid var(--linha)}
-.chip::before{content:"";width:8px;height:8px;border-radius:50%;background:#B7BDB3}
-.chip.ok::before{background:var(--verde)}
-.chip.pend::before{background:var(--ocre)}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 20px 90px;display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.wrap.carregando .painel-dados{opacity:.55;transition:opacity .2s}
 
-.card{background:var(--folha);border:1px solid var(--linha);border-radius:10px;padding:20px}
-.card h2{font-size:23px;margin-bottom:6px}
-.card .sub{color:var(--tinta-2);font-size:15px;margin-bottom:16px;max-width:65ch}
-.card h3{font-family:var(--f-texto);font-weight:700;font-size:15px;margin:18px 0 6px}
+/* linha de filtros */
+.filtros{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.seg{display:inline-flex;border:1px solid var(--linha);border-radius:8px;overflow:hidden;background:var(--folha)}
+.seg button{border:0;background:transparent;padding:8px 13px;font-size:14px;font-weight:700;color:var(--tinta-2);cursor:pointer}
+.seg button+button{border-left:1px solid var(--linha)}
+.seg button[aria-pressed="true"]{background:var(--mata);color:#fff}
+.btn-sec{border:1px solid var(--linha);background:var(--folha);color:var(--tinta);border-radius:8px;padding:8px 13px;font-size:14px;font-weight:700;cursor:pointer}
+.btn-sec:hover{border-color:var(--tinta-2)}
+.ao-vivo{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;background:var(--folha);border:1px solid var(--linha);border-radius:20px;padding:6px 12px}
+.ao-vivo i{width:9px;height:9px;border-radius:50%;background:var(--verde);box-shadow:0 0 0 0 rgba(23,154,69,.5)}
+@media(prefers-reduced-motion:no-preference){.ao-vivo i{animation:pulso 2s infinite}}
+@keyframes pulso{0%{box-shadow:0 0 0 0 rgba(23,154,69,.45)}70%{box-shadow:0 0 0 8px rgba(23,154,69,0)}100%{box-shadow:0 0 0 0 rgba(23,154,69,0)}}
+.atualizado{font-size:13px;color:var(--mudo)}
+.aviso{background:var(--ocre-claro);border-radius:8px;padding:12px 14px;font-size:15px}
+.aviso.erro{background:#F6D9D2}
 
-.atalhos{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(215px,1fr))}
+/* cartões */
+.card{background:var(--folha);border:1px solid var(--linha);border-radius:10px;padding:18px;min-width:0}
+.card h2{font-size:22px;margin-bottom:4px}
+.card .sub{color:var(--tinta-2);font-size:15px;margin-bottom:14px;max-width:70ch}
+.card h3{font-family:var(--f-texto);font-weight:700;font-size:15px;margin:16px 0 6px}
+.grade2{display:grid;gap:18px;grid-template-columns:minmax(0,1fr)}
+@media(min-width:920px){.grade2{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+
+/* números principais */
+.kpis{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(165px,1fr))}
+.kpi{background:var(--folha);border:1px solid var(--linha);border-radius:10px;padding:14px 16px;display:grid;gap:3px;align-content:start}
+.kpi__rot{font-size:14px;color:var(--tinta-2)}
+.kpi__val{font-size:30px;font-weight:700;line-height:1.15}
+.kpi__sub{font-size:13px;color:var(--mudo)}
+.kpi svg{width:100%;height:30px;margin-top:4px;overflow:visible}
+
+/* análises */
+.analises{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.analises li{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;background:var(--papel);border-radius:8px;padding:12px 14px}
+.selo{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.04em;white-space:nowrap;padding-top:2px}
+.selo svg{width:16px;height:16px;flex:0 0 auto}
+.analises b{display:block}
+.analises span.txt{display:block;font-size:14px;color:var(--tinta-2);margin-top:2px}
+
+/* gráficos */
+.legenda{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--tinta-2);margin:-4px 0 10px}
+.legenda span{display:inline-flex;align-items:center;gap:7px}
+.legenda i{width:16px;height:2px;border-radius:2px;background:var(--c)}
+.grafico{position:relative;width:100%}
+.vazio{display:grid;place-items:center;min-height:140px;color:var(--mudo);font-size:14px;background:var(--papel);border-radius:8px;text-align:center;padding:16px}
+details.tab{margin-top:10px}
+details.tab summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--tinta-2)}
+.tabela{overflow-x:auto;margin-top:8px;border:1px solid var(--linha);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--linha);vertical-align:top}
+th{background:#E6E8DC;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+
+/* barras em HTML: nome em cima, barra embaixo, valor na ponta */
+.bl{display:grid;gap:12px}
+.bl__item{display:grid;gap:4px;border-radius:4px;outline-offset:3px}
+.bl__rot{font-size:14px;color:var(--tinta-2);line-height:1.3}
+.bl__linha{display:flex;align-items:center;gap:8px;min-height:20px}
+.bl__barra{display:block;height:18px;border-radius:0 4px 4px 0;background:var(--s1);flex:0 0 auto}
+.bl__val{font-size:13px;font-weight:700;color:var(--tinta);white-space:nowrap;font-variant-numeric:tabular-nums}
+.bl__item:hover .bl__barra,.bl__item:focus .bl__barra{filter:brightness(1.15)}
+.dica{position:fixed;z-index:80;pointer-events:none;background:var(--tinta);color:#fff;border-radius:6px;padding:8px 10px;font-size:13px;max-width:260px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.dica b{display:block;font-size:15px}
+.dica span{color:#C9D1CA}
+
+/* medidor de aparelho */
+.medidor{height:12px;border-radius:6px;background:var(--s1-trilho);overflow:hidden;margin:8px 0 8px}
+.medidor i{display:block;height:100%;background:var(--s1);border-radius:6px 0 0 6px}
+.medidor-rot{display:flex;justify-content:space-between;font-size:14px;color:var(--tinta-2)}
+
+/* funil: vendas */
+.vendas{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;font-size:14px;color:var(--tinta-2)}
+.vendas input{width:90px;font:inherit;padding:6px 8px;border:1px solid var(--linha);border-radius:6px;background:#fff}
+
+/* mapa de calor */
+.mapa-ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:12px}
+.escala{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--tinta-2)}
+.escala i{width:130px;height:10px;border-radius:5px;background:linear-gradient(90deg,rgba(237,161,0,.35),#eda100 30%,#eb6834 65%,#e34948)}
+.escala.rol i{background:linear-gradient(90deg,rgba(20,41,28,0),rgba(20,41,28,.72))}
+.mapa-janela{height:min(76vh,880px);overflow:auto;border:1px solid var(--linha);border-radius:8px;background:#DADDD2;position:relative}
+.mapa-medida{position:relative;margin:0 auto}
+.mapa-palco{position:absolute;left:0;top:0;transform-origin:0 0}
+.mapa-palco iframe{border:0;display:block;pointer-events:none;background:#F1F2EA}
+.mapa-palco canvas{position:absolute;left:0;top:0;pointer-events:none}
+.mapa-info{font-size:13px;color:var(--mudo);margin-top:8px}
+.mapa-msg{position:absolute;left:50%;top:40px;transform:translateX(-50%);background:var(--tinta);color:#fff;font-size:14px;border-radius:8px;padding:10px 14px;z-index:3;max-width:90%;text-align:center}
+
+/* atividade */
+.feed{list-style:none;margin:0;padding:0;display:grid;gap:2px;font-size:14px}
+.feed li{display:grid;grid-template-columns:92px 1fr;gap:10px;padding:6px 0;border-bottom:1px solid var(--grade)}
+.feed time{color:var(--mudo);font-variant-numeric:tabular-nums}
+
+/* atalhos, melhorias, config */
+.atalhos{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
 .atalho{display:block;text-decoration:none;color:var(--tinta);background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:12px 14px}
 .atalho b{display:block;font-size:15px}
 .atalho span{display:block;font-size:13px;color:var(--tinta-2);margin-top:2px}
 .atalho:hover{border-color:var(--verde)}
-
 .passos{margin:0;padding-left:22px;display:grid;gap:10px}
 .passos li::marker{font-weight:700;color:var(--barro)}
-.passos b{font-weight:700}
-.nota{margin-top:14px;font-size:14px;color:var(--tinta-2);background:var(--ocre-claro);border-radius:6px;padding:10px 12px}
-
-.embed{width:100%;height:1150px;border:1px solid var(--linha);border-radius:8px;overflow:hidden;background:#fff}
-.embed iframe{width:100%;height:100%;border:0;display:block}
-
-.funil{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.funil li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;background:var(--papel);border-radius:8px;padding:12px 14px;border-left:4px solid var(--verde)}
-.funil .n{font-family:var(--f-display);font-size:22px;color:var(--verde-2);line-height:1}
-.funil b{display:block}
-.funil span{display:block;font-size:14px;color:var(--tinta-2)}
-.funil code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
-
-.tabela{overflow-x:auto;border:1px solid var(--linha);border-radius:8px}
-table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
-th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--linha);vertical-align:top}
-th{background:#E6E8DC;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
-tr:last-child td{border-bottom:0}
-td code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px;white-space:nowrap}
-.num{font-variant-numeric:tabular-nums;white-space:nowrap}
-
+.chave-form{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chave-form input{flex:1 1 220px;font:inherit;padding:9px 10px;border:1px solid var(--linha);border-radius:6px;background:#fff}
+.btn{border:0;border-radius:6px;padding:10px 16px;background:var(--verde);color:#fff;font-weight:700;cursor:pointer}
 .melhorias{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .melhorias label{display:grid;grid-template-columns:22px 1fr;gap:12px;align-items:start;background:var(--papel);border-radius:8px;padding:12px 14px;cursor:pointer}
 .melhorias input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--verde)}
 .melhorias b{display:block}
-.melhorias span{display:block;font-size:14px;color:var(--tinta-2);margin-top:2px}
+.melhorias .desc{display:block;font-size:14px;color:var(--tinta-2);margin-top:2px}
 .melhorias label.feito b{text-decoration:line-through;color:var(--tinta-2)}
-.melhorias .pri{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:4px;padding:1px 6px;margin-right:6px;vertical-align:1px}
+.pri{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:4px;padding:1px 6px;margin-right:6px;vertical-align:1px}
 .pri.alta{background:#F4D6CC;color:#8A3218}
 .pri.media{background:var(--ocre-claro);color:#6B5314}
 .pri.baixa{background:#DCE8DA;color:#2C5A2E}
-
-.botao{display:inline-block;font:inherit;font-weight:700;border:0;border-radius:6px;padding:10px 16px;background:var(--verde);color:#fff;cursor:pointer;text-decoration:none}
-.botao.sec{background:transparent;color:var(--tinta);border:1px solid var(--linha)}
-[hidden]{display:none!important}
+details.mais summary{cursor:pointer;font-weight:700}
+code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
 </style>
 </head>
 <body>
@@ -95,193 +169,785 @@ td code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px;whit
   </div>
 </header>
 
-<main class="wrap">
-  <div class="status" id="status" aria-live="polite"></div>
+<main class="wrap" id="wrap">
 
-  <!-- 1. Números ao vivo -->
-  <section class="card" id="ao-vivo">
-    <h2>Números ao vivo</h2>
-    <p class="sub">Acessos, origem das visitas, cliques nos botões e taxas, direto do Google Analytics.</p>
-    <div class="embed" id="embed" hidden></div>
-    <div id="setup">
-      <p class="sub" style="margin-bottom:12px">Pra este painel mostrar os números, falta ligar as ferramentas. É grátis e leva uns 10 minutos:</p>
+  <!-- Conexão (aparece só se faltar configurar) -->
+  <section class="card" id="setup" hidden>
+    <h2>Ligar a medição do painel</h2>
+    <div id="setup-coletor" hidden>
+      <p class="sub">O painel conta as visitas com uma medição própria do site, anônima e sem cookies, então todo mundo entra nos números. Os dados ficam numa planilha Google sua. Pra ligar, uma vez só:</p>
       <ol class="passos">
-        <li><b>Microsoft Clarity</b> (mapa de calor e gravações): entre em <a href="https://clarity.microsoft.com" target="_blank" rel="noopener">clarity.microsoft.com</a> com sua conta Google, crie um projeto com o nome "Caderno do Campo" e o site <b>https://jucadamata.com.br</b>. Em Configurações, copie o <b>ID do projeto</b> (um código curto, tipo <code>abcd1234ef</code>).</li>
-        <li><b>Google Analytics 4</b> (acessos e eventos): em <a href="https://analytics.google.com" target="_blank" rel="noopener">analytics.google.com</a>, crie uma propriedade "Caderno do Campo" (fuso de Brasília, moeda Real) e um fluxo de dados <b>Web</b> com o endereço do site. Copie o <b>ID da métrica</b>, no formato <code>G-XXXXXXXXXX</code>.</li>
-        <li><b>Mande os dois IDs no chat.</b> Eu coloco no site e publico. A partir daí, os dados começam a chegar.</li>
-        <li><b>Relatório ao vivo aqui no painel</b> (Looker Studio): em <a href="https://lookerstudio.google.com" target="_blank" rel="noopener">lookerstudio.google.com</a>, crie um relatório com o conector Google Analytics e a sua propriedade. Depois vá em Compartilhar › Incorporar relatório › ativar incorporação, e me mande o link. Deixe o compartilhamento <b>restrito à sua conta</b>: assim só você vê os números aqui.</li>
-        <li><b>Marque a conversão</b>: no Google Analytics, em Administrador › Eventos, marque <code>begin_checkout</code> como evento principal. Ele aparece depois do primeiro clique num botão de compra.</li>
+        <li>Crie uma planilha nova no Google Sheets (digite <b>sheets.new</b> no navegador) com o nome "Caderno do Campo — dados".</li>
+        <li>No menu <b>Extensões › Apps Script</b>, apague o que estiver lá e cole o código do arquivo <b>painel-coletor.gs</b> que o Claude te mandou. Clique em Salvar.</li>
+        <li>Clique em <b>Implantar › Nova implantação</b>, escolha <b>App da Web</b>, com "Executar como: Eu" e "Quem pode acessar: Qualquer pessoa". Autorize com a sua conta Google. Se aparecer "O Google não verificou este app", clique em Avançado › Acessar: é o seu próprio código.</li>
+        <li>Copie o <b>URL do app da Web</b> e mande no chat.</li>
       </ol>
-      <p class="nota">Os IDs não são senha: eles aparecem no código de qualquer site que usa essas ferramentas, então pode mandar tranquilo.</p>
+    </div>
+    <div id="setup-chave" hidden>
+      <p class="sub">A medição está ligada. Falta a chave do painel neste aparelho: ela protege os números, então só quem tem a chave vê.</p>
+      <form class="chave-form" id="form-chave">
+        <input id="in-chave" type="text" autocomplete="off" spellcheck="false" placeholder="Cole a chave do painel" aria-label="Chave do painel">
+        <button class="btn" type="submit">Salvar chave</button>
+      </form>
     </div>
   </section>
 
-  <!-- 2. Atalhos -->
+  <!-- Filtros: escopo de tudo abaixo -->
+  <div class="filtros" id="filtros">
+    <div class="seg" role="group" aria-label="Período">
+      <button type="button" data-dias="1">Hoje</button>
+      <button type="button" data-dias="7">7 dias</button>
+      <button type="button" data-dias="30">30 dias</button>
+      <button type="button" data-dias="90">90 dias</button>
+    </div>
+    <button class="btn-sec" type="button" id="btn-atualizar">Atualizar</button>
+    <span class="ao-vivo" id="ao-vivo" title="Pessoas com atividade nos últimos 5 minutos"><i aria-hidden="true"></i><span id="ao-vivo-n">0 pessoas agora</span></span>
+    <span class="atualizado" id="atualizado"></span>
+  </div>
+  <div class="aviso" id="msg" hidden></div>
+
+  <div class="painel-dados" style="display:grid;gap:18px">
+
+    <!-- Números principais -->
+    <section class="kpis" id="kpis" aria-label="Números principais"></section>
+
+    <!-- Análises automáticas -->
+    <section class="card">
+      <h2>O que os números estão dizendo</h2>
+      <p class="sub">Leitura automática do período escolhido, das mais urgentes pras informativas.</p>
+      <ul class="analises" id="analises"></ul>
+    </section>
+
+    <!-- Evolução -->
+    <section class="card">
+      <h2 id="evo-titulo">Visitas, plays e cliques por dia</h2>
+      <p class="sub" id="evo-sub">Passe o dedo ou o mouse no gráfico pra ver os números de cada dia.</p>
+      <div class="legenda" id="evo-legenda"></div>
+      <div class="grafico" style="height:280px"><canvas id="g-evo" role="img" aria-label="Evolução das visitas"></canvas></div>
+      <details class="tab"><summary>Ver em tabela</summary><div class="tabela" id="t-evo"></div></details>
+    </section>
+
+    <div class="grade2">
+      <section class="card">
+        <h2>Funil da página</h2>
+        <p class="sub">De cada 100 visitas, quantas chegam em cada etapa.</p>
+        <div class="grafico" id="c-funil"></div>
+        <div class="vendas"><label for="in-vendas">Vendas no período, da Kiwify:</label><input id="in-vendas" type="number" min="0" inputmode="numeric" placeholder="0"></div>
+        <details class="tab"><summary>Ver em tabela</summary><div class="tabela" id="t-funil"></div></details>
+      </section>
+      <section class="card">
+        <h2>Até onde as pessoas chegam</h2>
+        <p class="sub">Parte das visitas que chegou em cada bloco, na ordem da página.</p>
+        <div class="grafico" id="c-secoes"></div>
+        <details class="tab"><summary>Ver em tabela</summary><div class="tabela" id="t-secoes"></div></details>
+      </section>
+    </div>
+
+    <!-- Mapa de calor -->
+    <section class="card" id="card-mapa">
+      <h2>Mapa de calor</h2>
+      <p class="sub">A página de verdade, com os toques de quem visitou por cima. No modo rolagem, quanto mais escuro, menos gente chegou até ali.</p>
+      <div class="mapa-ctrl">
+        <div class="seg" role="group" aria-label="Aparelho">
+          <button type="button" data-dev="m" aria-pressed="true">Celular</button>
+          <button type="button" data-dev="d" aria-pressed="false">Computador</button>
+        </div>
+        <div class="seg" role="group" aria-label="Tipo de mapa">
+          <button type="button" data-modo="toques" aria-pressed="true">Toques</button>
+          <button type="button" data-modo="rolagem" aria-pressed="false">Rolagem</button>
+        </div>
+        <span class="escala" id="escala"><span>poucos</span><i aria-hidden="true"></i><span>muitos toques</span></span>
+      </div>
+      <div class="mapa-janela" id="mapa-janela">
+        <div class="mapa-msg" id="mapa-msg" hidden></div>
+        <div class="mapa-medida" id="mapa-medida">
+          <div class="mapa-palco" id="mapa-palco">
+            <iframe id="mapa-frame" title="Página do site usada no mapa de calor" tabindex="-1" aria-hidden="true"></iframe>
+            <canvas id="mapa-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+      <p class="mapa-info" id="mapa-info"></p>
+    </section>
+
+    <div class="grade2">
+      <section class="card">
+        <h2>Cliques por botão de compra</h2>
+        <p class="sub">Qual botão leva mais gente pro checkout.</p>
+        <div class="grafico" id="c-botoes"></div>
+        <details class="tab"><summary>Ver em tabela</summary><div class="tabela" id="t-botoes"></div></details>
+      </section>
+      <section class="card">
+        <h2>Onde as pessoas tocam</h2>
+        <p class="sub">Muitos toques em imagem ou texto mostram que esperavam que aquilo fosse clicável.</p>
+        <div class="grafico" id="c-alvos"></div>
+        <details class="tab"><summary>Ver em tabela</summary><div class="tabela" id="t-alvos"></div></details>
+      </section>
+    </div>
+
+    <div class="grade2">
+      <section class="card">
+        <h2>De onde vêm as visitas</h2>
+        <p class="sub">Pelo link de origem (UTM) ou pelo site que mandou a pessoa.</p>
+        <div class="grafico" id="c-origens"></div>
+        <details class="tab"><summary>Ver em tabela</summary><div class="tabela" id="t-origens"></div></details>
+        <h3>Aparelho</h3>
+        <div class="medidor" aria-hidden="true"><i id="med-cel"></i></div>
+        <div class="medidor-rot"><span id="med-cel-t">Celular —</span><span id="med-comp-t">Computador —</span></div>
+      </section>
+      <section class="card">
+        <h2>Dúvidas mais abertas</h2>
+        <p class="sub">Perguntas do fim da página que as pessoas abriram.</p>
+        <div class="grafico" id="c-faq"></div>
+        <details class="tab"><summary>Ver em tabela</summary><div class="tabela" id="t-faq"></div></details>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>Atividade recente</h2>
+      <p class="sub">Os últimos movimentos no site, do mais novo pro mais antigo.</p>
+      <ul class="feed" id="feed"></ul>
+    </section>
+  </div>
+
+  <!-- Atalhos -->
   <section class="card">
     <h2>Atalhos</h2>
-    <p class="sub">Cada ferramenta mostra uma parte da história. Os links abrem na sua conta.</p>
+    <p class="sub">Ferramentas externas, na sua conta.</p>
     <div class="atalhos">
-      <a class="atalho" id="lk-clarity" href="https://clarity.microsoft.com" target="_blank" rel="noopener"><b>Mapa de calor e gravações</b><span>Microsoft Clarity: onde tocam, até onde rolam, onde travam</span></a>
-      <a class="atalho" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener"><b>Acessos e eventos</b><span>Google Analytics: visitas, origem, cliques por botão</span></a>
+      <a class="atalho" id="lk-clarity" href="https://clarity.microsoft.com" target="_blank" rel="noopener"><b>Gravações das visitas</b><span>Clarity: assista como as pessoas navegaram (só de quem aceitou os cookies)</span></a>
       <a class="atalho" href="https://dashboard.kiwify.com.br" target="_blank" rel="noopener"><b>Vendas e checkout</b><span>Kiwify: vendas, conversão do checkout, abandono</span></a>
       <a class="atalho" id="lk-vimeo" href="https://vimeo.com/manage/videos" target="_blank" rel="noopener"><b>Retenção do vídeo</b><span>Vimeo: quantos assistem e até quando</span></a>
+      <a class="atalho" href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener"><b>Google Analytics</b><span>Relatórios do Google (só de quem aceitou os cookies)</span></a>
+      <a class="atalho" id="lk-looker" href="https://lookerstudio.google.com" target="_blank" rel="noopener"><b>Relatório do Looker</b><span>O relatório que você montou no Google</span></a>
       <a class="atalho" href="index.html?editar"><b>Editar texto do site</b><span>Abre a página no modo de edição</span></a>
     </div>
   </section>
 
-  <!-- 3. Funil -->
-  <section class="card">
-    <h2>O funil da página</h2>
-    <p class="sub">A venda acontece em etapas. Olhe a taxa de cada passagem: a etapa com a maior queda é onde mexer primeiro.</p>
-    <ol class="funil">
-      <li><span class="n">1</span><div><b>Visitou a página</b><span>Evento <code>page_view</code> no Analytics. É a base de todas as taxas.</span></div></li>
-      <li><span class="n">2</span><div><b>Tocou pra ouvir o vídeo</b><span>Evento <code>vsl_play_com_som</code>. Taxa de play = plays ÷ visitas.</span></div></li>
-      <li><span class="n">3</span><div><b>Chegou na oferta</b><span>Evento <code>secao_vista</code> com seção <code>oferta</code>. Taxa = chegaram na oferta ÷ visitas.</span></div></li>
-      <li><span class="n">4</span><div><b>Clicou num botão de compra</b><span>Evento <code>clique_comprar</code>. Taxa de clique = cliques ÷ visitas.</span></div></li>
-      <li><span class="n">5</span><div><b>Comprou</b><span>Vendas na Kiwify. Conversão do checkout = vendas ÷ cliques. Conversão geral = vendas ÷ visitas.</span></div></li>
-    </ol>
-    <h3>Referência aproximada pra comparar</h3>
-    <p class="sub" style="margin-bottom:10px">Faixas comuns em páginas de produto digital barato no Brasil. Servem de ponto de partida, não de meta: variam muito com a origem do tráfego.</p>
-    <div class="tabela">
-      <table>
-        <thead><tr><th>Passagem</th><th>Faixa comum</th><th>Se estiver abaixo</th></tr></thead>
-        <tbody>
-          <tr><td>Visita → clique no botão</td><td class="num">5% a 15%</td><td>Testar headline, primeiro botão e a parte de cima da página</td></tr>
-          <tr><td>Clique → compra (checkout)</td><td class="num">20% a 40%</td><td>Olhar o checkout da Kiwify: preço, formas de pagamento, recuperação de carrinho</td></tr>
-          <tr><td>Visita → compra (geral)</td><td class="num">1% a 3%</td><td>Ver qual das duas passagens acima está puxando pra baixo</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- 4. Eventos -->
-  <section class="card">
-    <h2>O que o site registra</h2>
-    <p class="sub">Os nomes que você vai encontrar no Google Analytics (Relatórios › Engajamento › Eventos) e no Clarity (filtro "Eventos personalizados").</p>
-    <div class="tabela">
-      <table>
-        <thead><tr><th>Evento</th><th>Quando acontece</th><th>Pra que serve</th></tr></thead>
-        <tbody>
-          <tr><td><code>page_view</code></td><td>Alguém abriu a página</td><td>Contar acessos</td></tr>
-          <tr><td><code>vsl_play_com_som</code></td><td>Tocou pra ouvir o vídeo desde o início</td><td>Saber se o vídeo prende</td></tr>
-          <tr><td><code>clique_comprar</code></td><td>Clicou em qualquer botão de compra. O campo <code>local</code> diz qual: <code>video</code>, <code>plano</code>, <code>dentro</code>, <code>oferta</code>, <code>final</code> ou <code>fixo</code> (barra do celular)</td><td>Ver qual botão vende mais</td></tr>
-          <tr><td><code>begin_checkout</code></td><td>O mesmo clique, no formato padrão do Google</td><td>Marcar como conversão</td></tr>
-          <tr><td><code>clique_tarja</code></td><td>Tocou na faixa do preço no topo</td><td>Ver se a faixa chama atenção</td></tr>
-          <tr><td><code>secao_vista</code></td><td>Chegou em cada bloco da página (campo <code>secao</code>)</td><td>Ver em que bloco as pessoas desistem</td></tr>
-          <tr><td><code>rolagem</code></td><td>Rolou 25%, 50%, 75% e 90% da página</td><td>Ver quanto da página é lida</td></tr>
-          <tr><td><code>faq_abrir</code></td><td>Abriu uma pergunta (campo <code>pergunta</code>)</td><td>Descobrir as dúvidas mais comuns</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <h3>Origem das visitas</h3>
-    <p class="sub" style="margin-bottom:0">Nos links de anúncio e de descrição de vídeo, use UTMs, por exemplo <code>jucadamata.com.br/?utm_source=youtube&amp;utm_campaign=video12</code>. O site repassa esses dados pro checkout, então dá pra ver na Kiwify qual vídeo ou anúncio gerou cada venda.</p>
-  </section>
-
-  <!-- 5. Mapa de calor -->
-  <section class="card">
-    <h2>Como ler o mapa de calor</h2>
-    <p class="sub">No Clarity, abra Mapas de calor e escolha "Celular", que é onde está a maior parte do seu público.</p>
-    <ol class="passos">
-      <li><b>Cliques:</b> muitos toques em algo que não é botão (uma foto, a capa do livro, um preço) mostram que as pessoas esperavam que aquilo fosse clicável.</li>
-      <li><b>Rolagem:</b> a faixa onde a cor esfria é onde a maioria para de ler. O que estiver abaixo dela quase ninguém vê.</li>
-      <li><b>Gravações:</b> assista a 10 visitas que não compraram. Procure "cliques de raiva" (vários toques rápidos no mesmo lugar) e rolagens pra cima e pra baixo, que indicam confusão.</li>
-    </ol>
-  </section>
-
-  <!-- 6. Melhorias -->
+  <!-- Melhorias -->
   <section class="card">
     <h2>Melhorias sugeridas</h2>
-    <p class="sub">Revisão da página hoje, em ordem de prioridade. Marque o que já foi feito: fica salvo neste aparelho.</p>
+    <p class="sub">Revisão da página, em ordem de prioridade. Marque o que já foi feito: fica salvo neste aparelho.</p>
     <ul class="melhorias" id="melhorias">
-      <li><label><input type="checkbox" data-id="m1"><div><b><span class="pri alta">Alta</span>Alinhar a escassez</b><span>O contador reinicia em ~2h a cada visita, e a oferta diz "termina domingo". Quem volta vê o relógio recomeçar, e isso quebra a confiança. Escassez falsa também pode ser vista como propaganda enganosa. Escolha uma data real e use a mesma nos dois lugares.</span></div></label></li>
-      <li><label><input type="checkbox" data-id="m2"><div><b><span class="pri alta">Alta</span>Confirmar o preço "de R$ 97"</b><span>O preço riscado só deve aparecer se o produto foi ou vai ser vendido por esse valor.</span></div></label></li>
-      <li><label><input type="checkbox" data-id="m3"><div><b><span class="pri alta">Alta</span>Preencher os dados legais</b><span>Razão social, CNPJ, e-mail de contato e foro nas páginas de Privacidade e Termos. Passa confiança e é exigido pela LGPD.</span></div></label></li>
-      <li><label><input type="checkbox" data-id="m4"><div><b><span class="pri media">Média</span>Medir a taxa de play do vídeo</b><span>Se menos de 1 em cada 5 visitantes tocar pra ouvir, teste outra frase no aviso do vídeo ou outra capa.</span></div></label></li>
-      <li><label><input type="checkbox" data-id="m5"><div><b><span class="pri media">Média</span>Encurtar a lista dos 13 cadernos no celular</b><span>É o trecho mais longo da página. Se o mapa de rolagem mostrar que muita gente para ali, recolha a lista num botão "ver todos os capítulos".</span></div></label></li>
-      <li><label><input type="checkbox" data-id="m6"><div><b><span class="pri media">Média</span>Comparar os cliques por botão</b><span>Com o campo <code>local</code> do evento <code>clique_comprar</code>, veja qual botão vende. O melhor pode ganhar mais destaque, e o que ninguém usa pode sair.</span></div></label></li>
-      <li><label><input type="checkbox" data-id="m7"><div><b><span class="pri media">Média</span>Mostrar a garantia perto do primeiro botão</b><span>Uma linha "7 dias de garantia" logo abaixo do botão do vídeo diminui o medo de comprar.</span></div></label></li>
-      <li><label><input type="checkbox" data-id="m8"><div><b><span class="pri media">Média</span>Usar UTMs em todo link que você divulgar</b><span>Descrição dos vídeos, comentário fixado e anúncios. Sem isso, não dá pra saber de onde vêm as vendas.</span></div></label></li>
-      <li><label><input type="checkbox" data-id="m9"><div><b><span class="pri media">Média</span>Ativar a recuperação de carrinho na Kiwify</b><span>Quem clica e não paga recebe um lembrete por e-mail ou WhatsApp. Costuma recuperar parte das vendas perdidas.</span></div></label></li>
-      <li><label><input type="checkbox" data-id="m10"><div><b><span class="pri baixa">Baixa</span>Trocar a capa desenhada por uma arte real</b><span>Uma foto ou mockup do livro no celular deixa o produto mais concreto.</span></div></label></li>
-      <li><label><input type="checkbox" data-id="m11"><div><b><span class="pri baixa">Baixa</span>Somar prints reais de clientes</b><span>Mensagens de WhatsApp e comentários do canal são a prova social mais forte.</span></div></label></li>
-      <li><label><input type="checkbox" data-id="m12"><div><b><span class="pri baixa">Baixa</span>Levar o vídeo pro Panda Video ou VTurb</b><span>Quando tiver volume de visitas: mostram a retenção segundo a segundo e onde as pessoas saem antes da oferta.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m1"><div><b><span class="pri alta">Alta</span>Alinhar a escassez</b><span class="desc">O contador reinicia em ~2h a cada visita, e a oferta diz "termina domingo". Quem volta vê o relógio recomeçar, e isso quebra a confiança. Escassez falsa também pode ser vista como propaganda enganosa. Escolha uma data real e use a mesma nos dois lugares.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m2"><div><b><span class="pri alta">Alta</span>Confirmar o preço "de R$ 97"</b><span class="desc">O preço riscado só deve aparecer se o produto foi ou vai ser vendido por esse valor.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m3"><div><b><span class="pri alta">Alta</span>Preencher os dados legais</b><span class="desc">Razão social, CNPJ, e-mail de contato e foro nas páginas de Privacidade e Termos. Passa confiança e é exigido pela LGPD.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m4"><div><b><span class="pri media">Média</span>Acompanhar a taxa de play do vídeo</b><span class="desc">Se menos de 1 em cada 5 visitantes tocar pra ouvir, teste outra frase no aviso do vídeo ou outra capa.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m5"><div><b><span class="pri media">Média</span>Encurtar a lista dos 13 cadernos no celular</b><span class="desc">É o trecho mais longo da página. Se o gráfico "Até onde as pessoas chegam" mostrar uma queda grande ali, recolha a lista num botão "ver todos os capítulos".</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m6"><div><b><span class="pri media">Média</span>Comparar os cliques por botão</b><span class="desc">O botão que mais leva pro checkout pode ganhar mais destaque, e o que ninguém usa pode sair.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m7"><div><b><span class="pri media">Média</span>Mostrar a garantia perto do primeiro botão</b><span class="desc">Uma linha "7 dias de garantia" logo abaixo do botão do vídeo diminui o medo de comprar.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m8"><div><b><span class="pri media">Média</span>Usar UTMs em todo link que você divulgar</b><span class="desc">Descrição dos vídeos, comentário fixado e anúncios, por exemplo <code>jucadamata.com.br/?utm_source=youtube&amp;utm_campaign=video12</code>. Assim o gráfico de origem separa cada vídeo.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m9"><div><b><span class="pri media">Média</span>Ativar a recuperação de carrinho na Kiwify</b><span class="desc">Quem clica e não paga recebe um lembrete por e-mail ou WhatsApp. Costuma recuperar parte das vendas perdidas.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m10"><div><b><span class="pri baixa">Baixa</span>Trocar a capa desenhada por uma arte real</b><span class="desc">Uma foto ou mockup do livro no celular deixa o produto mais concreto.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m11"><div><b><span class="pri baixa">Baixa</span>Somar prints reais de clientes</b><span class="desc">Mensagens de WhatsApp e comentários do canal são a prova social mais forte.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m12"><div><b><span class="pri baixa">Baixa</span>Levar o vídeo pro Panda Video ou VTurb</b><span class="desc">Quando tiver volume de visitas: mostram a retenção segundo a segundo e onde as pessoas saem antes da oferta.</span></div></label></li>
     </ul>
   </section>
 
-  <!-- 7. Este aparelho -->
+  <!-- Este aparelho -->
   <section class="card">
     <h2>Este aparelho</h2>
     <p class="sub" id="admin-txt"></p>
-    <button class="botao sec" id="admin-btn" type="button"></button>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <button class="btn-sec" id="admin-btn" type="button"></button>
+      <button class="btn-sec" id="chave-btn" type="button">Trocar a chave do painel</button>
+    </div>
   </section>
 </main>
 
 <script src="assets/config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-(function(){
+(function () {
   var C = window.CC_CONFIG || {};
+  var $ = function (id) { return document.getElementById(id); };
+  var raiz = getComputedStyle(document.documentElement);
+  var cor = function (v) { return raiz.getPropertyValue(v).trim(); };
+  var FONTE = '"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif';
+  var num = new Intl.NumberFormat('pt-BR');
 
-  /* Abrir o painel marca este aparelho como administrador:
-     suas visitas ao site deixam de entrar nas estatísticas. */
-  var admin = true;
-  try { localStorage.setItem('cc_admin','1'); } catch(e) {}
+  /* ---------- nomes legíveis ---------- */
+  var NOME_SEC = { hero: 'Topo (título)', video: 'Vídeo', caderno: 'O Caderno', plano: 'O plano', conta: 'A conta',
+    dentro: 'O que tem dentro', depoimentos: 'Depoimentos', sobre: 'Sobre o Juca', oferta: 'Oferta', perguntas: 'Perguntas', final: 'Botão final' };
+  var NOME_BTN = { video: 'Abaixo do vídeo', plano: 'Depois do plano', dentro: 'Depois dos capítulos', oferta: 'Caixa da oferta',
+    final: 'Final da página', fixo: 'Barra fixa do celular', outro: 'Outro' };
+  var NOME_ALVO = { comprar: 'Botão de compra', video: 'Tocar o vídeo', pergunta: 'Pergunta', link: 'Outro link',
+    botao: 'Outro botão', imagem: 'Imagem (não clicável)', texto: 'Texto (não clicável)' };
+  var nomeOrigem = function (o) { return o === 'direto' ? 'Direto ou sem origem' : o; };
+  var faqTextos = [];
+  var nomeFaq = function (n) { var t = faqTextos[Number(n) - 1]; return t ? t.replace(/^"|"$/g, '') : 'Pergunta ' + n; };
 
-  /* Status */
-  var st = document.getElementById('status');
-  function chip(txt, ok){ var s=document.createElement('span'); s.className='chip '+(ok?'ok':'pend'); s.textContent=txt; st.appendChild(s); }
-  chip(C.ga4 ? 'Google Analytics ligado' : 'Google Analytics pendente', !!C.ga4);
-  chip(C.clarity ? 'Clarity ligado' : 'Clarity pendente', !!C.clarity);
-  chip(C.lookerEmbed ? 'Relatório ao vivo ligado' : 'Relatório ao vivo pendente', !!C.lookerEmbed);
-
-  /* Relatório ao vivo */
-  if (C.lookerEmbed) {
-    var box = document.getElementById('embed');
-    var f = document.createElement('iframe');
-    f.src = C.lookerEmbed;
-    f.title = 'Relatório do Google Analytics';
-    f.setAttribute('allowfullscreen','');
-    f.setAttribute('sandbox','allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
-    box.appendChild(f);
-    box.hidden = false;
-    document.getElementById('setup').hidden = true;
+  /* ---------- formatação ---------- */
+  function pct(v, casas) {
+    if (!isFinite(v)) return '—';
+    var p = v * 100;
+    var c = casas != null ? casas : (p > 0 && p < 10 ? 1 : 0);
+    return p.toFixed(c).replace('.', ',') + '%';
+  }
+  function tempo(s) {
+    if (!s) return '—';
+    var m = Math.floor(s / 60), r = s % 60;
+    return m ? m + ' min ' + (r ? r + ' s' : '') : r + ' s';
+  }
+  function el(tag, txt, cls) { var e = document.createElement(tag); if (txt != null) e.textContent = txt; if (cls) e.className = cls; return e; }
+  function tabela(alvoId, cab, linhas) {
+    var box = $(alvoId); box.textContent = '';
+    var t = el('table'), th = el('thead'), tr = el('tr');
+    cab.forEach(function (c, i) { var h = el('th', c); if (i > 0) h.style.textAlign = 'right'; tr.appendChild(h); });
+    th.appendChild(tr); t.appendChild(th);
+    var tb = el('tbody');
+    linhas.forEach(function (l) {
+      var r = el('tr');
+      l.forEach(function (c, i) { r.appendChild(el('td', c, i > 0 ? 'n' : '')); });
+      tb.appendChild(r);
+    });
+    if (!linhas.length) { var r = el('tr'), td = el('td', 'Sem dados no período'); td.colSpan = cab.length; r.appendChild(td); tb.appendChild(r); }
+    t.appendChild(tb); box.appendChild(t);
   }
 
-  /* Links com os IDs */
-  if (C.clarity) document.getElementById('lk-clarity').href = 'https://clarity.microsoft.com/projects/view/' + encodeURIComponent(C.clarity) + '/dashboard';
-  if (C.vimeoId) document.getElementById('lk-vimeo').href = 'https://vimeo.com/manage/videos/' + encodeURIComponent(C.vimeoId);
+  /* ---------- Chart.js: aparência ---------- */
+  Chart.defaults.font.family = FONTE;
+  Chart.defaults.font.size = 12;
+  Chart.defaults.color = cor('--mudo');
+  Chart.defaults.animation.duration = 250;
+  Chart.defaults.plugins.legend.display = false;
+  Object.assign(Chart.defaults.plugins.tooltip, {
+    backgroundColor: cor('--tinta'), titleColor: '#fff', bodyColor: '#fff', padding: 10, cornerRadius: 6,
+    titleFont: { family: FONTE, weight: '400', size: 12 }, bodyFont: { family: FONTE, weight: '700', size: 13 },
+    usePointStyle: true, boxWidth: 14, boxHeight: 2
+  });
 
-  /* Melhorias: salvar o que já foi feito */
-  var KEY='cc_melhorias', feitos={};
-  try { feitos = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
-  [].forEach.call(document.querySelectorAll('#melhorias input'), function(inp){
-    var id = inp.getAttribute('data-id');
-    var lab = inp.closest('label');
-    inp.checked = !!feitos[id];
-    lab.classList.toggle('feito', inp.checked);
-    inp.addEventListener('change', function(){
-      feitos[id] = inp.checked;
-      lab.classList.toggle('feito', inp.checked);
-      try { localStorage.setItem(KEY, JSON.stringify(feitos)); } catch(e) {}
+  // Rótulo de valor na ponta da barra (seletivo: um por barra, sem sobrepor)
+  var rotulos = {
+    id: 'rotulos',
+    afterDatasetsDraw: function (chart, a, opts) {
+      if (!opts || !opts.fmt) return;
+      var ctx = chart.ctx; ctx.save();
+      ctx.font = '700 12px ' + FONTE; ctx.fillStyle = cor('--tinta'); ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+      var meta = chart.getDatasetMeta(0), ds = chart.data.datasets[0];
+      meta.data.forEach(function (bar, i) { var v = ds.data[i]; if (v == null) return; ctx.fillText(opts.fmt(v, i), bar.x + 6, bar.y); });
+      ctx.restore();
+    }
+  };
+  // Rótulo no fim da linha, só quando não colide com os vizinhos
+  var fimDeLinha = {
+    id: 'fimDeLinha',
+    afterDatasetsDraw: function (chart, a, opts) {
+      if (!opts || !opts.on) return;
+      var ctx = chart.ctx, pts = [];
+      chart.data.datasets.forEach(function (ds, i) {
+        var m = chart.getDatasetMeta(i); var p = m.data[m.data.length - 1]; if (p) pts.push({ y: p.y, x: p.x, t: ds.label });
+      });
+      pts.sort(function (a, b) { return a.y - b.y; });
+      for (var i = 1; i < pts.length; i++) if (pts[i].y - pts[i - 1].y < 15) return;
+      ctx.save(); ctx.font = '12px ' + FONTE; ctx.fillStyle = cor('--tinta-2'); ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+      pts.forEach(function (p) { ctx.fillText(p.t, p.x + 8, p.y); });
+      ctx.restore();
+    }
+  };
+  var graficos = {};
+  function desenhar(id, cfg) { if (graficos[id]) graficos[id].destroy(); graficos[id] = new Chart($(id), cfg); }
+  function eixos(fmtX) {
+    return {
+      x: { beginAtZero: true, grid: { color: cor('--grade') }, border: { color: cor('--eixo') },
+        ticks: { precision: 0, callback: fmtX || function (v) { return num.format(v); } } },
+      y: { grid: { display: false }, border: { color: cor('--eixo') }, ticks: { color: cor('--tinta-2'), font: { size: 13 } } }
+    };
+  }
+  var dica = el('div', null, 'dica'); dica.hidden = true; document.body.appendChild(dica);
+  function mostrarDica(x, y, valor, rotulo) {
+    dica.textContent = ''; dica.appendChild(el('b', valor)); dica.appendChild(el('span', rotulo)); dica.hidden = false;
+    dica.style.left = Math.max(8, Math.min(x + 14, window.innerWidth - 270)) + 'px';
+    dica.style.top = Math.max(8, Math.min(y + 14, window.innerHeight - 70)) + 'px';
+  }
+  function esconderDica() { dica.hidden = true; }
+  function barras(idCanvas, idCaixa, rotulosTxt, valores, opts) {
+    opts = opts || {};
+    var caixa = $(idCaixa); caixa.textContent = ''; caixa.style.height = 'auto';
+    if (!valores.length || valores.every(function (v) { return !v; })) { caixa.appendChild(el('div', 'Sem dados no período', 'vazio')); return; }
+    var max = opts.max || Math.max.apply(null, valores) || 1;
+    var fmt = opts.fmt || function (v) { return num.format(v); }, fmtTip = opts.fmtTip || fmt;
+    var lista = el('div', null, 'bl'); lista.setAttribute('role', 'list');
+    rotulosTxt.forEach(function (r, i) {
+      var v = valores[i] || 0, titulo = opts.titulos ? opts.titulos[i] : r;
+      var item = el('div', null, 'bl__item'); item.setAttribute('role', 'listitem'); item.tabIndex = 0;
+      item.setAttribute('aria-label', titulo + ': ' + fmtTip(v, i));
+      item.appendChild(el('div', r, 'bl__rot'));
+      var linha = el('div', null, 'bl__linha'), barra = el('i', null, 'bl__barra');
+      barra.style.width = v ? 'max(3px, calc((100% - 108px) * ' + Math.min(1, v / max).toFixed(4) + '))' : '0px';
+      barra.style.background = Array.isArray(opts.cores) ? opts.cores[i] : (opts.cores || cor('--s1'));
+      linha.appendChild(barra); linha.appendChild(el('span', fmt(v, i), 'bl__val')); item.appendChild(linha);
+      item.addEventListener('pointermove', function (e) { mostrarDica(e.clientX, e.clientY, fmtTip(v, i), titulo); });
+      item.addEventListener('pointerleave', esconderDica);
+      item.addEventListener('focus', function () { var b = item.getBoundingClientRect(); mostrarDica(b.left, b.bottom - 10, fmtTip(v, i), titulo); });
+      item.addEventListener('blur', esconderDica);
+      lista.appendChild(item);
+    });
+    caixa.appendChild(lista);
+  }
+
+  /* ---------- estado ---------- */
+  var DIAS = 7, dados = null, vendas = 0;
+  try { DIAS = Number(localStorage.getItem('cc_dias')) || 7; } catch (e) {}
+  try { localStorage.setItem('cc_admin', '1'); } catch (e) {}   // abrir o painel marca o aparelho
+
+  // chave vinda pelo link (#chave=...)
+  (function () {
+    var m = location.hash.match(/chave=([A-Za-z0-9_-]+)/);
+    if (m) { try { localStorage.setItem('cc_chave', m[1]); } catch (e) {} history.replaceState(null, '', location.pathname + location.search); }
+  })();
+  function lerChave() { try { return localStorage.getItem('cc_chave') || ''; } catch (e) { return ''; } }
+
+  /* ---------- números principais ---------- */
+  function kpi(rot, val, sub, spark) {
+    var d = el('div', null, 'kpi');
+    d.appendChild(el('span', rot, 'kpi__rot'));
+    d.appendChild(el('span', val, 'kpi__val'));
+    if (sub) d.appendChild(el('span', sub, 'kpi__sub'));
+    if (spark) d.appendChild(spark);
+    return d;
+  }
+  function sparkline(serie) {
+    if (!serie || serie.length < 2) return null;
+    var ns = 'http://www.w3.org/2000/svg', w = 120, h = 30, max = Math.max.apply(null, serie) || 1;
+    var svg = document.createElementNS(ns, 'svg'); svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h); svg.setAttribute('preserveAspectRatio', 'none'); svg.setAttribute('aria-hidden', 'true');
+    var pts = serie.map(function (v, i) { return [i / (serie.length - 1) * w, h - 3 - v / max * (h - 6)]; });
+    var pl = document.createElementNS(ns, 'polyline');
+    pl.setAttribute('points', pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '));
+    pl.setAttribute('fill', 'none'); pl.setAttribute('stroke', cor('--eixo')); pl.setAttribute('stroke-width', '2'); pl.setAttribute('vector-effect', 'non-scaling-stroke');
+    pl.setAttribute('stroke-linejoin', 'round'); pl.setAttribute('stroke-linecap', 'round');
+    var ult = pts[pts.length - 1], c = document.createElementNS(ns, 'circle');
+    c.setAttribute('cx', ult[0]); c.setAttribute('cy', ult[1]); c.setAttribute('r', '3.5'); c.setAttribute('fill', cor('--s1'));
+    svg.appendChild(pl); svg.appendChild(c);
+    return svg;
+  }
+  function renderKpis(D) {
+    var R = D.resumo, N = R.visitas, box = $('kpis'); box.textContent = '';
+    var taxa = function (x) { return N ? pct(x / N) : '—'; };
+    box.appendChild(kpi('Visitas', num.format(N), num.format(R.sessoes) + ' pessoas diferentes',
+      DIAS > 1 ? sparkline(D.porDia.map(function (d) { return d.visitas; })) : null));
+    box.appendChild(kpi('Tocaram no vídeo', taxa(R.pvPlay), num.format(R.pvPlay) + ' visitas'));
+    box.appendChild(kpi('Chegaram na oferta', taxa(R.pvOferta), num.format(R.pvOferta) + ' visitas'));
+    box.appendChild(kpi('Clicaram em comprar', taxa(R.pvClique), num.format(R.cliques) + ' cliques no total'));
+    box.appendChild(kpi('Tempo médio na página', tempo(R.tempoMedio), 'por visita'));
+    box.appendChild(kpi('Rolagem média', R.rolagemMedia ? R.rolagemMedia + '%' : '—', 'da página vista'));
+  }
+
+  /* ---------- análises automáticas ---------- */
+  var ICONES = {
+    critico: '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7.5" fill="var(--critico)"/><path d="M8 4v5" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="11.8" r="1.1" fill="#fff"/></svg>',
+    atencao: '<svg viewBox="0 0 16 16"><path d="M8 1l7.5 13.5H.5z" fill="var(--atencao)"/><path d="M8 6v4" stroke="#1B2420" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="12.2" r="1" fill="#1B2420"/></svg>',
+    bom: '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7.5" fill="var(--bom)"/><path d="M4.6 8.3l2.2 2.2 4.6-4.8" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    info: '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="var(--tinta-2)" stroke-width="1.6"/><path d="M8 7v4.5" stroke="var(--tinta-2)" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="4.8" r="1" fill="var(--tinta-2)"/></svg>'
+  };
+  var ROTULO = { critico: 'Crítico', atencao: 'Atenção', bom: 'Bom', info: 'Info' };
+  var PESO = { critico: 0, atencao: 1, bom: 2, info: 3 };
+  function soma(o) { return Object.keys(o || {}).reduce(function (s, k) { return s + o[k]; }, 0); }
+  function ordenado(o) { return Object.keys(o || {}).map(function (k) { return [k, o[k]]; }).sort(function (a, b) { return b[1] - a[1]; }); }
+  function analisar(D) {
+    var R = D.resumo, N = R.visitas, out = [];
+    if (!N) return [{ n: 'info', t: 'Ainda sem visitas neste período', x: 'Assim que alguém abrir o site, os números aparecem aqui em poucos segundos. As visitas deste aparelho não contam.' }];
+    var topo = [];
+    if (N < 50) topo.push({ n: 'info', t: 'Poucas visitas ainda (' + num.format(N) + ')', x: 'As taxas ficam confiáveis a partir de umas 100 visitas. Por enquanto, olhe como tendência.' });
+    var ord = D.ordem, alc = ord.map(function (s) { return (D.secoes[s] || 0) / N; });
+    var maxQ = 0, qi = -1;
+    for (var i = 1; i < ord.length; i++) { var q = alc[i - 1] - alc[i]; if (q > maxQ) { maxQ = q; qi = i; } }
+    if (qi > 0 && maxQ >= .08) out.push({ n: maxQ >= .25 ? 'critico' : 'atencao', t: 'Maior perda: entre "' + NOME_SEC[ord[qi - 1]] + '" e "' + NOME_SEC[ord[qi]] + '"',
+      x: pct(maxQ) + ' das visitas param nesse trecho. Veja no mapa de calor o que acontece ali e teste deixar esse trecho mais curto ou mais direto.' });
+    for (var j = 1; j < ord.length; j++) if (alc[j] < .5) {
+      out.push({ n: 'info', t: 'Metade das pessoas não chega em "' + NOME_SEC[ord[j]] + '"', x: 'Tudo o que vem daí pra baixo é visto por menos da metade. O que é importante pra vender deve aparecer antes.' });
+      break;
+    }
+    var tp = R.pvPlay / N;
+    out.push(tp < .2 ? { n: 'atencao', t: 'Poucos tocam no vídeo (' + pct(tp) + ')', x: 'Acima de 20% é bom. Teste outra frase no aviso do vídeo ou outra capa.' }
+      : { n: 'bom', t: pct(tp) + ' tocam pra ouvir o vídeo', x: 'O vídeo está chamando atenção. Acima de 20% é bom.' });
+    var to = R.pvOferta / N;
+    if (to < .4) out.push({ n: 'atencao', t: 'Só ' + pct(to) + ' chegam na oferta', x: 'A caixa com o preço fica longe pra muita gente. Os botões no meio da página ajudam: confira se estão visíveis.' });
+    var tc = R.pvClique / N;
+    out.push(tc < .05 ? { n: 'atencao', t: 'Clique em comprar: ' + pct(tc) + ' das visitas', x: 'Abaixo de 5% é baixo. Teste a headline, o primeiro botão e o que aparece antes de rolar.' }
+      : { n: 'bom', t: 'Clique em comprar: ' + pct(tc) + ' das visitas', x: 'Entre 5% e 15% é o comum. Acima disso, ótimo.' });
+    var bs = ordenado(D.botoes);
+    if (bs.length) out.push({ n: 'info', t: 'Botão que mais leva pro checkout: ' + (NOME_BTN[bs[0][0]] || bs[0][0]) + ' (' + num.format(bs[0][1]) + ')', x: 'Vale dar mais destaque a ele. Botões com poucos cliques podem sair da página.' });
+    var tot = soma(D.alvos), mortos = (D.alvos.imagem || 0) + (D.alvos.texto || 0);
+    if (tot >= 20 && mortos / tot > .3) out.push({ n: 'atencao', t: pct(mortos / tot) + ' dos toques foram em imagem ou texto', x: 'As pessoas tocam em coisas que não são botão. Veja no mapa de calor onde, e avalie transformar em botão.' });
+    if (R.tempoMedio && R.tempoMedio < 30) out.push({ n: 'atencao', t: 'Tempo médio curto (' + tempo(R.tempoMedio) + ')', x: 'Muita gente sai rápido. O começo da página precisa prender mais.' });
+    var ap = D.aparelhos, cel = (ap.m + ap.d) ? ap.m / (ap.m + ap.d) : 0;
+    if (cel >= .6) out.push({ n: 'info', t: pct(cel) + ' das visitas são no celular', x: 'Revise sempre as mudanças pelo celular primeiro.' });
+    var fq = ordenado(D.faq);
+    if (fq.length) out.push({ n: 'info', t: 'Dúvida mais aberta: "' + nomeFaq(fq[0][0]) + '"', x: 'Responder isso mais cedo na página pode tirar uma barreira da compra.' });
+    if (vendas > 0) {
+      var cv = vendas / N;
+      out.push({ n: cv >= .01 ? 'bom' : 'atencao', t: 'Conversão geral: ' + pct(cv, 1), x: num.format(vendas) + ' vendas em ' + num.format(N) + ' visitas. O comum é de 1% a 3%.' });
+      if (R.pvClique) {
+        var cc = vendas / R.pvClique;
+        out.push({ n: cc >= .2 ? 'bom' : 'atencao', t: 'Conversão do checkout: ' + pct(cc), x: 'O comum é de 20% a 40% de quem clica. Se estiver baixo, ative a recuperação de carrinho na Kiwify.' });
+      }
+    }
+    var or = D.origens && D.origens[0];
+    if (or) out.push({ n: 'info', t: 'Maior fonte de visitas: ' + nomeOrigem(or[0]), x: 'Use UTM nos links pra separar cada vídeo e anúncio.' });
+    out.sort(function (a, b) { return PESO[a.n] - PESO[b.n]; });
+    return topo.concat(out);
+  }
+  function renderAnalises(D) {
+    var ul = $('analises'); ul.textContent = '';
+    analisar(D).forEach(function (a) {
+      var li = el('li'), selo = el('span', null, 'selo');
+      selo.innerHTML = ICONES[a.n];  // ícone fixo, sem dado externo
+      selo.appendChild(document.createTextNode(ROTULO[a.n]));
+      var box = el('div'); box.appendChild(el('b', a.t)); box.appendChild(el('span', a.x, 'txt'));
+      li.appendChild(selo); li.appendChild(box); ul.appendChild(li);
+    });
+  }
+
+  /* ---------- evolução ---------- */
+  function renderEvolucao(D) {
+    var hoje = DIAS === 1, labels, sets, linhas;
+    var dataCurta = function (d) { var p = d.split('-'); return p[2] + '/' + p[1]; };
+    if (hoje) {
+      $('evo-titulo').textContent = 'Visitas por hora, hoje';
+      labels = D.porHora.map(function (v, h) { return h + 'h'; });
+      sets = [{ label: 'Visitas', data: D.porHora, borderColor: cor('--s1'), backgroundColor: 'rgba(42,120,214,.10)', fill: true }];
+      linhas = D.porHora.map(function (v, h) { return [h + 'h', num.format(v)]; }).filter(function (l, h) { return D.porHora[h]; });
+      tabela('t-evo', ['Hora', 'Visitas'], linhas);
+    } else {
+      $('evo-titulo').textContent = 'Visitas, plays e cliques por dia';
+      labels = D.porDia.map(function (d) { return dataCurta(d.d); });
+      sets = [
+        { label: 'Visitas', data: D.porDia.map(function (d) { return d.visitas; }), borderColor: cor('--s1'), backgroundColor: 'rgba(42,120,214,.10)', fill: true },
+        { label: 'Tocaram no vídeo', data: D.porDia.map(function (d) { return d.plays; }), borderColor: cor('--s2'), backgroundColor: cor('--s2') },
+        { label: 'Cliques em comprar', data: D.porDia.map(function (d) { return d.cliques; }), borderColor: cor('--s3'), backgroundColor: cor('--s3') }
+      ];
+      tabela('t-evo', ['Dia', 'Visitas', 'Plays', 'Cliques'], D.porDia.map(function (d) {
+        return [dataCurta(d.d), num.format(d.visitas), num.format(d.plays), num.format(d.cliques)];
+      }));
+    }
+    sets.forEach(function (s) {
+      Object.assign(s, { borderWidth: 2, pointRadius: 0, pointHoverRadius: 5, pointHoverBorderWidth: 2, pointHoverBorderColor: cor('--folha'),
+        pointBackgroundColor: s.borderColor, pointStyle: 'line', tension: .25, borderCapStyle: 'round', borderJoinStyle: 'round' });
+    });
+    var leg = $('evo-legenda'); leg.textContent = '';
+    if (sets.length > 1) sets.forEach(function (s) { var sp = el('span'); var i = el('i'); i.style.setProperty('--c', s.borderColor); sp.appendChild(i); sp.appendChild(document.createTextNode(s.label)); leg.appendChild(sp); });
+    desenhar('g-evo', {
+      type: 'line',
+      data: { labels: labels, datasets: sets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        layout: { padding: { right: sets.length > 1 ? 118 : 8 } },
+        scales: {
+          x: { grid: { display: false }, border: { color: cor('--eixo') }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 10 } },
+          y: { beginAtZero: true, grid: { color: cor('--grade') }, border: { display: false }, ticks: { precision: 0, callback: function (v) { return num.format(v); } } }
+        },
+        plugins: { fimDeLinha: { on: sets.length > 1 }, tooltip: { callbacks: { label: function (it) { return num.format(it.raw) + '  ' + it.dataset.label; } } } }
+      },
+      plugins: [fimDeLinha, {
+        id: 'mira', afterDraw: function (ch) {
+          var t = ch.tooltip; if (!t || !t.getActiveElements().length) return;
+          var x = t.getActiveElements()[0].element.x, a = ch.chartArea, ctx = ch.ctx;
+          ctx.save(); ctx.strokeStyle = cor('--eixo'); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, a.top); ctx.lineTo(x, a.bottom); ctx.stroke(); ctx.restore();
+        }
+      }]
+    });
+  }
+
+  /* ---------- funil e alcance ---------- */
+  function renderFunil(D) {
+    var R = D.resumo, N = R.visitas || 0;
+    var et = [['Visitaram', N], ['Tocaram no vídeo', R.pvPlay], ['Chegaram na oferta', R.pvOferta], ['Clicaram em comprar', R.pvClique]];
+    if (vendas > 0) et.push(['Compraram', vendas]);
+    var cores = [cor('--o1'), cor('--o2'), cor('--o3'), cor('--o4'), cor('--o5')].slice(0, et.length);
+    var fmt = function (v) { return num.format(v) + (N ? ' · ' + pct(v / N) : ''); };
+    barras('g-funil', 'c-funil', et.map(function (e) { return e[0]; }), et.map(function (e) { return e[1]; }),
+      { cores: cores, fmt: fmt, padDir: 96 });
+    tabela('t-funil', ['Etapa', 'Visitas', '% do total', '% da etapa anterior'], et.map(function (e, i) {
+      return [e[0], num.format(e[1]), N ? pct(e[1] / N) : '—', i && et[i - 1][1] ? pct(e[1] / et[i - 1][1]) : '—'];
+    }));
+  }
+  function renderSecoes(D) {
+    var N = D.resumo.visitas || 0;
+    var val = D.ordem.map(function (s) { return N ? (D.secoes[s] || 0) / N * 100 : 0; });
+    barras('g-secoes', 'c-secoes', D.ordem.map(function (s) { return NOME_SEC[s]; }), val,
+      { max: 100, fmt: function (v) { return pct(v / 100); }, fmtEixo: function (v) { return v + '%'; },
+        fmtTip: function (v, i) { return pct(v / 100) + ' · ' + num.format(D.secoes[D.ordem[i]] || 0) + ' visitas'; } });
+    tabela('t-secoes', ['Bloco', 'Visitas', '% do total'], D.ordem.map(function (s) {
+      return [NOME_SEC[s], num.format(D.secoes[s] || 0), N ? pct((D.secoes[s] || 0) / N) : '—'];
+    }));
+  }
+
+  /* ---------- distribuições ---------- */
+  function renderListas(D) {
+    var bs = ordenado(D.botoes);
+    barras('g-botoes', 'c-botoes', bs.map(function (b) { return NOME_BTN[b[0]] || b[0]; }), bs.map(function (b) { return b[1]; }));
+    tabela('t-botoes', ['Botão', 'Cliques'], bs.map(function (b) { return [NOME_BTN[b[0]] || b[0], num.format(b[1])]; }));
+
+    var al = ordenado(D.alvos), tot = soma(D.alvos);
+    barras('g-alvos', 'c-alvos', al.map(function (a) { return NOME_ALVO[a[0]] || a[0]; }), al.map(function (a) { return a[1]; }),
+      { fmt: function (v) { return num.format(v) + (tot ? ' · ' + pct(v / tot) : ''); }, padDir: 90 });
+    tabela('t-alvos', ['Onde tocou', 'Toques', '% dos toques'], al.map(function (a) { return [NOME_ALVO[a[0]] || a[0], num.format(a[1]), tot ? pct(a[1] / tot) : '—']; }));
+
+    var og = D.origens || [];
+    barras('g-origens', 'c-origens', og.map(function (o) { return nomeOrigem(o[0]); }), og.map(function (o) { return o[1]; }));
+    tabela('t-origens', ['Origem', 'Visitas'], og.map(function (o) { return [nomeOrigem(o[0]), num.format(o[1])]; }));
+    var ap = D.aparelhos, t = ap.m + ap.d;
+    $('med-cel').style.width = t ? (ap.m / t * 100) + '%' : '0';
+    $('med-cel-t').textContent = 'Celular ' + (t ? pct(ap.m / t) : '—');
+    $('med-comp-t').textContent = 'Computador ' + (t ? pct(ap.d / t) : '—');
+
+    renderFaq(D);
+  }
+  function renderFaq(D) {
+    var fq = ordenado(D.faq), curto = function (s) { return s.length > 34 ? s.slice(0, 32) + '…' : s; };
+    barras('g-faq', 'c-faq', fq.map(function (f) { return curto(nomeFaq(f[0])); }), fq.map(function (f) { return f[1]; }),
+      { titulos: fq.map(function (f) { return nomeFaq(f[0]); }) });
+    tabela('t-faq', ['Pergunta', 'Aberturas'], fq.map(function (f) { return [nomeFaq(f[0]), num.format(f[1])]; }));
+  }
+
+  /* ---------- atividade ---------- */
+  function renderFeed(D) {
+    var ul = $('feed'); ul.textContent = '';
+    var ap = function (d) { return d === 'm' ? 'celular' : d === 'd' ? 'computador' : 'aparelho'; };
+    var itens = (D.recentes || []).filter(function (r) { return r.t !== 'l'; });
+    if (!itens.length) { ul.appendChild(el('li', 'Nenhum movimento no período.')); return; }
+    itens.forEach(function (r) {
+      var txt;
+      if (r.t === 'v') txt = 'Alguém abriu a página (' + ap(r.d) + ')';
+      else if (r.t === 'b') txt = 'Clicou em comprar: ' + (NOME_BTN[r.a] || r.a) + ' (' + ap(r.d) + ')';
+      else if (r.t === 'p') txt = 'Tocou pra ouvir o vídeo (' + ap(r.d) + ')';
+      else if (r.t === 'f') txt = 'Abriu a pergunta "' + nomeFaq(r.a) + '"';
+      else txt = 'Tocou em ' + (NOME_ALVO[r.a] || r.a).toLowerCase() + (NOME_SEC[r.z] ? ', no bloco ' + NOME_SEC[r.z] : '') + ' (' + ap(r.d) + ')';
+      var li = el('li'); li.appendChild(el('time', r.h)); li.appendChild(el('span', txt)); ul.appendChild(li);
+    });
+  }
+
+  /* ---------- mapa de calor ---------- */
+  var mapa = { dev: 'm', modo: 'toques', W: 390, H: 0, s: 1, pronto: false };
+  var frame = $('mapa-frame'), cv = $('mapa-canvas'), palco = $('mapa-palco'), medida = $('mapa-medida'), janela = $('mapa-janela');
+  function iniciarMapa() {
+    frame.style.width = mapa.W + 'px'; frame.style.height = '1200px';
+    frame.addEventListener('load', prepararFrame);
+    frame.src = 'index.html?mapa=1';
+    window.addEventListener('resize', function () { ajustarEscala(); });
+  }
+  function prepararFrame() {
+    var doc; try { doc = frame.contentDocument; } catch (e) { return; }
+    if (!doc || !doc.body) return;
+    var st = doc.createElement('style');
+    st.textContent = '.edit-toggle,.painel-toggle,.fixo,.cookie,.edit-bar,.video-som{display:none!important}html{scroll-behavior:auto!important}'
+      + '.video-embed{background:#1D3A28!important}.video-embed iframe{visibility:hidden}.video-embed::after{content:"Vídeo";position:absolute;inset:0;display:grid;place-items:center;color:#8FB58A;font:700 14px/1 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase}';
+    doc.head.appendChild(st);
+    var v = doc.getElementById('vsl'); if (v) v.src = 'about:blank';
+    faqTextos = [].map.call(doc.querySelectorAll('.faq summary'), function (s) { return s.textContent.trim(); });
+    mapa.pronto = true;
+    medirFrame();
+    setTimeout(medirFrame, 700); setTimeout(medirFrame, 2500);
+    if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(medirFrame);
+    if (dados) { renderFaq(dados); renderAnalises(dados); renderFeed(dados); }
+  }
+  function medirFrame() {
+    var doc = frame.contentDocument; if (!doc || !doc.body) return;
+    var H = Math.max(doc.documentElement.scrollHeight, doc.body.scrollHeight);
+    if (Math.abs(H - mapa.H) > 2) { frame.style.height = H + 'px'; mapa.H = H; }
+    ajustarEscala(); desenharMapa();
+  }
+  function ajustarEscala() {
+    var jw = janela.clientWidth - 2;
+    mapa.s = Math.min(1, jw / mapa.W);
+    palco.style.transform = 'scale(' + mapa.s + ')';
+    medida.style.width = (mapa.W * mapa.s) + 'px';
+    medida.style.height = (mapa.H * mapa.s) + 'px';
+  }
+  function retangulo(doc, z) {
+    var e = z === 'hero' ? doc.querySelector('header.hero') : z === 'rodape' ? doc.querySelector('footer.rodape') : doc.getElementById(z);
+    if (!e) return null;
+    var r = e.getBoundingClientRect(), w = doc.defaultView;
+    return { x: r.left + w.scrollX, y: r.top + w.scrollY, w: r.width, h: r.height };
+  }
+  var paleta = null;
+  function paletaCalor() {
+    if (paleta) return paleta;
+    var c = document.createElement('canvas'); c.width = 256; c.height = 1;
+    var x = c.getContext('2d'), g = x.createLinearGradient(0, 0, 256, 0);
+    g.addColorStop(0, '#eda100'); g.addColorStop(.55, '#eb6834'); g.addColorStop(1, '#e34948');
+    x.fillStyle = g; x.fillRect(0, 0, 256, 1);
+    return (paleta = x.getImageData(0, 0, 256, 1).data);
+  }
+  function msgMapa(t) { var m = $('mapa-msg'); if (t) { m.textContent = t; m.hidden = false; } else m.hidden = true; }
+  function desenharMapa() {
+    if (!mapa.pronto || !mapa.H || !dados) return;
+    var doc = frame.contentDocument; if (!doc) return;
+    var W = mapa.W, H = mapa.H, esc = Math.min(1, 6e6 / (W * H));
+    cv.width = Math.round(W * esc); cv.height = Math.round(H * esc);
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    var ctx = cv.getContext('2d'); ctx.clearRect(0, 0, cv.width, cv.height);
+    $('escala').className = 'escala' + (mapa.modo === 'rolagem' ? ' rol' : '');
+    $('escala').firstChild.textContent = mapa.modo === 'rolagem' ? 'muita gente' : 'poucos';
+    $('escala').lastChild.textContent = mapa.modo === 'rolagem' ? 'pouca gente chega' : 'muitos toques';
+    if (mapa.modo === 'toques') desenharToques(ctx, doc, esc); else desenharRolagem(ctx, esc);
+  }
+  function desenharToques(ctx, doc, esc) {
+    var pts = (dados.toques && dados.toques[mapa.dev]) || [];
+    var aparelho = mapa.dev === 'm' ? 'celular' : 'computador';
+    if (!pts.length) { msgMapa('Ainda não há toques no ' + aparelho + ' neste período.'); $('mapa-info').textContent = ''; return; }
+    msgMapa('');
+    var R = (mapa.dev === 'm' ? 22 : 28) * esc;
+    var alfa = Math.min(.55, Math.max(.07, 2.8 / Math.sqrt(pts.length)));
+    var off = document.createElement('canvas'); off.width = cv.width; off.height = cv.height;
+    var o = off.getContext('2d'), cache = {}, usados = 0;
+    pts.forEach(function (p) {
+      var r = cache[p[0]] || (cache[p[0]] = retangulo(doc, p[0])); if (!r) return;
+      var x = (r.x + p[1] / 100 * r.w) * esc, y = (r.y + p[2] / 100 * r.h) * esc;
+      var g = o.createRadialGradient(x, y, 0, x, y, R);
+      g.addColorStop(0, 'rgba(0,0,0,' + alfa + ')'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      o.fillStyle = g; o.fillRect(x - R, y - R, R * 2, R * 2); usados++;
+    });
+    var img = o.getImageData(0, 0, off.width, off.height), d = img.data, pal = paletaCalor();
+    for (var i = 3; i < d.length; i += 4) {
+      var a = d[i]; if (!a) continue;
+      var j = a * 4; d[i - 3] = pal[j]; d[i - 2] = pal[j + 1]; d[i - 1] = pal[j + 2]; d[i] = Math.min(230, 45 + a * 1.25);
+    }
+    ctx.putImageData(img, 0, 0);
+    $('mapa-info').textContent = num.format(usados) + ' toques no ' + aparelho + ' neste período. Toques na faixa do topo e na barra fixa de compra entram em "Cliques por botão".';
+  }
+  function alcanceEm(arr, p) { var i = Math.min(19, Math.floor(p / 5)), f = (p - i * 5) / 5; return arr[i] + (arr[i + 1] - arr[i]) * f; }
+  function profundidadeOnde(arr, nivel) {
+    for (var i = 1; i < arr.length; i++) if (arr[i] < nivel) { var a = arr[i - 1], b = arr[i]; return (i - 1) * 5 + (a - nivel) / (a - b || 1) * 5; }
+    return null;
+  }
+  function desenharRolagem(ctx, esc) {
+    var arr = dados.rolagem && dados.rolagem[mapa.dev], base = dados.rolagem && dados.rolagem.base && dados.rolagem.base[mapa.dev];
+    var aparelho = mapa.dev === 'm' ? 'celular' : 'computador';
+    if (!arr || !base) { msgMapa('Ainda não há dados de rolagem no ' + aparelho + ' neste período.'); $('mapa-info').textContent = ''; return; }
+    msgMapa('');
+    var W = cv.width, H = cv.height;
+    for (var k = 0; k < 200; k++) {
+      var alc = alcanceEm(arr, k / 2);
+      ctx.fillStyle = 'rgba(20,41,28,' + ((1 - alc) * .72).toFixed(3) + ')';
+      ctx.fillRect(0, k / 200 * H, W, H / 200 + 1);
+    }
+    var fs = 15 / mapa.s * esc;
+    [.75, .5, .25].forEach(function (nv) {
+      var p = profundidadeOnde(arr, nv); if (p == null) return;
+      var y = p / 100 * H;
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2 * esc / mapa.s;
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      var t = Math.round(nv * 100) + '% chegam até aqui';
+      ctx.font = '700 ' + fs + 'px ' + FONTE;
+      var tw = ctx.measureText(t).width, pad = fs * .5;
+      ctx.fillStyle = '#1B2420'; ctx.fillRect(8 * esc, y - fs - pad * 1.6, tw + pad * 2, fs + pad * 1.4);
+      ctx.fillStyle = '#ffffff'; ctx.textBaseline = 'alphabetic'; ctx.fillText(t, 8 * esc + pad, y - pad * 1.1);
+    });
+    $('mapa-info').textContent = 'Baseado em ' + num.format(base) + ' visitas no ' + aparelho + '. Cada faixa mostra quanta gente viu aquela parte da página.';
+  }
+  [].forEach.call(document.querySelectorAll('[data-dev]'), function (b) {
+    b.addEventListener('click', function () {
+      mapa.dev = b.getAttribute('data-dev'); mapa.W = mapa.dev === 'm' ? 390 : 1280;
+      [].forEach.call(document.querySelectorAll('[data-dev]'), function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      frame.style.width = mapa.W + 'px';
+      setTimeout(medirFrame, 60); setTimeout(medirFrame, 600);
+    });
+  });
+  [].forEach.call(document.querySelectorAll('[data-modo]'), function (b) {
+    b.addEventListener('click', function () {
+      mapa.modo = b.getAttribute('data-modo');
+      [].forEach.call(document.querySelectorAll('[data-modo]'), function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      desenharMapa();
     });
   });
 
-  /* Este aparelho */
-  var txt = document.getElementById('admin-txt'), btn = document.getElementById('admin-btn');
-  function render(){
-    var a = false; try { a = localStorage.getItem('cc_admin') === '1'; } catch(e) {}
-    txt.textContent = a
-      ? 'Este aparelho está marcado como administrador. Suas visitas ao site não entram nas estatísticas, e o site mostra os botões "Editar texto" e "Painel" pra você.'
-      : 'Este aparelho não está marcado. Suas visitas contam nas estatísticas como as de qualquer visitante.';
-    btn.textContent = a ? 'Desmarcar este aparelho' : 'Marcar como administrador';
+  /* ---------- montar tudo ---------- */
+  function render(D) {
+    dados = D;
+    try { vendas = Number(localStorage.getItem('cc_vendas_' + DIAS)) || 0; } catch (e) { vendas = 0; }
+    $('in-vendas').value = vendas || '';
+    renderKpis(D); renderAnalises(D); renderEvolucao(D); renderFunil(D); renderSecoes(D); renderListas(D); renderFeed(D);
+    $('ao-vivo-n').textContent = (D.resumo.agora === 1 ? '1 pessoa' : num.format(D.resumo.agora) + ' pessoas') + ' agora';
+    var h = new Date(D.geradoEm);
+    $('atualizado').textContent = 'Atualizado às ' + String(h.getHours()).padStart(2, '0') + ':' + String(h.getMinutes()).padStart(2, '0');
+    desenharMapa();
   }
-  btn.addEventListener('click', function(){
-    try {
-      if (localStorage.getItem('cc_admin') === '1') localStorage.removeItem('cc_admin');
-      else localStorage.setItem('cc_admin','1');
-    } catch(e) {}
-    render();
+  window.ccPainel = { render: render };
+
+  function aviso(t, erro) { var m = $('msg'); if (!t) { m.hidden = true; return; } m.textContent = t; m.className = 'aviso' + (erro ? ' erro' : ''); m.hidden = false; }
+  function carregar(fresco) {
+    var chave = lerChave();
+    $('setup').hidden = !!(C.coletor && chave);
+    $('setup-coletor').hidden = !!C.coletor;
+    $('setup-chave').hidden = !C.coletor || !!chave;
+    if (!C.coletor || !chave) return;
+    $('wrap').classList.add('carregando');
+    var u = C.coletor + (C.coletor.indexOf('?') > -1 ? '&' : '?') + 'k=' + encodeURIComponent(chave) + '&dias=' + DIAS + (fresco ? '&fresco=1' : '') + '&_=' + Date.now();
+    fetch(u).then(function (r) { return r.json(); }).then(function (j) {
+      if (!j || !j.ok) {
+        aviso(j && j.erro === 'chave' ? 'A chave do painel não confere. Use o botão "Trocar a chave do painel", lá embaixo, e cole de novo.' : 'O coletor respondeu com erro. Tente de novo em instantes.', true);
+        return;
+      }
+      aviso(''); render(j);
+    }).catch(function () {
+      aviso('Não consegui buscar os dados agora. Confira a internet e toque em "Atualizar".', true);
+    }).then(function () { $('wrap').classList.remove('carregando'); });
+  }
+
+  // período
+  [].forEach.call(document.querySelectorAll('[data-dias]'), function (b) {
+    var d = Number(b.getAttribute('data-dias'));
+    b.setAttribute('aria-pressed', String(d === DIAS));
+    b.addEventListener('click', function () {
+      DIAS = d; try { localStorage.setItem('cc_dias', String(d)); } catch (e) {}
+      [].forEach.call(document.querySelectorAll('[data-dias]'), function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      carregar(false);
+    });
   });
-  render();
+  $('btn-atualizar').addEventListener('click', function () { carregar(true); });
+  $('in-vendas').addEventListener('input', function () {
+    vendas = Math.max(0, Number(this.value) || 0);
+    try { localStorage.setItem('cc_vendas_' + DIAS, String(vendas)); } catch (e) {}
+    if (dados) { renderFunil(dados); renderAnalises(dados); }
+  });
+  $('form-chave').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = $('in-chave').value.trim(); if (!v) return;
+    try { localStorage.setItem('cc_chave', v); } catch (er) {}
+    $('in-chave').value = ''; carregar(true);
+  });
+  $('chave-btn').addEventListener('click', function () {
+    try { localStorage.removeItem('cc_chave'); } catch (e) {}
+    carregar(false); $('setup').scrollIntoView({ behavior: 'smooth' });
+  });
+  setInterval(function () { if (document.visibilityState === 'visible') carregar(true); }, 60000);
+
+  // atalhos com IDs
+  if (C.clarity) $('lk-clarity').href = 'https://clarity.microsoft.com/projects/view/' + encodeURIComponent(C.clarity) + '/dashboard';
+  if (C.vimeoId) $('lk-vimeo').href = 'https://vimeo.com/manage/videos/' + encodeURIComponent(C.vimeoId);
+  if (C.lookerEmbed) $('lk-looker').href = C.lookerEmbed.replace('/embed/', '/');
+
+  // melhorias
+  var KEY = 'cc_melhorias', feitos = {};
+  try { feitos = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  [].forEach.call(document.querySelectorAll('#melhorias input'), function (inp) {
+    var id = inp.getAttribute('data-id'), lab = inp.closest('label');
+    inp.checked = !!feitos[id]; lab.classList.toggle('feito', inp.checked);
+    inp.addEventListener('change', function () {
+      feitos[id] = inp.checked; lab.classList.toggle('feito', inp.checked);
+      try { localStorage.setItem(KEY, JSON.stringify(feitos)); } catch (e) {}
+    });
+  });
+
+  // este aparelho
+  function renderAdmin() {
+    var a = false; try { a = localStorage.getItem('cc_admin') === '1'; } catch (e) {}
+    $('admin-txt').textContent = a
+      ? 'Este aparelho está marcado como administrador. Suas visitas ao site não entram nos números, e o site mostra os botões "Editar texto" e "Painel" pra você.'
+      : 'Este aparelho não está marcado. Suas visitas contam nos números como as de qualquer visitante.';
+    $('admin-btn').textContent = a ? 'Desmarcar este aparelho' : 'Marcar como administrador';
+  }
+  $('admin-btn').addEventListener('click', function () {
+    try { if (localStorage.getItem('cc_admin') === '1') localStorage.removeItem('cc_admin'); else localStorage.setItem('cc_admin', '1'); } catch (e) {}
+    renderAdmin();
+  });
+  renderAdmin();
+
+  iniciarMapa();
+  carregar(false);
 })();
 </script>
 </body>
