@@ -15,7 +15,7 @@ window.CC_CONFIG = {
   lookerEmbed: 'https://lookerstudio.google.com/embed/reporting/f78ae821-9113-47d3-8009-d68e43a266ac/page/vCs8F',
 
   // Medição própria do painel — URL do "App da Web" da planilha (termina em /exec)
-  coletor: '',
+  coletor: 'https://script.google.com/macros/s/AKfycbwr4eqvl2lKgHGYa-OW4MssgBcWI8JHKIlupRj5BKh8m_ulhcGFDBRImDE-dCSu5BXi/exec',
 
   checkout: 'https://pay.kiwify.com.br/INdFS82',
   vimeoId: '1226280316'
