@@ -115,6 +115,7 @@
     function tipoAlvo(el) {
       if (el.closest('a[href*="pay.kiwify.com.br"]')) return 'comprar';
       if (el.closest('#vsl-som')) return 'video';
+      if (el.closest('a.btn[href="#oferta"]')) return 'ver-oferta';
       if (el.closest('.faq summary')) return 'pergunta';
       if (el.closest('a')) return 'link';
       if (el.closest('button')) return 'botao';

@@ -265,8 +265,8 @@ code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
 
     <div class="grade2">
       <section class="card">
-        <h2>Cliques por botão de compra</h2>
-        <p class="sub">Qual botão leva mais gente pro checkout.</p>
+        <h2>Cliques que vão pro checkout</h2>
+        <p class="sub">Os botões da caixa da oferta e do final da página. Os de cima levam pra oferta e aparecem em "Onde as pessoas tocam".</p>
         <div class="grafico" id="c-botoes"></div>
         <details class="tab"><summary>Ver em tabela</summary><div class="tabela" id="t-botoes"></div></details>
       </section>
@@ -329,7 +329,7 @@ code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
     <h2>Melhorias sugeridas</h2>
     <p class="sub">Revisão da página, em ordem de prioridade. Marque o que já foi feito: fica salvo neste aparelho.</p>
     <ul class="melhorias" id="melhorias">
-      <li><label><input type="checkbox" data-id="m1"><div><b><span class="pri alta">Alta</span>Alinhar a escassez</b><span class="desc">O contador reinicia em ~2h a cada visita, e a oferta diz "termina domingo". Quem volta vê o relógio recomeçar, e isso quebra a confiança. Escassez falsa também pode ser vista como propaganda enganosa. Escolha uma data real e use a mesma nos dois lugares.</span></div></label></li>
+      <li><label><input type="checkbox" data-id="m1"><div><b><span class="pri alta">Alta</span>Alinhar a escassez</b><span class="desc">O contador do topo reinicia em ~2h a cada visita. Quem volta vê o relógio recomeçar, e isso quebra a confiança. Escassez falsa também pode ser vista como propaganda enganosa. Use uma data real de fim do lançamento.</span></div></label></li>
       <li><label><input type="checkbox" data-id="m2"><div><b><span class="pri alta">Alta</span>Confirmar o preço "de R$ 97"</b><span class="desc">O preço riscado só deve aparecer se o produto foi ou vai ser vendido por esse valor.</span></div></label></li>
       <li><label><input type="checkbox" data-id="m3"><div><b><span class="pri alta">Alta</span>Preencher os dados legais</b><span class="desc">Razão social, CNPJ, e-mail de contato e foro nas páginas de Privacidade e Termos. Passa confiança e é exigido pela LGPD.</span></div></label></li>
       <li><label><input type="checkbox" data-id="m4"><div><b><span class="pri media">Média</span>Acompanhar a taxa de play do vídeo</b><span class="desc">Se menos de 1 em cada 5 visitantes tocar pra ouvir, teste outra frase no aviso do vídeo ou outra capa.</span></div></label></li>
@@ -371,7 +371,7 @@ code{font-size:13px;background:#E6E8DC;border-radius:4px;padding:1px 5px}
     dentro: 'O que tem dentro', depoimentos: 'Depoimentos', sobre: 'Sobre o Juca', oferta: 'Oferta', perguntas: 'Perguntas', final: 'Botão final' };
   var NOME_BTN = { video: 'Abaixo do vídeo', plano: 'Depois do plano', dentro: 'Depois dos capítulos', oferta: 'Caixa da oferta',
     final: 'Final da página', fixo: 'Barra fixa do celular', outro: 'Outro' };
-  var NOME_ALVO = { comprar: 'Botão de compra', video: 'Tocar o vídeo', pergunta: 'Pergunta', link: 'Outro link',
+  var NOME_ALVO = { comprar: 'Botão pro checkout', 'ver-oferta': 'Botão que leva pra oferta', video: 'Tocar o vídeo', pergunta: 'Pergunta', link: 'Outro link',
     botao: 'Outro botão', imagem: 'Imagem (não clicável)', texto: 'Texto (não clicável)' };
   var nomeOrigem = function (o) { return o === 'direto' ? 'Direto ou sem origem' : o; };
   var faqTextos = [];
