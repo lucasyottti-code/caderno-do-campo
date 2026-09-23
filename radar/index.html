@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Radar Juca da Mata</title>
+<style>
+:root{
+  --bg:#f5f2ec; --card:#ffffff; --ink:#1f1d1a; --muted:#6b645a; --line:#e3dccf; --soft:#faf8f4;
+  --accent:#2e6b3a; --on-accent:#ffffff; --link:#1d5ea8;
+  --forte:#1d7a3c; --forte-bg:#e2f3e6; --bom:#8f6100; --bom-bg:#fbefd2; --fraco:#6b645a; --fraco-bg:#eeeae2;
+  --warn:#8a4a00; --warn-bg:#fff3de; --info-bg:#eaf1fa; --info:#1d4f86;
+  --real:#1d5e3a; --real-bg:#dff0e5; --pers:#6b3f8a; --pers-bg:#efe6f6; --nsei:#5d5a55; --nsei-bg:#ece9e4;
+  --shadow:0 1px 2px rgba(40,30,10,.06),0 4px 14px rgba(40,30,10,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#151412; --card:#1f1d1a; --ink:#f0ece5; --muted:#a79f94; --line:#35312b; --soft:#252320;
+    --accent:#7cc48a; --on-accent:#10150f; --link:#7fb4f0;
+    --forte:#7fd49a; --forte-bg:#1c3324; --bom:#f0c060; --bom-bg:#3a2f14; --fraco:#b8b0a4; --fraco-bg:#2c2925;
+    --warn:#f3b35b; --warn-bg:#3a2a12; --info-bg:#182638; --info:#9cc3f0;
+    --real:#8fdcaa; --real-bg:#1b3325; --pers:#d0a8ef; --pers-bg:#2e2238; --nsei:#c9c3ba; --nsei-bg:#2c2925;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#151412; --card:#1f1d1a; --ink:#f0ece5; --muted:#a79f94; --line:#35312b; --soft:#252320;
+  --accent:#7cc48a; --on-accent:#10150f; --link:#7fb4f0;
+  --forte:#7fd49a; --forte-bg:#1c3324; --bom:#f0c060; --bom-bg:#3a2f14; --fraco:#b8b0a4; --fraco-bg:#2c2925;
+  --warn:#f3b35b; --warn-bg:#3a2a12; --info-bg:#182638; --info:#9cc3f0;
+  --real:#8fdcaa; --real-bg:#1b3325; --pers:#d0a8ef; --pers-bg:#2e2238; --nsei:#c9c3ba; --nsei-bg:#2c2925;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--link);text-decoration:none} a:hover{text-decoration:underline}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.topo{max-width:1240px;margin:0 auto;padding:14px 16px 0;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between}
+.marca{display:flex;flex-direction:column}
+.marca b{font-size:20px;letter-spacing:.2px}
+.marca span{color:var(--muted);font-size:13px}
+.controles{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+select{font:inherit;font-size:15px;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+nav{max-width:1240px;margin:0 auto;padding:10px 16px 0;display:flex;gap:4px;overflow-x:auto}
+nav button{font:inherit;font-size:15px;border:0;background:none;color:var(--muted);padding:9px 14px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+main{max-width:1240px;margin:0 auto;padding:18px 16px 60px}
+h2{font-size:21px;margin:30px 0 4px}
+h2 small{font-weight:400;color:var(--muted);font-size:14px;margin-left:6px}
+.sub{color:var(--muted);margin:0 0 14px;font-size:14px}
+.resumo{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.resumo p{margin:0 0 10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:4px 10px;border-radius:999px;background:var(--soft);border:1px solid var(--line);color:var(--ink)}
+.chip.forte{background:var(--forte-bg);color:var(--forte);border-color:transparent;font-weight:600}
+.chip.bom{background:var(--bom-bg);color:var(--bom);border-color:transparent;font-weight:600}
+.chip.fraco{background:var(--fraco-bg);color:var(--fraco);border-color:transparent;font-weight:600}
+.chip.warn{background:var(--warn-bg);color:var(--warn);border-color:transparent}
+details.legenda{margin-top:12px;font-size:14px;color:var(--muted)}
+details.legenda summary{cursor:pointer;color:var(--ink)}
+details.legenda ul{margin:8px 0 0;padding-left:20px}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.thumb{position:relative;display:block;aspect-ratio:16/9;background:#000;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.semfoto{background:repeating-linear-gradient(135deg,var(--soft) 0 10px,var(--line) 10px 20px)!important}
+.thumb .pos{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.72);color:#fff;font-weight:700;font-size:13px;padding:3px 8px;border-radius:6px}
+.thumb .classe{position:absolute;top:10px;right:10px;font-weight:800;font-size:12px;letter-spacing:.6px;padding:4px 9px;border-radius:6px}
+.thumb .classe.forte{background:#1d7a3c;color:#fff} .thumb .classe.bom{background:#b07800;color:#fff} .thumb .classe.fraco{background:#6b645a;color:#fff}
+.thumb .dur{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.78);color:#fff;font-size:12px;padding:2px 7px;border-radius:5px}
+.corpo{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.metrica{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.metrica .x{font-size:30px;font-weight:800;line-height:1;color:var(--forte)}
+.metrica .x.bom{color:var(--bom)} .metrica .x.fraco{color:var(--fraco)}
+.metrica .xl{font-size:13px;color:var(--muted)}
+.metrica .v{margin-left:auto;font-size:14px;color:var(--ink);text-align:right}
+.titulo{font-size:17px;font-weight:650;line-height:1.3;margin:0}
+.titulo a{color:var(--ink)}
+.pt{font-size:14px;color:var(--muted);margin:-4px 0 0;font-style:italic}
+.canal{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:14px;color:var(--muted)}
+.canal a{font-weight:600}
+.tipo{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px}
+.tipo.pessoa_real{background:var(--real-bg);color:var(--real)} .tipo.personagem_provavel{background:var(--pers-bg);color:var(--pers)} .tipo.nao_sei{background:var(--nsei-bg);color:var(--nsei)}
+.bloco h4{margin:0 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.bloco ul{margin:0;padding-left:18px} .bloco li{margin:2px 0} .bloco p{margin:0}
+.ideia{background:var(--info-bg);color:var(--ink);border-radius:10px;padding:10px 12px}
+.ideia h4{color:var(--info)}
+.alerta{background:var(--warn-bg);color:var(--warn);border-radius:10px;padding:8px 12px;font-size:14px}
+.fonte{border:1px dashed var(--line);border-radius:10px;padding:8px 12px;font-size:14px}
+details.coment summary{cursor:pointer;font-size:14px;color:var(--muted)}
+details.coment blockquote{margin:8px 0 0;padding:6px 10px;border-left:3px solid var(--line);font-size:14px}
+details.coment blockquote span{display:block;color:var(--muted);font-size:13px}
+.origem{font-size:12px;color:var(--muted)}
+.acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:6px}
+.btn{font:inherit;font-size:14px;display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:9px;border:1px solid var(--line);background:var(--soft);color:var(--ink);cursor:pointer;text-decoration:none}
+.btn:hover{text-decoration:none;border-color:var(--muted)}
+.btn.primario{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn:focus-visible,nav button:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lista{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.linha{display:flex;gap:12px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}
+.linha:first-child{border-top:0}
+.linha img{width:120px;aspect-ratio:16/9;object-fit:cover;border-radius:6px;flex:none;background:#000}
+.linha .txt{flex:1;min-width:0}
+.linha .txt b{display:block;font-weight:600;font-size:15px;line-height:1.3}
+.linha .txt span{font-size:13px;color:var(--muted)}
+.linha .num{font-weight:700;white-space:nowrap}
+.vazio{color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:14px;padding:22px;text-align:center}
+.notas{font-size:14px;color:var(--muted)} .notas li{margin:4px 0}
+.fontes-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.fonte-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.fonte-card b{font-size:16px}
+.fonte-card p{margin:0;font-size:13px;color:var(--muted)}
+.trend{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.trend b{font-size:17px}
+.trend .meta{font-size:13px;color:var(--muted);margin:2px 0 6px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+footer{max-width:1240px;margin:0 auto;padding:0 16px 40px;color:var(--muted);font-size:13px}
+@media (max-width:520px){ .grade{grid-template-columns:1fr} .linha img{width:92px} .metrica .v{margin-left:0;text-align:left} }
+</style>
+</head>
+<body>
+<header>
+  <div class="topo">
+    <div class="marca"><b id="t-canal">Radar de pauta</b><span id="t-gerado"></span></div>
+    <div class="controles"><label for="sel-dia" class="sub" style="margin:0">Rodada</label><select id="sel-dia"></select></div>
+  </div>
+  <nav role="tablist">
+    <button role="tab" data-aba="videos" aria-selected="true">Vídeos para modelar</button>
+    <button role="tab" data-aba="tendencias" aria-selected="false">Tendências</button>
+    <button role="tab" data-aba="fontes" aria-selected="false">Fontes e candidatos</button>
+    <button role="tab" data-aba="semana" aria-selected="false">Relatório da semana</button>
+  </nav>
+</header>
+<main id="conteudo"></main>
+<footer>Views de outros canais são referência, não prova de CTR nem de retenção. O radar sugere; quem decide é você.</footer>
+<div class="toast" id="toast"></div>
+<script id="dados" type="application/json">{"canal": "Juca da Mata", "gerado": "23/09/2026 16:56", "dias": [{"data": "2026-09-23", "status": "parcial", "atrasada": false, "janela_horas": 48, "regua": "aproximação inicial", "contagem": {"lista": 5, "candidatos": 5, "buscas": 18}, "resumo": "Primeira rodada: 6 vídeos no tema e 4 fora. O que mais vale olhar: o roubo no sítio (#01), um canal minúsculo que fez 47 vezes o normal com assunto de segurança, o mesmo do vídeo que mais deu certo no canal; e o plástico-bolha do Elias (#04), um título que já deu certo 3 vezes. Os canais da sua lista postaram pouco nas últimas 48 h.", "itens": [{"id": "R-20260923-01", "classe": "forte", "indice": 124.3, "video_id": "ieVDIGM6_8o", "titulo": "Estão roubando as frutas do meu sítio", "canal": "Vida no Rancho", "channel_id": "UCK1OdKQejDhB8W4x58iU64A", "handle": "@canalvidanorancho", "pais": "BR", "inscritos": 188, "tipo": "nao_sei", "views": 8500, "idade_h": 36, "idade_aprox": true, "normal": 180, "duracao_min": 16, "origem": "busca \"vida no sítio\"", "fora_do_tema": false, "por_que_deu_certo": ["Queixa real, com revolta: \"estão roubando\" mexe com quem tem sítio ou quintal.", "Título curto, na primeira pessoa, sem número: parece conversa de vizinho.", "O canal tem 188 inscritos. Quem puxou foi o assunto, não o canal."], "por_que_vale": "Roubo em sítio e em casa é medo real de quem tem mais de 60 e mora só na roça. É o mesmo terreno do vídeo de segurança, o que mais deu certo no canal.", "como_adaptar": "Como os antigos protegiam horta, pomar e galinheiro de ladrão sem gastar: cerca viva, cachorro, barulho e vizinho de olho.", "parecido_com": "\"17 Técnicas Contra Invasão Simples para Idosos que Moram Sozinhos\" (mesma promessa: segurança de quem mora só)", "comentarios": [{"texto": "Eles vão voltar, essas pessoas não querem ter trabalho de nada", "curtidas": 4}, {"texto": "Infelizmente sítio tem dessas coisas. Você gasta, planta, investe tempo e vem alguém e leva.", "curtidas": 3}, {"texto": "Como pode a pessoa ir aí pra roubar, mas Deus tá vendo tudo!", "curtidas": 2}, {"texto": "quem vai adivinhar que isso tem dono… limpa o terreno", "curtidas": 1}]}, {"id": "R-20260923-02", "classe": "forte", "indice": 41.7, "video_id": "H9XNxfetJKs", "titulo": "Why the Amish Are Quietly Leaving Pennsylvania After 200 Years — The Reason Will SHOCK You!", "titulo_pt": "Por que os Amish estão deixando a Pensilvânia em silêncio depois de 200 anos — o motivo vai te chocar", "canal": "Elias Stoltzfus", "channel_id": "UC4jb53XNsc1IlML43tSH7Nw", "handle": "@EliasStoltzfus", "inscritos": 3210, "tipo": "personagem_provavel", "views": 5098, "idade_h": 36, "idade_aprox": true, "normal": 322, "duracao_min": 20, "origem": "busca \"amish\"", "fora_do_tema": true, "por_que_deu_certo": ["Curiosidade com mistério (\"o motivo vai te chocar\") sobre um povo que esse público admira.", "O assunto \"os Amish estão indo embora\" estourou em vários canais esta semana: o vídeo anterior deste mesmo canal, com título quase igual, fez 1,7 mi em 2 dias."], "por_que_vale": "Só se quiser um vídeo de curiosidade. Nos comentários, gente diz que é mentira e aponta erro de imagem feita por IA: risco de credibilidade.", "como_adaptar": "Como está, não recomendo. Se usar, o ângulo seria \"o que os Amish sabem que a gente esqueceu\", sem inventar notícia.", "fonte": {"achou": true, "titulo": "Why the Amish Are Leaving the One Place That Made Them Famous", "canal": "Amish Faith Today", "video_id": "n7H0ZKCgFrY", "data": "há 1 mês", "views": 183804, "nota": "A embalagem \"Thousands of Amish Are Abandoning Their Home — The Reason is SHOCKING!\" saiu antes no canal imsickurdcure (1,36 mi, há 6 dias: youtube.com/watch?v=dWPaKB7NE6Y). Não confirmei se algum dos dois é pessoa real."}, "comentarios": [{"texto": "Would like to be updated where Amish will re settle.", "texto_pt": "Queria saber para onde os Amish vão se mudar.", "curtidas": 2}, {"texto": "Why are you lying, this isn't true.", "texto_pt": "Por que você está mentindo? Isso não é verdade.", "curtidas": 1}, {"texto": "…some foolish mistakes… like the horse cart in reverse", "texto_pt": "…uns erros bobos… como a carroça com o cavalo ao contrário (erro de imagem de IA)", "curtidas": 0}, {"texto": "Poor and inauthentic video, the information is fairly accurate.", "texto_pt": "Vídeo fraco e pouco autêntico; a informação até que é correta.", "curtidas": 0}]}, {"id": "R-20260923-03", "classe": "forte", "indice": 15.1, "video_id": "WFy4vQ4H2xk", "titulo": "Preps When All Else Fails.", "titulo_pt": "O que ter guardado para quando tudo falhar", "canal": "Modern Refugee.", "channel_id": "UCo95iU0xxbk_Eo6y4lc7Alw", "handle": "@ModernRefugee", "inscritos": 39600, "tipo": "pessoa_real", "views": 6867, "idade_h": 36, "idade_aprox": true, "normal": 1200, "duracao_min": 10, "origem": "busca \"wood stove\"", "fora_do_tema": false, "por_que_deu_certo": ["Promessa de segurança: o que ter em casa quando tudo der errado.", "Pessoa real, canal de 2018 com público fiel: 5,7 vezes o normal."], "por_que_vale": "Crise e falta de tudo é o terreno do \"15 coisas que idosos que moram sozinhos precisam ter em casa\".", "como_adaptar": "O que a roça sempre guardou para quando falta luz, água e mercado: lista curta e barata, com o porquê de cada item.", "parecido_com": "\"15 coisas que idosos que moram sozinhos precisam ter em casa antes de uma crise\""}, {"id": "R-20260923-04", "classe": "forte", "indice": 14.7, "video_id": "62eg5bUCX9Q", "titulo": "Why Installing BUBBLE WRAP on Windows Is GENIUS", "titulo_pt": "Por que colocar plástico-bolha na janela é genial", "canal": "Elias Yoder", "channel_id": "UCaj8oe2fiZNjXzX1QEZ1F2A", "handle": "@EliasYoderAmish", "pais": "US", "inscritos": 361000, "tipo": "personagem_provavel", "views": 24000, "idade_h": 13, "normal": 8600, "duracao_min": 20, "origem": "lista", "fora_do_tema": false, "por_que_deu_certo": ["Objeto comum e barato (plástico-bolha) com um resultado que surpreende (\"genial\").", "Título já testado: o mesmo título fez 807 mil há 1 ano em outro canal, e o assunto soma 3,6 mi desde 2014.", "Referência de sempre do canal: 2,8 vezes o normal em 13 horas."], "por_que_vale": "Casa quente gastando pouco é promessa que o público já assistiu no canal. Aqui o frio já passou: guardar para o próximo inverno ou virar pelo lado da conta de luz.", "como_adaptar": "O truque barato da janela que segura o calor (ou barra o sol), do jeito que se fazia na roça com o que tinha em casa.", "parecido_com": "\"12 jeitos de esquentar a casa quando falta luz\" (casa quente gastando pouco)", "fonte": {"achou": true, "titulo": "Why Installing Bubble Wrap on Windows is Genius", "canal": "Natural Health Remedies", "video_id": "lB-rDgZup9Q", "data": "há 1 ano", "views": 807308, "nota": "O assunto é antigo: \"Insulate A Window With Bubble Wrap\", AlaskaGranny, há 12 anos, 3,6 mi (youtube.com/watch?v=3TxGl7IO2Ds). A Sylvie Mercer usou o mesmo título há 3 semanas: 81 mil."}}, {"id": "R-20260923-05", "classe": "forte", "indice": 12.5, "video_id": "0dTvut847Mo", "titulo": "Things took a turn really fast", "titulo_pt": "As coisas mudaram muito rápido", "canal": "HOMESTEAD HEART", "channel_id": "UCb5r6YTWcmvU7hgfuhjxqgw", "handle": "@HOMESTEADHEART", "pais": "US", "inscritos": 382000, "tipo": "pessoa_real", "views": 33735, "idade_h": 14, "normal": 13500, "duracao_min": 19, "origem": "busca \"homestead\"", "fora_do_tema": true, "por_que_deu_certo": ["Vlog de família com público fiel; título de suspense que não diz o assunto.", "Funciona pelo canal, não pelo tema."], "por_que_vale": "Dá pouco para modelar: o título não carrega assunto. Entrou só pelo número.", "como_adaptar": "Não vale modelar."}, {"id": "R-20260923-06", "classe": "forte", "indice": 11.9, "video_id": "nvSOBzR-ozk", "titulo": "£1 a Meal for 7 Days… Limited Budget Food Challenge", "titulo_pt": "Refeição a £1 por 7 dias… desafio de comer com pouco dinheiro", "canal": "WearyWolf Adventures", "channel_id": "UCUSQDNI2HdeEgEJUSpaCE-A", "handle": "@WearyWolfAdventures", "inscritos": 43100, "tipo": "pessoa_real", "views": 12640, "idade_h": 22, "normal": 3800, "duracao_min": 63, "origem": "busca \"frugal living\"", "fora_do_tema": false, "por_que_deu_certo": ["Número concreto e pequeno (£1 por refeição) e um desafio com prazo (7 dias).", "Economia de mercado: dor do bolso de todo mundo agora.", "3,3 vezes o normal de um canal de pessoa real."], "por_que_vale": "Comer bem com pouco é a dor de quem vive de aposentadoria.", "como_adaptar": "Uma semana comendo bem com R$ X por dia, com o que a roça ensinava: feijão, fubá, ovo, horta e nada jogado fora."}, {"id": "R-20260923-07", "classe": "forte", "indice": 11.6, "video_id": "GYVSj5qISy4", "titulo": "VOCÊ TEM MAIS DE 60 ANOS? ENTÃO TEM DIREITO A ESSES 4 BENEFÍCIOS! Lei do IDOSO", "canal": "Professor Carlos Mendes", "channel_id": "UCAUmBOV1TNS4mrUbmc23U-w", "handle": "@carlosmendesadvocacia", "pais": "BR", "inscritos": 157000, "tipo": "pessoa_real", "views": 54000, "idade_h": 23, "normal": 16000, "duracao_min": 16, "origem": "busca \"idosos\"", "fora_do_tema": true, "por_que_deu_certo": ["Chama o público pelo nome logo na primeira frase: \"Você tem mais de 60 anos?\"", "Promessa de ganho direto, com número (4 benefícios).", "3,4 vezes o normal de um canal grande do Brasil."], "por_que_vale": "É exatamente o público do Juca, mas direitos e benefícios não são a lente do canal. Serve de prova de que \"Tem mais de 60 anos?\" no começo do título puxa.", "como_adaptar": "Não modelar o assunto; testar a abertura \"Tem mais de 60 anos?\" num título do canal."}, {"id": "R-20260923-08", "classe": "forte", "indice": 9.5, "video_id": "yM1Zp0KSZ0U", "titulo": "No Gas, No Wood — This DIY Stove Heats Your Home All Winter for FREE", "titulo_pt": "Sem gás, sem lenha: este fogão caseiro esquenta sua casa o inverno todo de graça", "canal": "Wes Tucker Prepping", "channel_id": "UCmpz9jj83ditlYP4XA74r8w", "handle": "@WesTuckerPrepping", "pais": "US", "inscritos": 1130, "tipo": "personagem_provavel", "views": 8679, "idade_h": 20, "normal": 3500, "duracao_min": 19, "origem": "busca \"wood stove\"", "fora_do_tema": false, "por_que_deu_certo": ["Tira duas despesas de uma vez (\"sem gás, sem lenha\") e ainda promete de graça.", "Embalagem já testada: o original fez 6,9 mi."], "por_que_vale": "A mesma promessa do fogão do Juca, que fez 5,7 mil. O frio já passou por aqui: guardar para o próximo inverno.", "como_adaptar": "Para o inverno: o aquecedor improvisado dos antigos, com o cuidado de segurança (fumaça e monóxido) dito com todas as letras.", "parecido_com": "\"O fogão antigo que economiza METADE da lenha…\" e \"12 jeitos de esquentar a casa quando falta luz\"", "fonte": {"achou": true, "titulo": "No Gas, No Wood 😱!! This Simple DIY Stove Heats for FREE All Winter", "canal": "Creative DIY365", "video_id": "H2SrcFJ8g6s", "data": "há 8 meses", "views": 6867553, "nota": "Mesma embalagem, palavra por palavra. Não confirmei se é pessoa real."}}, {"id": "R-20260923-09", "classe": "forte", "indice": 8.8, "video_id": "xKSInReB8e4", "titulo": "PASSA UM RIO COM CACHOEIRA NO MEU SÍTIO", "canal": "Vida no Rancho", "channel_id": "UCK1OdKQejDhB8W4x58iU64A", "handle": "@canalvidanorancho", "pais": "BR", "inscritos": 188, "tipo": "nao_sei", "views": 460, "idade_h": 23, "normal": 180, "duracao_min": 12, "origem": "busca \"vida no sítio\"", "fora_do_tema": true, "por_que_deu_certo": ["Número pequeno (460 views): entrou só pela conta, porque o canal é minúsculo."], "por_que_vale": "Não vale. O que importa desse canal é o #01."}, {"id": "R-20260923-10", "classe": "forte", "indice": 7.7, "video_id": "nR-zKWKN2x0", "titulo": "We Made 42 Jars of Apple Butter—and Stayed Up Until Midnight!", "titulo_pt": "Fizemos 42 potes de doce de maçã e ficamos acordados até meia-noite!", "canal": "Whitetail Acres Homemade", "channel_id": "UC32P86hggS-GY7WfO62DzUg", "handle": "@WhitetailAcresHomemade", "pais": "US", "inscritos": 769, "tipo": "nao_sei", "views": 2915, "idade_h": 36, "idade_aprox": true, "normal": 1000, "duracao_min": 23, "origem": "busca \"canning\"", "fora_do_tema": false, "por_que_deu_certo": ["Quantidade que impressiona (42 potes) e esforço de verdade (até meia-noite).", "Canal pequeno: 2,9 vezes o normal."], "por_que_vale": "Conservar comida do jeito antigo e ter a despensa cheia: casa com a receita da vó.", "como_adaptar": "O doce de fruta no tacho que durava o ano inteiro sem geladeira: como a vó fazia e guardava."}], "candidatos_novos": [{"nome": "Vida no Rancho", "channel_id": "UCK1OdKQejDhB8W4x58iU64A", "tipo": "nao_sei"}, {"nome": "Elias Stoltzfus", "channel_id": "UC4jb53XNsc1IlML43tSH7Nw", "tipo": "personagem_provavel"}, {"nome": "Modern Refugee.", "channel_id": "UCo95iU0xxbk_Eo6y4lc7Alw", "tipo": "pessoa_real"}, {"nome": "HOMESTEAD HEART", "channel_id": "UCb5r6YTWcmvU7hgfuhjxqgw", "tipo": "pessoa_real"}, {"nome": "WearyWolf Adventures", "channel_id": "UCUSQDNI2HdeEgEJUSpaCE-A", "tipo": "pessoa_real"}, {"nome": "Professor Carlos Mendes", "channel_id": "UCAUmBOV1TNS4mrUbmc23U-w", "tipo": "pessoa_real"}, {"nome": "Wes Tucker Prepping", "channel_id": "UCmpz9jj83ditlYP4XA74r8w", "tipo": "personagem_provavel"}, {"nome": "Whitetail Acres Homemade", "channel_id": "UC32P86hggS-GY7WfO62DzUg", "tipo": "nao_sei"}], "notas": ["Rodada parcial: dos 337 canais novos que apareceram nas buscas, 62 foram medidos (os que tinham vídeo do tema com views altas). Os outros ficaram sem régua.", "Também passaram da meta, fortes e no tema, sem link guardado na rodada (índice de 2,1 a 5,3): Care Free Living, Catherine's Plates, Wild Line, Epic Gardening, Catarinas Mundo Afora, Grow For Me Gardening, Simply Simona, Homestead Tessie e Eli Yoder Secrets. Com o painel, as próximas rodadas guardam o link de todos.", "Nesta primeira rodada, 4 dos 10 lugares foram para vídeos fora do tema. A partir da próxima, os 10 lugares são do tema, e os de fora aparecem em lista separada.", "Na busca em português, o NexLev corta as views no ponto do milhar (1.324 vira \"1\"). Nos canais medidos, o número foi corrigido pela lista do canal.", "Número errado na busca: o NexLev deu 1,36 mi ao vídeo \"Thousands of Amish Are Abandoning Their Home\" do canal Boot Byte, mas a lista do canal mostra 78 views. Valeu a lista do canal.", "A busca \"old timer tips\" falhou na 1ª tentativa e deu certo na 2ª. Nenhum canal falhou."], "gasto": {"youtube_channel_videos": "76/300", "youtube_search": "40/500", "youtube_channel_about": "64/300", "youtube_video_comments": "2/300", "youtube_video_details": "7"}, "mais": [{"titulo": "Grandma's 20 Clever Cooking Tricks For Seniors Living Alone That Make Life Easier", "canal": "Saving Savers", "video_id": "4igng5vYOZI", "views": 3778, "idade_h": 23, "classe": "forte", "fora_do_tema": false, "nota": "índice 6,6", "titulo_pt": "20 truques espertos de cozinha da vó para idosos que moram sozinhos"}, {"titulo": "How the Amish Outsmarted the Power Companies — With a $50 Stove", "canal": "Eli Yoder Secrets", "video_id": "_HpWIRrkvgk", "views": null, "idade_h": null, "classe": "forte", "fora_do_tema": false, "nota": "índice 5,9 · cópia do nome do Elias", "titulo_pt": "Como os Amish driblaram a companhia de energia com um fogão de 50 dólares"}, {"titulo": "15 Japanese Frugal Habits to Save More Without Cutting Out the Things You Love", "canal": "Raised on Promises", "video_id": "yus0tWNiAvk", "views": 6628, "idade_h": 36, "classe": "forte", "fora_do_tema": false, "nota": "índice 5,6", "titulo_pt": "15 hábitos japoneses de economia para guardar mais sem abrir mão do que você gosta", "idade_aprox": true}, {"titulo": "Our Massive Homestead Pantry Tour | 5 Years in the Making 🤍", "canal": "Willow Creek Homestead", "video_id": "HZWGQIsYB5w", "views": 4057, "idade_h": 17, "classe": "forte", "fora_do_tema": false, "nota": "índice 5,2", "titulo_pt": "Tour pela nossa despensa enorme, montada em 5 anos"}, {"titulo": "Tips For Growing Asparagus", "canal": "Vasili's Garden", "video_id": "-mbQhWKRo0U", "views": 6483, "idade_h": 18, "classe": "forte", "fora_do_tema": false, "nota": "índice 4,9", "titulo_pt": "Dicas para plantar aspargo"}, {"titulo": "We Turned This Workroom Into a Pantry in 9 Hours", "canal": "Little Mountain Ranch", "video_id": "dQvv1Qs13ak", "views": 85914, "idade_h": 19, "classe": "forte", "fora_do_tema": false, "nota": "índice 3,6", "titulo_pt": "Transformamos esta sala de trabalho numa despensa em 9 horas"}, {"titulo": "I Never Boil My Beans Anymore — This Old Grandma Trick Makes Them Melt in Your Mouth", "canal": "Sylvie Mercer", "video_id": "rZf6yLx0a8M", "views": 1963, "idade_h": 36, "classe": "forte", "fora_do_tema": false, "nota": "índice 3,4 · do mesmo grupo do Silas", "titulo_pt": "Nunca mais cozinho feijão fervendo: este truque antigo da vó deixa ele derretendo na boca", "idade_aprox": true}, {"titulo": "25 Home Depot Items That Sell Out First Before a Winter Blackout", "canal": "Lost Survival Knowledge", "video_id": "aqNCjVdyKK8", "views": 3541, "idade_h": 21, "classe": "forte", "fora_do_tema": false, "nota": "índice 3,2", "titulo_pt": "25 itens de loja de construção que esgotam primeiro antes de um apagão no inverno"}, {"titulo": "Pam's Top 20 Foods for No Cook Meals", "canal": "RoseRed Homestead", "video_id": "D3K9FQaYr5A", "views": 4872, "idade_h": 9, "classe": "forte", "fora_do_tema": false, "nota": "índice 3,2", "titulo_pt": "As 20 comidas preferidas da Pam para refeições sem fogão"}, {"titulo": "10 “Illegal” Gardening Tricks Our Grandparents Used That Still Work", "canal": "Amish Gardening", "video_id": "juZ-dzalhUI", "views": 1982, "idade_h": 16, "classe": "forte", "fora_do_tema": false, "nota": "índice 3,0", "titulo_pt": "10 truques \"proibidos\" de horta que nossos avós usavam e ainda funcionam"}, {"titulo": "Forgotten Amish Ways to Preserve Fruit (Including Perfect Schnitz)", "canal": "Frugal Solutions", "video_id": "sK1-UUnlsns", "views": 1787, "idade_h": 23, "classe": "forte", "fora_do_tema": false, "nota": "índice 2,8 · o título mudou desde a rodada", "titulo_pt": "Jeitos esquecidos dos Amish de conservar fruta"}, {"titulo": "PÃO DE MILHO DE VÓ - Fofinho e não precisa Sovar !!!", "canal": "Helena Receitas", "video_id": "nCQG9fb2GGg", "views": 5226, "idade_h": 18, "classe": "forte", "fora_do_tema": false, "nota": "índice 2,7"}, {"titulo": "Colhi ALFACE GIGANTE na HORTA feita em jardineira de PLÁSTICO", "canal": "Minhas Plantas", "video_id": "hbyaD9WirhY", "views": 1574, "idade_h": 5, "classe": "forte", "fora_do_tema": false, "nota": "índice 2,5"}], "da_lista": [{"titulo": "Why Don't Seniors Try This $10 Bucket of Salt That Heats a Room All Winter With No Power?", "canal": "Jhon Construction", "video_id": "fX4qYS3lQqY", "views": 26000, "idade_h": 18, "normal": 15000, "classe": "forte", "titulo_pt": "Por que os idosos não testam este balde de sal de 10 dólares que esquenta um cômodo o inverno todo sem energia?", "nota": "o melhor da lista hoje; ficou fora dos 10 só pela meta"}, {"titulo": "Don't SCRAPE That Popcorn Ceiling Until You Watch THIS", "canal": "Elias Yoder", "video_id": "tyKGiXpTQdU", "views": 6900, "idade_h": 36, "normal": 8600, "classe": "forte", "titulo_pt": "Não raspe esse teto texturizado antes de ver isto", "idade_aprox": true}, {"titulo": "Just 1 leaf of this plant is worth a gold mine (you need to have it at home)", "canal": "Victor Horta na Varanda", "video_id": "9Z3xR54yyaM", "views": 27000, "idade_h": 36, "normal": 41000, "classe": "bom", "titulo_pt": "Só 1 folha dessa planta vale uma mina de ouro (você precisa ter em casa)", "nota": "a mesma embalagem da folha, pela 4ª vez; o título aparece em inglês porque o YouTube traduz", "idade_aprox": true}, {"titulo": "20 FREEZER Tricks That Make Your Groceries Last MONTHS Longer", "canal": "Elias Yoder", "video_id": "7hc37AranrA", "views": 6400, "idade_h": 36, "normal": 8600, "classe": "bom", "titulo_pt": "20 truques de freezer que fazem a compra durar MESES a mais", "idade_aprox": true}, {"titulo": "Tastes Like Apple and Honey. Grandma Planted It Once — Why Does Nobody Grow It Now?", "canal": "Silas Mercer", "video_id": "xBQ3qPTzOT8", "views": 3900, "idade_h": 36, "normal": 9000, "classe": "fraco", "titulo_pt": "Tem gosto de maçã com mel. A vó plantou uma vez — por que ninguém planta mais?", "idade_aprox": true}, {"titulo": "25 More \"Illegal\" Off-Grid Living Tricks Our Grandparents Used That Still Work Today", "canal": "Silas Mercer", "video_id": "EgfH8W5UUJU", "views": 2900, "idade_h": 17, "normal": 9000, "classe": "fraco", "titulo_pt": "Mais 25 truques \"proibidos\" de vida fora da rede que nossos avós usavam e ainda funcionam"}, {"titulo": "There Are 5 Rules To Survive The Ozark Mountains... (From A Local Who Knows)", "canal": "Silas Mercer", "video_id": "NQ_XhpDj1gU", "views": 3700, "idade_h": 36, "normal": 9000, "classe": "fraco", "titulo_pt": "5 regras para sobreviver nas montanhas Ozark (de quem mora lá)", "idade_aprox": true}, {"titulo": "How to Cook Perfect and Delicious Pot Roast (With Secret Ingredient)", "canal": "Otis's Kitchen", "video_id": "x_nwRegdTqg", "views": 8100, "idade_h": 36, "normal": 54000, "classe": "fraco", "titulo_pt": "Como fazer uma carne de panela perfeita (com ingrediente secreto)", "idade_aprox": true}, {"titulo": "NEVER Bake Your Meatloaf in a Loaf Pan Again — Try This Old FARM Trick", "canal": "Otis's Kitchen", "video_id": "mieruCO0aE4", "views": 2300, "idade_h": 10, "normal": 54000, "classe": "fraco", "titulo_pt": "Nunca mais asse bolo de carne na forma — use este truque antigo da fazenda", "nota": "só 10 h de vida"}, {"titulo": "Stop Paying for Crawlspace Encapsulation — This Forgotten Method Kept Old Houses Dry for 100 Years", "canal": "Jhon Construction", "video_id": "OLZYvqj7bVg", "views": 772, "idade_h": 36, "normal": 15000, "classe": "fraco", "titulo_pt": "Pare de pagar isolamento de porão — este método esquecido manteve casas antigas secas por 100 anos", "idade_aprox": true}], "arquivo": "2026-09-23.json"}], "tendencias": [], "semanas": [], "fontes": {"lista": [{"nome": "Victor Horta na Varanda", "id": "UCn4Z4-N2vrvPfsnEWaOx7PQ", "handle": "@victorhortanavaranda", "pais": "BR", "tipo": "pessoa_real", "entrou": "2026-09-23", "motivo": "Fonte do vídeo da folha (\"Só 1 folha dessa planta vale uma mina de ouro\", 3,3 mi views, 13,8x a média). Repete a mesma embalagem, e ela cresce: 462 mil → 1 mi → 3,3 mi."}, {"nome": "Otis's Kitchen", "id": "UCpeZULGpluw5NuwitKFtq0w", "handle": "@OtisGrangerKitchen", "pais": "US", "tipo": "personagem_provavel", "entrou": "2026-09-23", "motivo": "Indicado pelo dono. Canal de 15/08/2026, 30 vídeos, história pronta e livro à venda. Série \"NEVER … Again — Try This Old FARM Trick\": 1,1 mi (8,6x)."}, {"nome": "Jhon Construction", "id": "UCCPCEUtao-g9_iWYyfF-B1w", "handle": "@JhonConstruction", "pais": "US", "tipo": "personagem_provavel", "entrou": "2026-09-23", "motivo": "Indicado pelo dono. Canal de 06/08/2026, e-book para idosos no link. \"Stop Paying for Concrete…\" 245 mil (8x)."}, {"nome": "Silas Mercer", "id": "UC_yTHwUQS--7ZsCo8fxW67A", "handle": "@SilasMercerYT", "pais": "US", "tipo": "personagem_provavel", "entrou": "2026-09-23", "motivo": "Referência de sempre do canal (os 4 títulos mais vistos vieram dele). Muito copiado."}, {"nome": "Elias Yoder", "id": "UCaj8oe2fiZNjXzX1QEZ1F2A", "handle": "@EliasYoderAmish", "pais": "US", "tipo": "personagem_provavel", "entrou": "2026-09-23", "motivo": "Referência de sempre do canal (361 mil inscritos, e-book no link). Há pelo menos 20 canais com o nome dele no YouTube; este é o original."}], "candidatos": [{"nome": "Acre Homestead", "id": "UCIxmWUbe4OZuMDJKIHKwwKg", "pais": "US", "tipo": "pessoa_real", "entrou": "2026-09-23", "origem": "teste de 23/09, busca \"homestead\" (214 mil views em 3 dias)"}, {"nome": "The Hollar Homestead", "id": "UCcjlGeJ9vQXVqSxu7zHDhbA", "pais": "US", "tipo": "pessoa_real", "entrou": "2026-09-23", "origem": "teste de 23/09, busca \"homestead\" (58 mil em 16 h)"}, {"nome": "The Foraging Family Homestead", "id": "UCBAv9VnrKr-y6eITNAYJXNw", "pais": "US", "tipo": "pessoa_real", "entrou": "2026-09-23", "origem": "teste de 23/09, busca \"homestead\" (\"Homestead Safety Rules Every Family Should Know\", 58 mil em 2 dias)"}, {"nome": "Modern Homestead Alaska", "id": "UCa4VQXUlcKDELw5Rp9wnV7g", "pais": "US", "tipo": "pessoa_real", "entrou": "2026-09-23", "origem": "teste de 23/09, busca \"homestead\" (93 mil em 4 dias)"}, {"nome": "Appalachia's Homestead with Patara", "id": "UCXyRtDXzptYN56-UxNhYAbQ", "pais": "US", "tipo": "pessoa_real", "entrou": "2026-09-23", "origem": "teste de 23/09, busca \"homestead\" (64 mil em 23 h)"}, {"nome": "Vida no Rancho", "id": "UCK1OdKQejDhB8W4x58iU64A", "pais": "BR", "tipo": "nao_sei", "entrou": "2026-09-23", "origem": "radar 23/09, busca \"vida no sítio\" (\"Estão roubando as frutas do meu sítio\", 8.500 views em ~36 h, índice 124)"}, {"nome": "Elias Stoltzfus", "id": "UC4jb53XNsc1IlML43tSH7Nw", "pais": null, "tipo": "personagem_provavel", "entrou": "2026-09-23", "origem": "radar 23/09, busca \"amish\" (Amish saindo da Pensilvânia, índice 42; fora do tema de sempre)"}, {"nome": "Modern Refugee.", "id": "UCo95iU0xxbk_Eo6y4lc7Alw", "pais": null, "tipo": "pessoa_real", "entrou": "2026-09-23", "origem": "radar 23/09, busca \"wood stove\" (\"Preps When All Else Fails.\", índice 15)"}, {"nome": "HOMESTEAD HEART", "id": "UCb5r6YTWcmvU7hgfuhjxqgw", "pais": "US", "tipo": "pessoa_real", "entrou": "2026-09-23", "origem": "radar 23/09, busca \"homestead\" (vlog, índice 12; fora do tema de sempre)"}, {"nome": "WearyWolf Adventures", "id": "UCUSQDNI2HdeEgEJUSpaCE-A", "pais": null, "tipo": "pessoa_real", "entrou": "2026-09-23", "origem": "radar 23/09, busca \"frugal living\" (\"£1 a Meal for 7 Days\", índice 12)"}, {"nome": "Professor Carlos Mendes", "id": "UCAUmBOV1TNS4mrUbmc23U-w", "pais": "BR", "tipo": "pessoa_real", "entrou": "2026-09-23", "origem": "radar 23/09, busca \"idosos\" (benefícios para mais de 60, índice 12; fora do tema de sempre)"}, {"nome": "Wes Tucker Prepping", "id": "UCmpz9jj83ditlYP4XA74r8w", "pais": "US", "tipo": "personagem_provavel", "entrou": "2026-09-23", "origem": "radar 23/09, busca \"wood stove\" (\"No Gas, No Wood — This DIY Stove…\", índice 9,5)"}, {"nome": "Whitetail Acres Homemade", "id": "UC32P86hggS-GY7WfO62DzUg", "pais": "US", "tipo": "nao_sei", "entrou": "2026-09-23", "origem": "radar 23/09, busca \"canning\" (\"42 Jars of Apple Butter\", índice 7,7)"}]}}</script>
+<script>
+(function(){
+const D = JSON.parse(document.getElementById('dados').textContent);
+const $ = s => document.querySelector(s);
+function el(tag, attrs, ...kids){
+  const e = document.createElement(tag);
+  if (attrs) for (const [k,v] of Object.entries(attrs)){
+    if (v === null || v === undefined || v === false) continue;
+    if (k === 'class') e.className = v; else if (k === 'text') e.textContent = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v);
+  }
+  for (const k of kids.flat()){ if (k === null || k === undefined || k === false) continue; e.append(k instanceof Node ? k : document.createTextNode(String(k))); }
+  return e;
+}
+const num = n => {
+  if (n === null || n === undefined || n === '' || isNaN(+n)) return '—';
+  n = +n;
+  const f = (v, d) => { let s = v.toFixed(d); if (s.endsWith('.0')) s = s.slice(0, -2); return s.replace('.', ','); };
+  if (n >= 1e6) return f(n/1e6, n >= 1e7 ? 0 : 1) + ' mi';
+  if (n >= 1e3) return f(n/1e3, n >= 1e4 ? 0 : 1) + ' mil';
+  return String(Math.round(n));
+};
+const vezes = v => v >= 10 ? Math.round(v) + '×' : (Math.round(v*10)/10).toString().replace('.', ',') + '×';
+const TIPO = {pessoa_real:'Pessoa real', personagem_provavel:'Personagem provável', nao_sei:'Não sei'};
+const CLASSE = {forte:'FORTE', bom:'BOM', fraco:'FRACO', sem_regua:'SEM RÉGUA'};
+const PAIS = {BR:'Brasil', Brazil:'Brasil', US:'EUA', 'United States':'EUA', GB:'Reino Unido', 'United Kingdom':'Reino Unido', PT:'Portugal', CA:'Canadá', AU:'Austrália'};
+const urlVideo = id => 'https://www.youtube.com/watch?v=' + id;
+const urlCanal = (id, handle) => id ? 'https://www.youtube.com/channel/' + id : (handle ? 'https://www.youtube.com/' + handle : null);
+const urlBusca = q => 'https://www.youtube.com/results?search_query=' + encodeURIComponent(q);
+const thumb = id => (D.thumbs && D.thumbs[id]) || 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
+function semFoto(e){ const i = e.target; i.style.visibility = 'hidden'; if (i.parentNode) i.parentNode.classList.add('semfoto'); }
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 1800); }
+function copiar(txt){
+  const ok = () => toast('Copiado: ' + txt);
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, () => velho(txt, ok));
+  else velho(txt, ok);
+}
+function velho(txt, ok){ const a = el('textarea', {style:'position:fixed;opacity:0'}); a.value = txt; document.body.append(a); a.select(); try{ document.execCommand('copy'); ok(); } catch(e){ toast('Não deu para copiar'); } a.remove(); }
+function idadeTxt(it){ if (it.idade_h === undefined || it.idade_h === null) return ''; return (it.idade_aprox ? '~' : '') + Math.round(it.idade_h) + ' h'; }
+
+$('#t-canal').textContent = 'Radar · ' + (D.canal || '');
+$('#t-gerado').textContent = 'Atualizado em ' + (D.gerado || '');
+
+// ---------- seleção de rodada
+const sel = $('#sel-dia');
+const dias = D.dias || [];
+if (!dias.length) sel.append(el('option', {text:'nenhuma rodada ainda'}));
+dias.forEach((d, i) => sel.append(el('option', {value:i, text: fmtData(d.data) + (d.arquivo && /-\d\.json$/.test(d.arquivo) ? ' (2ª)' : '')})));
+function fmtData(s){ if (!s) return ''; const [a,m,d] = s.split('-'); const dt = new Date(+a, +m-1, +d); return dt.toLocaleDateString('pt-BR', {weekday:'short', day:'2-digit', month:'2-digit', year:'numeric'}); }
+
+let aba = 'videos';
+document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => {
+  aba = b.dataset.aba; document.querySelectorAll('nav button').forEach(x => x.setAttribute('aria-selected', x === b)); render();
+}));
+sel.addEventListener('change', render);
+
+function render(){
+  const c = $('#conteudo'); c.replaceChildren();
+  if (aba === 'videos') c.append(...abaVideos(dias[+sel.value || 0]));
+  if (aba === 'tendencias') c.append(...abaTendencias());
+  if (aba === 'fontes') c.append(...abaFontes());
+  if (aba === 'semana') c.append(...abaSemana());
+  window.scrollTo(0, 0);
+}
+
+// ---------- vídeos
+function abaVideos(d){
+  if (!d) return [el('div', {class:'vazio', text:'Nenhuma rodada do /radar ainda. Rode /radar na pasta do canal.'})];
+  const itens = d.itens || [];
+  const noTema = itens.filter(i => !i.fora_do_tema);
+  const fora = itens.filter(i => i.fora_do_tema);
+  const mais = d.mais || [];
+  const cont = c => itens.filter(i => i.classe === c).length;
+  const out = [];
+  const chips = el('div', {class:'chips'},
+    el('span', {class:'chip', text: itens.length + ' vídeos'}),
+    cont('forte') ? el('span', {class:'chip forte', text: cont('forte') + ' fortes'}) : null,
+    cont('bom') ? el('span', {class:'chip bom', text: cont('bom') + ' bons'}) : null,
+    cont('fraco') ? el('span', {class:'chip fraco', text: cont('fraco') + ' fracos'}) : null,
+    d.contagem ? el('span', {class:'chip', text: `${d.contagem.lista ?? '—'} canais da lista · ${d.contagem.candidatos ?? '—'} candidatos · ${d.contagem.buscas ?? '—'} buscas`}) : null,
+    el('span', {class:'chip', text: 'janela de ' + (d.janela_horas || 48) + ' h'}),
+    d.status && d.status !== 'completo' ? el('span', {class:'chip warn', text: 'rodada ' + d.status + (d.atrasada ? ' · atrasada' : '')}) : null
+  );
+  out.push(el('section', {class:'resumo'},
+    d.resumo ? el('p', {text: d.resumo}) : null,
+    chips,
+    el('details', {class:'legenda'}, el('summary', {text:'Como ler'}), el('ul', null,
+      el('li', {text:'"47×" = o vídeo já tem 47 vezes as views que um vídeo normal desse canal costuma ter. Quanto maior, mais ele fugiu do padrão do canal.'}),
+      el('li', {text:'FORTE, BOM ou FRACO levam em conta a idade do vídeo: 5 mil views em 10 horas pesa mais que 5 mil em 2 dias.'}),
+      el('li', {text:'Pessoa real ou personagem provável é uma leitura do canal (idade, ritmo, descrição, produto no link). A métrica manda; o tipo só desempata.'}),
+      el('li', {text:'"Por que deu certo" é uma leitura da embalagem (título, promessa, número, público), não uma prova.'})
+    ))
+  ));
+  out.push(el('h2', null, 'No tema do canal', el('small', {text: noTema.length + ' vídeo(s)'})));
+  out.push(noTema.length ? el('div', {class:'grade'}, noTema.map(cartao)) : el('div', {class:'vazio', text:'Nada forte no tema hoje. Vale pesquisar na mão.'}));
+  if (d.da_lista && d.da_lista.length){
+    out.push(el('h2', null, 'Suas fontes hoje', el('small', {text:'o que os canais da lista postaram nas 48 h'})));
+    out.push(listaMais(d.da_lista));
+  }
+  const maisTema = mais.filter(m => !m.fora_do_tema);
+  if (maisTema.length){
+    out.push(el('h2', null, 'Mais no tema', el('small', {text:'também estouraram, ficaram fora dos 10'})));
+    out.push(listaMais(maisTema));
+  }
+  const maisFora = mais.filter(m => m.fora_do_tema);
+  if (fora.length || maisFora.length){
+    out.push(el('h2', null, 'Estourou, mas fora do tema', el('small', {text:'só se quiser variar'})));
+    if (fora.length) out.push(el('div', {class:'grade'}, fora.map(cartao)));
+    if (maisFora.length) out.push(el('div', {style:'margin-top:14px'}, listaMais(maisFora)));
+  }
+  if (d.candidatos_novos && d.candidatos_novos.length){
+    out.push(el('h2', null, 'Canais que entraram em teste hoje', el('small', {text:'candidatos: você confirma no relatório da semana'})));
+    out.push(el('div', {class:'chips'}, d.candidatos_novos.map(c => el('a', {class:'chip', href: urlCanal(c.channel_id, c.handle), target:'_blank', rel:'noopener', text: c.nome + (c.tipo ? ' · ' + (TIPO[c.tipo] || c.tipo) : '')}))));
+  }
+  if ((d.notas && d.notas.length) || d.gasto){
+    out.push(el('h2', null, 'Notas da rodada'));
+    out.push(el('ul', {class:'notas'}, (d.notas || []).map(n => el('li', {text:n})),
+      d.gasto ? el('li', {text: 'Gasto no NexLev: ' + Object.entries(d.gasto).map(([k,v]) => k + ' ' + v).join(' · ')}) : null));
+  }
+  return out;
+}
+
+function cartao(it){
+  const x = it.views && it.normal ? it.views / it.normal : null;
+  const cls = it.classe || 'fraco';
+  const canalUrl = urlCanal(it.channel_id, it.handle);
+  const pais = PAIS[it.pais] || it.pais;
+  const blocos = [];
+  if (it.por_que_deu_certo && it.por_que_deu_certo.length)
+    blocos.push(el('div', {class:'bloco'}, el('h4', {text:'Por que deu certo'}), el('ul', null, [].concat(it.por_que_deu_certo).map(t => el('li', {text:t})))));
+  if (it.por_que_vale) blocos.push(el('div', {class:'bloco'}, el('h4', {text:'Por que vale para o canal'}), el('p', {text: it.por_que_vale})));
+  if (it.como_adaptar) blocos.push(el('div', {class:'bloco ideia'}, el('h4', {text:'Como daria para fazer'}), el('p', {text: it.como_adaptar})));
+  if (it.parecido_com) blocos.push(el('div', {class:'alerta', text: '⚠ Parecido com vídeo seu: ' + it.parecido_com}));
+  if (it.fonte){
+    const f = it.fonte; const u = f.url || (f.video_id ? urlVideo(f.video_id) : null);
+    blocos.push(el('div', {class:'fonte'}, el('b', {text: f.achou === false ? 'Fonte original: não achei' : 'Fonte original provável: '}),
+      f.achou === false ? null : (u ? el('a', {href:u, target:'_blank', rel:'noopener', text: f.titulo || u}) : (f.titulo || '')),
+      f.canal ? ' · ' + f.canal : '', f.data ? ' · ' + f.data : '', f.views ? ' · ' + num(f.views) + ' views' : '',
+      f.nota ? el('div', {class:'origem', text: f.nota}) : null));
+  }
+  if (it.comentarios && it.comentarios.length)
+    blocos.push(el('details', {class:'coment'}, el('summary', {text:'O que a plateia comenta (' + it.comentarios.length + ')'}),
+      it.comentarios.map(cm => el('blockquote', null, cm.texto, cm.texto_pt && cm.texto_pt !== cm.texto ? el('span', {text: cm.texto_pt}) : null, cm.curtidas !== undefined ? el('span', {text: cm.curtidas + ' curtida(s)'}) : null))));
+  return el('article', {class:'card'},
+    el('a', {class:'thumb', href: urlVideo(it.video_id), target:'_blank', rel:'noopener', title:'Assistir no YouTube'},
+      el('img', {src: thumb(it.video_id), alt:'', loading:'lazy', onerror: semFoto}),
+      el('span', {class:'pos', text: (it.id || '').replace(/^R-\d{8}-/, '#')}),
+      el('span', {class:'classe ' + cls, text: CLASSE[cls] || cls.toUpperCase()}),
+      it.duracao_min ? el('span', {class:'dur', text: Math.round(it.duracao_min) + ' min'}) : null),
+    el('div', {class:'corpo'},
+      el('div', {class:'metrica'},
+        x ? el('span', {class:'x ' + cls, text: vezes(x)}) : null,
+        x ? el('span', {class:'xl', text:'o normal do canal'}) : null,
+        el('span', {class:'v'}, el('b', {text: num(it.views) + ' views'}), ' em ' + idadeTxt(it), el('br'), el('span', {class:'xl', text:'normal: ' + num(it.normal)}))),
+      el('h3', {class:'titulo'}, el('a', {href: urlVideo(it.video_id), target:'_blank', rel:'noopener', text: it.titulo})),
+      it.titulo_pt && it.titulo_pt !== it.titulo ? el('p', {class:'pt', text: 'Em português: ' + it.titulo_pt}) : null,
+      el('div', {class:'canal'},
+        canalUrl ? el('a', {href: canalUrl, target:'_blank', rel:'noopener', text: it.canal}) : el('b', {text: it.canal}),
+        pais ? el('span', {text: '· ' + pais}) : null,
+        it.inscritos ? el('span', {text: '· ' + num(it.inscritos) + ' inscritos'}) : null,
+        it.tipo ? el('span', {class:'tipo ' + it.tipo, text: TIPO[it.tipo] || it.tipo}) : null),
+      blocos,
+      it.origem ? el('div', {class:'origem', text: 'Achado por: ' + it.origem}) : null,
+      el('div', {class:'acoes'},
+        el('a', {class:'btn primario', href: urlVideo(it.video_id), target:'_blank', rel:'noopener', text:'▶ Assistir'}),
+        canalUrl ? el('a', {class:'btn', href: canalUrl, target:'_blank', rel:'noopener', text:'Ver canal'}) : null,
+        it.id ? el('button', {class:'btn', onclick: () => copiar('/radar transcrever ' + it.id), text:'Copiar pedido de transcrição'}) : null,
+        canalUrl ? el('button', {class:'btn', onclick: () => copiar('/radar adicionar ' + canalUrl), text:'Copiar: pôr canal na lista'}) : null
+      )));
+}
+
+function listaMais(arr){
+  return el('div', {class:'lista'}, arr.map(m => {
+    const u = m.url || (m.video_id ? urlVideo(m.video_id) : urlBusca((m.titulo || '') + ' ' + (m.canal || '')));
+    const x = m.views && m.normal ? m.views / m.normal : null;
+    return el('div', {class:'linha'},
+      m.video_id ? el('a', {href:u, target:'_blank', rel:'noopener'}, el('img', {src: thumb(m.video_id), alt:'', loading:'lazy', onerror: semFoto})) : null,
+      el('div', {class:'txt'},
+        el('a', {href:u, target:'_blank', rel:'noopener'}, el('b', {text: m.titulo || '(sem título)'})),
+        el('span', {text: [m.canal, m.titulo_pt && m.titulo_pt !== m.titulo ? 'Em português: ' + m.titulo_pt : null, m.nota, m.video_id ? null : 'sem link direto: abre a busca do YouTube'].filter(Boolean).join(' · ')})),
+      el('span', {class:'num'}, [x ? vezes(x) : null, m.idade_h ? 'em ' + idadeTxt(m) : null].filter(Boolean).join(' '),
+        m.classe ? el('span', {class:'chip ' + m.classe, style:'margin-left:8px', text: CLASSE[m.classe] || m.classe}) : null));
+  }));
+}
+
+// ---------- tendências
+function abaTendencias(){
+  const ts = D.tendencias || [];
+  if (!ts.length) return [el('div', {class:'vazio', text:'Nenhuma rodada do /tendencias ainda. Rode /tendencias na pasta do canal.'})];
+  const t = ts[0];
+  const out = [el('section', {class:'resumo'},
+    el('p', null, el('b', {text: 'Tendências · ' + fmtData(t.data)}), t.geo ? ' · ' + (PAIS[t.geo] || t.geo) : ''),
+    t.resumo ? el('p', {text: t.resumo}) : null,
+    el('div', {class:'chips'}, t.gasto ? Object.entries(t.gasto).map(([k,v]) => el('span', {class:'chip', text: k + ': ' + v})) : null),
+    el('p', {class:'sub', style:'margin:10px 0 0', text:'O Google Trends mede o que as pessoas buscam. É termômetro de assunto, não previsão de views.'}))];
+  const bloco = (titulo, sub, arr) => {
+    if (!arr || !arr.length) return;
+    out.push(el('h2', null, titulo, el('small', {text: sub})));
+    out.push(el('div', null, arr.map(a => el('div', {class:'trend'},
+      el('b', {text: a.assunto}),
+      el('div', {class:'meta', text: [a.buscas ? num(a.buscas) + ' buscas' : null, a.subida ? '+' + a.subida + '%' : null, a.desde ? 'desde ' + a.desde : null, a.categoria].filter(Boolean).join(' · ')}),
+      a.por_que ? el('p', {style:'margin:0 0 4px', text: 'Por que serve: ' + a.por_que}) : null,
+      a.angulo ? el('div', {class:'ideia', style:'margin:6px 0'}, el('b', {text:'Ângulo: '}), a.angulo) : null,
+      a.cuidado ? el('div', {class:'alerta', text:'Cuidado: ' + (a.cuidado === true ? 'assunto sensível' : a.cuidado)}) : null,
+      a.noticia ? el('a', {href: a.noticia, target:'_blank', rel:'noopener', text: a.noticia_titulo || 'notícia'}) : null))));
+  };
+  bloco('Para agora', 'vale por 24 a 72 h', t.agora);
+  bloco('Da estação', 'semanas', t.estacao);
+  if (t.subindo && t.subindo.itens && t.subindo.itens.length){
+    out.push(el('h2', null, 'Subindo no tema "' + t.subindo.termo + '"', el('small', {text: t.subindo.onde || ''})));
+    out.push(el('div', {class:'chips'}, t.subindo.itens.map(s => el('a', {class:'chip', href: urlBusca(s.busca), target:'_blank', rel:'noopener', text: s.busca + (s.valor ? ' · ' + s.valor : '')}))));
+  }
+  if (t.descartado && t.descartado.length){
+    out.push(el('h2', null, 'Visto e descartado'));
+    out.push(el('ul', {class:'notas'}, t.descartado.map(x => el('li', {text: x.assunto + ': ' + x.motivo}))));
+  }
+  return out;
+}
+
+// ---------- fontes
+function abaFontes(){
+  const f = D.fontes || {};
+  const card = c => el('div', {class:'fonte-card'},
+    el('b', null, el('a', {href: urlCanal(c.id, c.handle), target:'_blank', rel:'noopener', text: c.nome})),
+    el('div', {class:'canal'}, c.tipo ? el('span', {class:'tipo ' + c.tipo, text: TIPO[c.tipo] || c.tipo}) : null, c.pais ? el('span', {text: PAIS[c.pais] || c.pais}) : null, c.entrou ? el('span', {text:'desde ' + String(c.entrou).split('-').reverse().join('/')}) : null),
+    c.motivo || c.origem ? el('p', {text: c.motivo || c.origem}) : null);
+  return [
+    el('h2', null, 'Lista de fontes', el('small', {text:'conferida em toda rodada, sempre primeiro'})),
+    (f.lista || []).length ? el('div', {class:'fontes-grade'}, f.lista.map(card)) : el('div', {class:'vazio', text:'Lista vazia. Use /radar adicionar <link>.'}),
+    el('h2', null, 'Candidatos', el('small', {text:'em teste; no relatório da semana você decide quem entra'})),
+    (f.candidatos || []).length ? el('div', {class:'fontes-grade'}, f.candidatos.map(card)) : el('div', {class:'vazio', text:'Nenhum candidato agora.'})
+  ];
+}
+
+// ---------- semana
+function abaSemana(){
+  const ss = D.semanas || [];
+  if (!ss.length) return [el('div', {class:'vazio', text:'Nenhum relatório da semana ainda. Ele sai no dia marcado no config (ou com /radar semana).'})];
+  const s = ss[0];
+  const out = [el('section', {class:'resumo'}, el('p', null, el('b', {text:'Relatório da semana · ' + fmtData(s.data)})), s.resumo ? el('p', {text: s.resumo}) : null)];
+  if (s.candidatos && s.candidatos.length){
+    out.push(el('h2', {text:'Candidatos'}));
+    out.push(el('div', {class:'fontes-grade'}, s.candidatos.map(c => el('div', {class:'fonte-card'},
+      el('b', null, el('a', {href: urlCanal(c.channel_id, c.handle), target:'_blank', rel:'noopener', text: c.nome})),
+      el('div', {class:'canal'}, c.tipo ? el('span', {class:'tipo ' + c.tipo, text: TIPO[c.tipo] || c.tipo}) : null, c.recomendacao ? el('span', {class:'chip ' + (c.recomendacao === 'entra' ? 'forte' : c.recomendacao === 'sai' ? 'fraco' : 'bom'), text: c.recomendacao}) : null),
+      el('p', {text: [c.fortes !== undefined ? c.fortes + ' forte(s)' : null, c.bons !== undefined ? c.bons + ' bom(ns)' : null, c.melhor ? 'melhor: ' + c.melhor : null].filter(Boolean).join(' · ')}),
+      c.porque ? el('p', {text: c.porque}) : null,
+      c.channel_id ? el('button', {class:'btn', onclick: () => copiar('/radar adicionar ' + urlCanal(c.channel_id)), text:'Copiar: pôr na lista'}) : null))));
+  }
+  if (s.canal_resumo){ out.push(el('h2', {text:'Como o canal está'})); out.push(el('p', {text: s.canal_resumo})); }
+  return out;
+}
+
+render();
+})();
+</script>
+</body>
+</html>
